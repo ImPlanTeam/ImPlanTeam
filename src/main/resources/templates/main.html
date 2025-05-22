@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>글쓰기</title>
+</head>
+<body>
+    <h2>글쓰기</h2>
+    <div>
+        <form action="/register" method="post" enctype="multipart/form-data">
+        <p>지역<select name="area">
+            <option value="수원">수원</option>
+            <option value="서울">서울</option>
+        </select></p>
+        <p>제목<input type="text" name="title"></p>
+        <p>내용<textarea name="content"></textarea></p>
+            <p>작성자<input type="text" name="writer"></p>
+        <p>첨부파일<input type="file" name="files" multiple></p>
+        <p><input type="submit" value="완료"></p>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+  <script
+          src="https://code.jquery.com/jquery-3.7.1.js"
+          integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+          crossorigin="anonymous">
+  </script>
+</head>
+
+
+<body>
+  <table>
+    <tr>
+      <a th:href="@{/listView}"><p>리스트로가기</p></a>
+      <td>제목</td>
+      <td th:text="${board.title}"></td>
+    </tr>
+    <tr>
+      <td>
+      지역<span th:text="${board.area}"></span>&emsp;
+      작성일<span th:text="${#strings.substring(board.indate,0,10)}"></span>&emsp;
+      작성자<span th:text="${board.writer}"></span>&emsp;
+      조회수<span th:text="${board.view_count}"></span>&emsp;
+      </td>
+    </tr>
+    <tr><td>사진</td></tr>
+    <tr>
+      <td colspan="2" th:each="filename : ${file}">
+        <img th:src="@{'/upload/' + ${filename. orignFileName}}" alt="" style="width: 200px;" />
+      </td>
+    </tr>
+    <tr>
+      <td>내용</td>
+      <td th:text="${board.content}"></td>
+    </tr>
+    <tr>
+      <td><input type="button" value="좋아요" th:onclick="likeIt([[${board.num}]])"></td>
+      <td th:text="${board.like_count}" id="likecnt"></td>
+    </tr>
+  </table>
+
+</body>
+</html>
+<script>
+  function likeIt(num){
+      $.ajax({
+        type:"post",
+        url:"likeIt",
+        data:{
+          "num":num
+        },
+        success:function(likeCnt){
+            $("#likecnt").text(likeCnt);
+
+        },
+        error: function(){
+
+        }
+        })
+  }
+</script>
+
+
+

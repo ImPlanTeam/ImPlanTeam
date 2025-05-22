@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>목록보기</title>
+    <script
+            src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous">
+    </script>
+</head>
+<body>
+    <table>
+        <tr>
+            <p>
+                <select name="area"  onchange="changeBoard(value)" id="area">
+                    <option>==선택==</option>
+                    <option value="전체보기">전체보기</option>
+                    <option value="수원">수원</option>
+                    <option value="서울">서울</option>
+                </select>
+            </p>
+            <form th:action="@{/listView}" method="get">
+                <input type="text" name="searchKeyword">
+                <button type="submit">검색</button>
+            </form>
+
+        </tr>
+        <tr>
+            <td>번호</td>
+            <td>지역</td>
+            <td>제목</td>
+            <td>작성자</td>
+            <td>작성일</td>
+            <td>조회수</td>
+        </tr>
+        <tr th:each="list : ${list}">
+            <td th:text="${list.num}" id="num"></td>
+            <td th:text="${list.area}"></td>a
+            <td><a th:href="@{/view(num=${list.num})}" th:text="${list.title}" style="text-decoration:none" id="title"></a></td>
+            <td th:text="${list.writer}"></td>
+            <td th:text="${#strings.substring(list.indate,0,10)}"></td>
+            <td th:text="${list.view_count}" id="viewCnt"></td>
+        </tr>
+    </table>
+
+
+    <a th:if="${startPage > 0}" th:href="@{/listView(page=${startPage - 1})}">이전</a>
+
+    <th:block th:each="page : ${#numbers.sequence(startPage,endPage)}">
+        <a th:if="${page != nowPage}" th:href="@{/listView(page=${page}, searchKeyword=${param.searchKeyword})}" th:text="${page+1}"></a>
+        <strong th:if="${page == nowPage}" th:text="${page+1}" style="color : red"></strong>
+    </th:block>
+
+    <a th:if="${endPage < totalPages - 1}" th:href="@{/listView(page=${endPage + 1})}">다음</a>
+
+
+</body>
+</html>
+<script>
+    function changeBoard(value){
+        location.href='/listView?searchKeyword='+value;
+    }
+
+<!--     $("#title").click(()=>{-->
+<!--          let num=$("num").val();-->
+<!--              $.ajax({-->
+<!--                    type:"post",-->
+<!--                    url:"viewCnt",-->
+<!--                    data:{-->
+<!--                      "num":num-->
+<!--                    },-->
+<!--                    success:function(viewCnt){-->
+<!--                        $("#viewCnt").text(viewCnt);-->
+<!--                    },-->
+<!--                    error: function(){-->
+
+<!--                }-->
+<!--              })-->
+<!--          })-->
+<!--     }-->
+<!--  }-->
+
+
+
+
+
+
+
+</script>
