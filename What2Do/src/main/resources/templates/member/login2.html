@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+            color: #333333;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #0d6efd;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0b5ed7;
+        }
+
+        .links {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .links a {
+            text-decoration: none;
+            color: #0d6efd;
+            font-weight: 500;
+        }
+
+        .error-msg {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>로그인</h2>
+    <form action="logincheck" method="post">
+        <input type="text" name="id" placeholder="아이디" required>
+        <input type="password" name="pass" placeholder="비밀번호" required>
+        <input type="submit" value="확인">
+    </form>
+
+    <div class="error-msg" th:text="${error}"></div>
+
+    <div class="links">
+        <a href="/join">회원가입</a>
+        <a href="/">뒤로가기</a>
+    </div>
+</div>
+</body>
+</html>

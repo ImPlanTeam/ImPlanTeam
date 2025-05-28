@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<h3>회원정보보기</h3>
+<form th:action="@{/mod}" method="post">
+<table>
+    <tr>
+        <td>아이디</td>
+        <td>
+            <span th:text="${mod.id}"></span>
+            <input type="hidden" name="id" th:value="${mod.id}" />
+        </td>
+    </tr>
+    <tr>
+        <td>비밀번호</td>
+        <td><input type="text" th:value="${mod.pw}" name="pw"></td>
+    </tr>
+    <tr>
+        <td>이름</td>
+        <td><input type="text" th:value="${mod.name}" name="name"></td>
+    </tr>
+    <tr>
+        <td>주소</td>
+        <td><input type="text" th:value="${mod.addr}" name="addr"></td>
+    </tr>
+    <tr>
+        <td>전화번호</td>
+        <td><input type="text" th:value="${mod.tel}" name="tel"></td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type="submit" value="저장"></td>
+    </tr>
+</table>
+
+</body>
+</html>

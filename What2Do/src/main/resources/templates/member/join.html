@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<style>
+  body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 60px;
+      margin: 0;
+  }
+
+  .container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 600px;
+  }
+
+  h2 {
+      margin-bottom: 30px;
+      color: #333;
+      text-align: center;
+  }
+
+  form {
+      display: flex;
+      flex-direction: column;
+  }
+
+  label, input, select, button {
+      margin-bottom: 15px;
+      font-size: 14px;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input[type="date"],
+  select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+  }
+
+  .email-group {
+      display: flex;
+      gap: 8px;
+  }
+
+  .email-group input[type="text"],
+  .email-group select {
+      flex: 1;
+  }
+
+  .btn-check,
+  input[type="submit"],
+  .back-btn {
+      background-color: #0d6efd;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+  }
+
+  .btn-check:hover,
+  input[type="submit"]:hover,
+  .back-btn:hover {
+      background-color: #0b5ed7;
+  }
+
+  .radio-group {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 15px;
+  }
+
+  .error-messages {
+      color: red;
+      margin-top: 10px;
+      list-style: none;
+      padding-left: 0;
+  }
+
+  .error-messages li {
+      margin-bottom: 5px;
+  }
+
+  .btn-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>회원가입</h2>
+
+  <form action="save2" method="post">
+    <label>*아이디</label>
+    <input type="text" name="id" id="id" required>
+    <button type="button" class="btn-check" id="duplenxid">중복확인</button>
+    <div id="idAvailable" class="valid-feedback"></div>
+    <div id="idNotAvailable" class="invalid-feedback"></div>
+
+    <label>*비밀번호</label>
+    <input type="password" name="pass" id="pass" required>
+
+    <label>*비밀번호 확인</label>
+    <input type="password" name="pass2" id="pass2" required>
+    <button type="button" class="btn-check" onclick="checkPass()">확인</button>
+
+    <label>*이름</label>
+    <input type="text" name="name" id="name" required>
+
+    <label>전화번호</label>
+    <input type="text" name="tel" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+
+    <label>생년월일</label>
+    <input type="date" name="birth">
+
+    <label>이메일</label>
+    <div class="email-group">
+      <input type="text" name="mail1"> @
+      <input type="text" class="box" id="domain-txt" name="mail2">
+      <select class="box" id="domain-list" name="mail2">
+        <option value="">직접 입력</option>
+        <option value="naver.com" name="mail2">naver.com</option>
+        <option value="google.com" name="mail2">google.com</option>
+        <option value="nate.com" name="mail2">nate.com</option>
+      </select>
+    </div>
+
+    <label>성별</label>
+    <div class="radio-group">
+      <label><input type="radio" value="m" name="jender"> 남</label>
+      <label><input type="radio" value="f" name="jender"> 여</label>
+    </div>
+
+    <input type="submit" value="가입하기">
+  </form>
+
+  <div class="btn-group">
+    <a href="login2"><button class="back-btn">뒤로가기</button></a>
+  </div>
+
+  <ul class="error-messages" th:if="${errList != null}">
+    <li th:each="msg : ${errList}" th:text="${msg}"></li>
+    <li th:text="${errID}"></li>
+  </ul>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js">
+
+</script>
+
+<script>
+  const domainListEl = document.querySelector('#domain-list')
+  const domainInputEl = document.querySelector('#domain-txt')
+
+  domainListEl.addEventListener('change', (event) => {
+    // option에 있는 도메인 선택 시
+    if(event.target.value !== "") {
+      // 선택한 도메인을 input에 입력하고 disabled
+      domainInputEl.value = event.target.value
+      domainInputEl.disabled = true
+    } else { // 직접 입력 시
+      // input 내용 초기화 & 입력 가능하도록 변경
+      domainInputEl.value = ""
+      domainInputEl.disabled = false
+    }
+  })
+
+
+$('#duplenxid').click(function () {
+const userId = $('#id').val();
+
+if (!userId || userId.trim() === '') {
+  alert("아이디를 입력해주세요.");
+  return;
+}
+
+  $.ajax({
+    url: '/checkId',  // 실제 API URL로 변경
+    type: 'GET',
+    headers: {
+        "X-CSRF-TOKEN": $("meta[name='_csrf']").attr("content")  // CSRF 토큰이 필요할 경우
+    },
+    data: {
+      id: userId  // id를 전달
+    },
+    success: function(result) {
+      $('#idNotAvailable').hide();  // 실패 메시지 숨기기
+      $('#idAvailable').show().text(result).append($('<br />'));  // 성공 메시지 표시
+    },
+    error: function(error) {
+      $('#idAvailable').hide();  // 성공 메시지 숨기기
+      $('#idNotAvailable').show().text('이미 사용중인 아이디 입니다.').append($('<br />'));  // 실패 메시지 표시
+    }
+  });
+});
+
+
+  function checkPass() {
+    var p1 = document.getElementById('pass').value;
+    var p2 = document.getElementById('pass2').value;
+    if( p1 != p2 ) {
+      alert("비밀번호가 일치 하지 않습니다");
+      document.getElementById('pass2').value="";
+      return false;
+    } else{
+      alert("비밀번호가 일치합니다");
+      return true;
+    }
+  }
+
+</script>

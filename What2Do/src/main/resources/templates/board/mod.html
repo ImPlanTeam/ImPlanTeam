@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>오늘 뭐하지? - 게시글 수정</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #f6f9fc;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 2rem;
+    }
+
+    label {
+      display: block;
+      margin-top: 1.2rem;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      background-color: #fff;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    input[type="submit"] {
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      margin-top: 2rem;
+      font-size: 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #0b5ed7;
+    }
+
+    .info-bar {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 0.7rem;
+    }
+
+    .images {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .images img {
+      width: 200px;
+      border-radius: 0.5rem;
+      object-fit: cover;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+
+<body>
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+
+<div class="container">
+  <h2>📝 자유게시판 글 수정</h2>
+
+  <form action="/modify" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="num" th:value="${board.num}">
+
+    <label for="title">제목</label>
+    <input type="text" id="title" name="title" th:value="${board.title}" placeholder="제목을 입력하세요">
+
+    <div class="info-bar">
+      지역: <span th:text="${board.area}"></span> |
+      작성일: <span th:text="${#strings.substring(board.indate,0,10)}"></span> |
+      작성자: <span th:text="${board.writer}"></span> |
+      조회수: <span th:text="${board.view_count}"></span>
+    </div>
+
+    <label>첨부된 이미지</label>
+    <div class="images" th:if="${file != null}">
+      <div th:each="filename : ${file}">
+        <img th:src="@{'/upload/' + ${filename.originFileName}}" alt="이미지">
+      </div>
+    </div>
+
+    <label for="content">내용</label>
+    <textarea id="content" name="content" rows="6" th:text="${board.content}" placeholder="내용을 수정해주세요."></textarea>
+
+    <input type="submit" value="수정 완료">
+  </form>
+</div>
+
+</body>
+</html>

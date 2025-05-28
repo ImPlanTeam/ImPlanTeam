@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보 수정</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .main-container {
+            max-width: 700px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 2rem 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 1rem;
+            color: #444;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.7rem;
+            margin-top: 0.3rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #fff;
+        }
+
+        input[disabled] {
+            background-color: #f1f1f1;
+            color: #888;
+        }
+
+        .radio-group {
+            margin-top: 1rem;
+        }
+
+        .radio-group label {
+            margin-right: 1rem;
+            font-weight: normal;
+        }
+
+        .btn-group {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .btn-group button,
+        .btn-group input[type="submit"] {
+            padding: 0.6rem 1.5rem;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 0.5rem;
+        }
+
+        .submit-btn {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background-color: #0b5ed7;
+        }
+
+        .back-btn:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/admintop :: headerFragment}"></div>
+
+<div class="main-container">
+    <h2>👤 회원 정보 수정</h2>
+
+    <form th:action="@{/update/{id}(id=${user.id})}" method="post">
+        <label>유저 아이디</label>
+        <input type="text" th:value="${user.id}" disabled/>
+
+        <label>비밀번호</label>
+        <input type="text" name="pass" th:value="${user.pass}" />
+
+        <label>이름</label>
+        <input type="text" name="name" th:value="${user.name}" />
+
+        <label>전화번호</label>
+        <input type="text" name="tel" th:value="${user.tel}" />
+
+        <label>생년월일</label>
+        <input type="date" name="birth" th:value="${user.birth}" />
+
+        <label>이메일</label>
+        <input type="text" name="mail" th:value="${user.mail}" />
+
+        <label>성별</label>
+        <div class="radio-group">
+            <label><input type="radio" name="jender" value="m" th:checked="${user.jender == 'm'}"> 남</label>
+            <label><input type="radio" name="jender" value="f" th:checked="${user.jender == 'f'}"> 여</label>
+        </div>
+
+        <label>가입일자</label>
+        <input type="text" th:value="${#strings.substring(user.indate,0,10)}" disabled/>
+
+        <div class="btn-group">
+            <input type="submit" class="submit-btn" value="수정 완료" />
+            <a href="/list"><button type="button" class="back-btn">뒤로가기</button></a>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

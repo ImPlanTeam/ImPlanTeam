@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>자유게시판</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"
+            integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f7fa;
+            padding: 30px;
+            margin: 0;
+        }
+
+        .board-container {
+            max-width: 1000px;
+            margin: auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .filter-section {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        select, input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #0d6efd;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0b5ed7;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e1e1e1;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f1f3f5;
+            font-weight: 600;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        a:hover {
+            color: #0d6efd;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .pagination a,
+        .pagination strong {
+            margin: 0 5px;
+            padding: 6px 10px;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover {
+            background-color: #e9ecef;
+        }
+
+        .pagination strong {
+            color: white;
+            background-color: #0d6efd;
+        }
+
+        .write-link {
+            display: block;
+            text-align: right;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+
+<div class="board-container">
+    <h2>자유게시판</h2>
+
+    <div class="filter-section">
+        <select name="area" onchange="changeBoard(value)" id="area">
+            <option>==선택==</option>
+            <option value="전체보기">전체보기</option>
+            <option value="수원">수원</option>
+            <option value="서울">서울</option>
+        </select>
+
+        <form th:action="@{/listView}" method="get" style="display: flex; gap: 10px;">
+            <input type="text" name="searchKeyword" placeholder="검색어를 입력하세요.">
+            <button type="submit">검색</button>
+        </form>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>지역</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="list : ${list}">
+            <td th:text="${list.num}"></td>
+            <td th:text="${list.area}"></td>
+            <td>
+                <a th:href="@{/view(num=${list.num})}" th:text="${list.title}"></a>
+            </td>
+            <td th:text="${list.writer}"></td>
+            <td th:text="${#strings.substring(list.indate,0,10)}"></td>
+            <td th:text="${list.view_count}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a class="write-link" th:href="@{/board}">➕ 글쓰기</a>
+
+    <div class="pagination">
+        <a th:if="${startPage > 0}" th:href="@{/listView(page=${startPage - 1})}">이전</a>
+
+        <th:block th:each="page : ${#numbers.sequence(startPage,endPage)}">
+            <a th:if="${page != nowPage}"
+               th:href="@{/listView(page=${page}, searchKeyword=${param.searchKeyword})}"
+               th:text="${page+1}"></a>
+            <strong th:if="${page == nowPage}" th:text="${page+1}"></strong>
+        </th:block>
+
+        <a th:if="${endPage < totalPages - 1}" th:href="@{/listView(page=${endPage + 1})}">다음</a>
+    </div>
+</div>
+
+<script>
+    function changeBoard(value) {
+        location.href = '/listView?searchKeyword=' + value;
+    }
+</script>
+</body>
+</html>

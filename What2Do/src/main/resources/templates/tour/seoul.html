@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div class="max-w-5xl mx-auto p-6">
+  <h1 class="text-3xl font-bold text-center mb-6">마스코트를 선택해주세요</h1>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <!-- 마스코트 카드 -->
+    <a href="/category?city=종로구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/종로구.PNG" alt="종로구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">종로구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=중구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/중구.PNG" alt="중구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">중구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=용산구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/용산구.PNG" alt="용산구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">용산구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=성동구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/성동구.PNG" alt="성동구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">성동구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=광진구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/광진구.PNG" alt="광진구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">광진구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=동대문구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/동대문구.PNG" alt="동대문구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">동대문구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=중랑구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/중랑구.PNG" alt="중랑구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">중랑구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=성북구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/성북구.PNG" alt="성북구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">성북구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=강북구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/강북구.PNG" alt="강북구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">강북구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=도봉구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/도봉구.PNG" alt="도봉구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">도봉구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=노원구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/노원구.PNG" alt="노원구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">노원구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=은평구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/은평구.PNG" alt="은평구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">은평구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=서대문구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/서대문구.PNG" alt="서대문구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">서대문구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=마포구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/마포구.PNG" alt="마포구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">마포구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=양천구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/양천구.PNG" alt="양천구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">양천구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=강서구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/강서구.PNG" alt="강서구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">강서구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=구로구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/구로구.PNG" alt="구로구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">구로구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=금천구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/금천구.PNG" alt="금천구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">금천구</p>
+      </div>
+    </a>
+
+    <a href="/category?city=영등포구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/영등포구.PNG" alt="영등포구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">영등포구</p>
+      </div>
+    </a>
+    <a href="/category?city=동작구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/동작구.PNG" alt="동작구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">동작구</p>
+      </div>
+    </a>
+    <a href="/category?city=관악구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/관악구.PNG" alt="관악구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">관악구</p>
+      </div>
+    </a>
+    <a href="/category?city=서초구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/서초구.PNG" alt="서초구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">서초구</p>
+      </div>
+    </a>
+    <a href="/category?city=강남구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/강남구.PNG" alt="강남구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">강남구</p>
+      </div>
+    </a>
+    <a href="/category?city=송파구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/송파구.PNG" alt="송파구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">송파구</p>
+      </div>
+    </a>
+    <a href="/category?city=강동구" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/강동구.PNG" alt="강동구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">강동구</p>
+      </div>
+    </a>
+
+    <!-- 원하는 만큼 카드 추가 -->
+  </div>
+  <div th:replace="~{fragments/footer :: footerFragment}"></div>
+</div>
+</body>
+</html>
