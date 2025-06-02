@@ -4,9 +4,11 @@ package What2Do.service;
 import What2Do.domain.Board;
 import What2Do.domain.BoardFile;
 import What2Do.domain.LikeIt;
+import What2Do.domain.User;
 import What2Do.repository.BoardRepository;
 import What2Do.repository.FileRepository;
 import What2Do.repository.LikeRepository;
+import What2Do.repository.UserRepository;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,13 +33,15 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final FileRepository fileRepository;
     private final LikeRepository likeRepository;
+    private final UserRepository userRepository;
 
 
-    public BoardService(BoardRepository boardRepository, FileRepository fileRepository, LikeRepository likeRepository) {
+    public BoardService(BoardRepository boardRepository, FileRepository fileRepository, LikeRepository likeRepository, UserRepository userRepository) {
         this.boardRepository = boardRepository;
 
         this.fileRepository = fileRepository;
         this.likeRepository = likeRepository;
+        this.userRepository = userRepository;
     }
     private final String uploadDir = "D:/upload/";
 
@@ -51,15 +55,15 @@ public class BoardService {
         board.setArea(area);
         for(MultipartFile file:files){
             if(!file.isEmpty()){
-                String orignalName = file.getOriginalFilename();
+                String originalName = file.getOriginalFilename();
                 UUID uuid = UUID.randomUUID(); //파일이름 랜덤으로 생성
                 String storedName= uuid+"_"+ file.getOriginalFilename();//저장될 파일이름 생성
                 String path = uploadDir + storedName;
                 file.transferTo(new File(path));
 
                 BoardFile boardFile= new BoardFile();
-                boardFile.setFilename(orignalName);
-                boardFile.setOrignFileName(storedName);
+                boardFile.setFilename(originalName);
+                boardFile.setOriginFileName(storedName);
                 boardFile.setFilePath(path);
 
                 board.addFile(boardFile);
@@ -76,7 +80,7 @@ public class BoardService {
 
     //검색된 게시글 리스트
     public Page<Board> listSearch(Pageable pageable,String searchKeyword){
-        Page<Board> list=boardRepository.findByAreaContaining(searchKeyword,pageable);
+        Page<Board> list=boardRepository.findByTitleContaining(searchKeyword,pageable);
         return list;
     }
 
@@ -93,25 +97,36 @@ public class BoardService {
         boardRepository.updateCount(num);
     }
 
+    @Transactional
     public Integer likePlus(Integer num){
         Integer likeCnt=boardRepository.updateLikePlus(num);
         return likeCnt;
     }
+    @Transactional
     public Integer likeMinus(Integer num){
         Integer likeCnt=boardRepository.updateLikeMinus(num);
         return likeCnt;
     }
     //게시글에 좋아요를 했는지 판별
-    public Integer likeB(Integer num, String id){
-        Integer likeCnt=likeRepository.findByNumAndId(num,id);
+    public boolean likeB(Integer num, String id){
+        boolean likeCnt=likeRepository.existsByUserIdAndBoardNum(id,num);
         return likeCnt;
     }
     public void likeI(Integer num,String id){
-        likeRepository.insertNumAndID(num,id);
+
+        User user = userRepository.findById(id);
+        Board board = boardRepository.findById(num).orElseThrow();
+
+        LikeIt likeIt = new LikeIt();
+        likeIt.setUser(user);
+        likeIt.setBoard(board);
+
+        likeRepository.save(likeIt);
     }
 
     public void likeD(Integer num,String id){
-        likeRepository.deleteByNumAndId(num,id);
+
+        likeRepository.deleteByBoardNumAndUserId(num,id);
     }
     //게시글 삭제
     public void del(Integer num){

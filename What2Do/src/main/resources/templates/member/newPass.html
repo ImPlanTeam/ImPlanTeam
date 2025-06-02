@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>새 비밀번호</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 80px;
+            margin: 0;
+        }
+        #error {
+        color: red;
+        text-align: center;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+            color: #333333;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background-color: #0d6efd;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0b5ed7;
+        }
+
+        .result-msg {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .links {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .links a {
+            text-decoration: none;
+            color: #0d6efd;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <form th:action="@{/newPass2/{id}(id=${id})}" method="post">
+    <h2>새 비밀번호</h2>
+        <input type="hidden" name="id" id="id" th:value="${id}">
+        <input type="text" name="pass" id="pass" placeholder="비밀번호" minlength="4" required>
+        <input type="text" name="pass2" placeholder="비밀번호 확인" required>
+        <input type="submit" value="확인">
+    </form>
+    <div class="result-msg" th:if="${errPass}" th:text="${errPass}"></div>
+
+    <div class="links">
+        <a href="/login2">로그인</a>
+        <a href="/join">회원가입</a>
+        <a href="/myInfo">뒤로가기</a>
+    </div>
+</div>
+
+</body>
+</html>

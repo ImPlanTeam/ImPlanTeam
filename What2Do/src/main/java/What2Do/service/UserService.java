@@ -49,10 +49,18 @@ UserService {
         return list;
     }
 
+    public List<User> findByIdContaining(String id) {
+        List<User> list= userRepository.findByIdContaining(id);
+        return list;
+    }
+
+
     public User findById(String id){
         User u = userRepository.findById(id);
         return u;
     }
+
+
 
     @Transactional
     public boolean checkId(String id){

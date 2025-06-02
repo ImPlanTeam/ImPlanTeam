@@ -44,9 +44,9 @@ public class LoginController {
 
             // 역할에 따라 분기
             if ("ADMIN".equalsIgnoreCase(user.getRole())) {
-                return "redirect:/admin/ask"; // 관리자 전용 페이지
+                return "redirect:/main/adminmain"; // 관리자 전용 페이지
             } else {
-                return "redirect:/"; // 일반 유저 메인 페이지
+                return "redirect:/what2do"; // 일반 유저 메인 페이지
             }
         } else {
             System.out.println("Login failed");
@@ -60,6 +60,6 @@ public class LoginController {
         session.removeAttribute("user");
         System.out.println("logout");
         model.addAttribute("out", "로그아웃 되었습니다.");
-        return "redirect:/";
+        return "redirect:/what2do";
     }
 }

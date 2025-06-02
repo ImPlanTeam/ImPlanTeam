@@ -1,12 +1,23 @@
 package What2Do.controller;
 
+import What2Do.domain.Tour;
+import What2Do.service.TourService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Controller
 public class MainController {
+
+    @Autowired
+    private final TourService tourService;
+
+    public MainController(TourService tourService) {
+        this.tourService = tourService;
+    }
 
     @RequestMapping("/")
     public String main(){
@@ -24,6 +35,13 @@ public class MainController {
 
         return "main/what2do";
     }
+
+    @RequestMapping(value = "/main/adminmain", method = RequestMethod.GET)
+    public String adminmain() {
+
+        return "main/adminmain";
+    }
+
     @GetMapping("gyeonggi")
     public String gyeonggi(){
 
@@ -77,6 +95,20 @@ public class MainController {
         return "tour/jeju";
     }
 
+    @GetMapping("/category")
+    public String category2(@RequestParam("city")String city,@RequestParam("areacode")String areacode,@RequestParam("sigungucode")String sigungucode, Model model){
+        List<Tour> tlist=tourService.findRegion(areacode,sigungucode);
+        model.addAttribute("city", city);
+        model.addAttribute("tlist",tlist);
+        return "tour/city";
+    }
+    @GetMapping("/detail")
+    public String detailV(@RequestParam("id") Long id, Model model){
+        Tour tour = tourService.findOne(id);
+        model.addAttribute("tour",tour);
+        return "tour/cityDetail";
+    }
+//    @ResponseBody
 
 
 

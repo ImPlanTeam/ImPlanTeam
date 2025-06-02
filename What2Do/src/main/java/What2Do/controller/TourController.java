@@ -1,6 +1,7 @@
 package What2Do.controller;
 
 import What2Do.domain.Tour;
+import What2Do.repository.TourRepository;
 import What2Do.service.TourService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,11 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.swing.*;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -24,84 +24,182 @@ import java.util.List;
 public class TourController {
 
     private final TourService tourService;
-    private static final Logger logger =
-            LoggerFactory.getLogger(TourController.class);
-
+    private final TourRepository tourRepository;
+    private static final Logger logger = LoggerFactory.getLogger(TourController.class);
 
     @GetMapping("/api/tour")
     public String callTourApi() {
         StringBuilder result = new StringBuilder();
-        // API URL 하드코딩
-        String urlStr = "https://openapi.gg.go.kr/TOURESRTINFO?KEY=67cf7d1a2f424502bc98781d6c6ac75b&Type=json&pIndex=1&pSize=1000";
-        HttpURLConnection urlConnection = null;
-        BufferedReader br = null;
-        logger.info("API 원시 응답: " + result.toString());
-        try {
-            // API 요청 설정
-            URL url = new URL(urlStr);
-            urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.setConnectTimeout(10000); // 10초 연결 타임아웃
-            urlConnection.setReadTimeout(10000); // 10초 읽기 타임아웃
+        String urlStr = "http://apis.data.go.kr/B551011/KorService2/areaBasedList2?" +
+                "serviceKey=HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D" +
+                "&numOfRows=51000&pageNo=1&MobileOS=ETC&MobileApp=TestApp&_type=json";
 
-            // 응답을 BufferedReader로 읽기
-            br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
-            String returnLine;
-            while ((returnLine = br.readLine()) != null) {
-                result.append(returnLine).append("\n");
+        try {
+            HttpURLConnection urlConnection = (HttpURLConnection) new URL(urlStr).openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setConnectTimeout(10000);
+            urlConnection.setReadTimeout(10000);
+
+            int status = urlConnection.getResponseCode();
+            if (status != 200) {
+                logger.warn("Tour API 응답 오류 - 상태코드: {}", status);
+                return "API 호출 실패: 상태코드 " + status;
             }
 
-            // JSON 파싱
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(result.toString());
-            JsonNode itemsNode = rootNode.path("TOURESRTINFO").get(1).path("row");
+            BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) response.append(line);
+            br.close();
+            urlConnection.disconnect();
 
-            logger.info("Items count: " + itemsNode.size());
-            System.out.println(itemsNode);
+            String responseBody = response.toString();
+            if (responseBody.startsWith("<")) {
+                logger.warn("HTML 응답 감지 - JSON 파싱 중단");
+                return "API 호출 실패: JSON 응답이 아님";
+            }
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode items = objectMapper.readTree(responseBody)
+                    .path("response").path("body").path("items").path("item");
 
             List<Tour> tourList = new ArrayList<>();
-            for (JsonNode itemNode : itemsNode) {
+
+            for (JsonNode item : items) {
                 Tour tour = new Tour();
+                tour.setTitle(item.path("title").asText(""));
+                tour.setAddr1(item.path("addr1").asText(""));
+                tour.setMapx(item.path("mapx").asDouble());
+                tour.setMapy(item.path("mapy").asDouble());
+                tour.setContentid(item.path("contentid").asText(""));
+                tour.setFirstimage(item.path("firstimage").asText(""));
+                tour.setContenttypeid(item.path("contenttypeid").asText(""));
+                tour.setSigungucode(item.path("sigungucode").asText(""));
 
-                // 각 필드에 값 설정
-                tour.setFacltnm(itemNode.path("FACLT_NM").asText());
-                tour.setFacltdivnm(itemNode.path("FACLT_DIV_NM").asText());
-                tour.setRefinlotnoaddr(itemNode.path("REFINE_LOTNO_ADDR").asText());
-                tour.setTouresrtinfo(itemNode.path("TOURESRT_INFO").asText());
-                tour.setConvncefacltinfo(itemNode.path("CONVNCE_FACLT_INFO").asText());
-                tour.setStayngfacltinfo(itemNode.path("STAYNG_FACLT_INFO").asText());
-                tour.setRecratnfacltinfo(itemNode.path("RECRATN_FACLT_INFO").asText());
-                tour.setCulturfacltinfo(itemNode.path("CULTUR_FACLT_INFO").asText());
-                tour.setRefinewgs84lat(itemNode.path("REFINE_WGS84_LAT").asDouble());
-                tour.setRefinewgs84logt(itemNode.path("CREFINE_WGS84_LOGT").asDouble());
+                // 상세 정보 요청
+                String contentId = tour.getContentid();
+                JsonNode detail = fetchDetailInfo(contentId);
+                if (detail != null) {
+                    tour.setOverview(detail.path("overview").asText(""));
+                }
 
-
-                logger.info("파싱된 가게: " + tour);
+                Thread.sleep(300); // 요청 속도 제한 회피
 
                 tourList.add(tour);
             }
 
-            // 데이터베이스에 저장
             tourService.saveAllTour(tourList);
-            logger.info("관광지 정보가 성공적으로 저장되었습니다.");
+            return "관광지 정보 저장 완료 (" + tourList.size() + "건)";
 
-        } catch (IOException e) {
-            logger.error("API 호출 중 오류가 발생했습니다: " + e.getMessage());
-            logger.error("응답 본문:\n{}", result.toString());
-            return "API 호출 중 오류가 발생했습니다: " + e.getMessage();
-        } finally {
-            // 자원 정리
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException e) {
-                    logger.error("BufferedReader 닫기 중 오류 발생: " + e.getMessage());
+        } catch (Exception e) {
+            logger.error("API 호출 중 오류 발생", e);
+            return "API 처리 오류: " + e.getMessage();
+        }
+    }
+
+    @GetMapping("/api/tour/updateOverview")
+    public String updateTourOverviews() {
+        List<Tour> allTours = tourRepository.findAll();
+        int updatedCount = 0;
+
+        for (Tour tour : allTours) {
+            try {
+                if (tour.getOverview() != null && !tour.getOverview().isBlank()) continue;
+
+                JsonNode detail = fetchDetailInfo(tour.getContentid());
+                if (detail != null) {
+                    String newOverview = detail.path("overview").asText("");
+                    if (!newOverview.isBlank()) {
+                        tour.setOverview(newOverview);
+                        tourRepository.save(tour);
+                        updatedCount++;
+                        Thread.sleep(150); // API 요청 딜레이
+                    }
                 }
-            }
-            if (urlConnection != null) {
-                urlConnection.disconnect();
+            } catch (Exception e) {
+                logger.warn("상세정보 갱신 실패 - contentId: {}, 이유: {}", tour.getContentid(), e.getMessage());
             }
         }
-        return "데이터가 성공적으로 저장되었습니다.";
+
+        return "상세정보 업데이트 완료. 총 " + updatedCount + "건 업데이트됨.";
+    }
+
+    private JsonNode fetchDetailInfo(String contentId) {
+        try {
+            String urlStr = "https://apis.data.go.kr/B551011/KorService2/detailCommon2?" +
+                    "serviceKey=HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D" +
+                    "&MobileApp=AppTest&MobileOS=ETC&_type=json" +
+                    "&contentId=" + contentId;
+
+            HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
+            conn.setRequestMethod("GET");
+
+            if (conn.getResponseCode() != 200) {
+                logger.warn("상세 API 상태코드 오류 - contentId: {}, code: {}", contentId, conn.getResponseCode());
+                return null;
+            }
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) result.append(line);
+            br.close();
+            conn.disconnect();
+
+            if (result.toString().startsWith("<")) {
+                logger.warn("HTML 오류 응답 - contentId: {}, 응답: {}", contentId, result.substring(0, 200));
+                return null;
+            }
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readTree(result.toString())
+                    .path("response").path("body").path("items").path("item").get(0);
+
+        } catch (Exception e) {
+            logger.warn("상세 API 호출 실패 - contentId: {}, 오류: {}", contentId, e.getMessage());
+            return null;
+        }
+    }
+
+    @GetMapping("/api/tour/updateAllOverviews")
+    public String updateAllOverviews() {
+        int page = 1;
+        int pageSize = 100;
+        int totalUpdated = 0;
+
+        while (true) {
+            int offset = (page - 1) * pageSize;
+            List<Tour> targetTours = tourRepository.findOverviewEmptyPaged(offset, pageSize);
+
+            if (targetTours.isEmpty()) {
+                break; // 더 이상 처리할 항목이 없으면 종료
+            }
+
+            int updatedThisPage = 0;
+
+            for (Tour tour : targetTours) {
+                try {
+                    JsonNode detail = fetchDetailInfo(tour.getContentid());
+                    if (detail != null) {
+                        String overview = detail.path("overview").asText("");
+                        if (!overview.isBlank()) {
+                            tour.setOverview(overview);
+                            tourRepository.save(tour);
+                            updatedThisPage++;
+                            Thread.sleep(150);
+                        }
+                    }
+                } catch (Exception e) {
+                    logger.warn("상세정보 실패 - contentId: {}, 이유: {}", tour.getContentid(), e.getMessage());
+                }
+            }
+
+            logger.info("Page {} 완료 - {}건 업데이트됨", page, updatedThisPage);
+            totalUpdated += updatedThisPage;
+            page++;
+        }
+
+        return "모든 overview 업데이트 완료 - 총 " + totalUpdated + "건 업데이트됨";
     }
 }
+

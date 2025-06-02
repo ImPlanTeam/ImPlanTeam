@@ -19,7 +19,7 @@ public class BoardFile {
     private Integer filenum; //파일번호
 
 
-    private String orignFileName;  // 파일 원본명
+    private String originFileName;  // 파일 원본명
 
     private String filePath;  // 파일 저장 경로
 
@@ -39,12 +39,12 @@ public class BoardFile {
         this.postnum = postnum;
     }
 
-    public String getOrignFileName() {
-        return orignFileName;
+    public String getOriginFileName() {
+        return originFileName;
     }
 
-    public void setOrignFileName(String orignFileName) {
-        this.orignFileName = orignFileName;
+    public void setOriginFileName(String originFileName) {
+        this.originFileName = originFileName;
     }
 
     public Integer getFilenum() {

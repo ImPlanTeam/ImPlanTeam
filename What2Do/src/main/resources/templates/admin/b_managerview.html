@@ -100,10 +100,10 @@
 </head>
 <body>
 
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="~{fragments/admintop :: headerFragment}"></div>
 
 <div class="container">
-  <a th:href="@{/listView}" class="back-link">← 목록으로 돌아가기</a>
+  <a th:href="@{/manager}" class="back-link">← 목록으로 돌아가기</a>
 
   <h2 th:text="${board.title}">제목</h2>
 

@@ -84,7 +84,8 @@
         <span th:if="${session.user != null}">
         <!--만일 세션 유저에 값이 있다면-->
     <span th:text="${session.user.id} + '님' "></span>
-        <a href="/logout"><button class="login-btn">로그아웃</button></a>
+        <a href="/logout">로그아웃</a>
+            <a href="/myPage"><button class="login-btn">마이페이지</button></a>
 </span>
         <!-- 로그인 X-->
         <a th:if="${session.user == null}" href="/login2">

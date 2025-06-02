@@ -5,7 +5,9 @@ import What2Do.domain.Board;
 import What2Do.domain.BoardFile;
 import What2Do.domain.User;
 import What2Do.service.BoardService;
+import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,9 +30,11 @@ public class BoardController {
 
     @Autowired
     private final BoardService boardService;
+    private final EntityManager entityManager;
 
-    public BoardController(BoardService boardService) {
+    public BoardController(BoardService boardService, EntityManager entityManager) {
         this.boardService = boardService;
+        this.entityManager = entityManager;
     }
 
 
@@ -104,14 +108,17 @@ public class BoardController {
 
     @PostMapping("/likeB")
     @ResponseBody
+    @Transactional
     public Integer likeB(@RequestParam("num") Integer num,
                          HttpSession session) {
         User user = (User) session.getAttribute("user");
         String id = user.getId();
-        Integer like = boardService.likeB(num, id);
-        if (like == null) {
+        boolean like = boardService.likeB(num, id);
+        if (like == false) {
             boardService.likeI(num, id);
             boardService.likePlus(num);
+            entityManager.flush();
+            entityManager.clear();
             Board board = boardService.view(num);
             Integer likeCnt = board.getLike_count();
             return likeCnt;
@@ -195,6 +202,18 @@ public class BoardController {
         System.out.println(num);
         boardService.del(num);
         return "redirect:/manager";
+    }
+
+    @GetMapping("/managerview")
+    public String managerview(@RequestParam("num") Integer num, Model model) {
+        boardService.updateCount(num);
+        Board board = boardService.view(num);
+        List<BoardFile> boardFiles = boardService.viewF(num);
+
+        model.addAttribute("board", board);
+        model.addAttribute("file", boardFiles);
+
+        return "admin/managerview";
     }
 
 }

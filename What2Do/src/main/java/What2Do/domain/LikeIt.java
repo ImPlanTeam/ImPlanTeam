@@ -14,11 +14,11 @@ public class LikeIt {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User id;
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "board_num")
-    private Board num;
+    private Board board;
 
     public Integer getNo() {
         return no;
@@ -28,19 +28,19 @@ public class LikeIt {
         this.no = no;
     }
 
-    public User getId() {
-        return id;
+    public User getUser() {
+        return user;
     }
 
-    public void setId(User id) {
-        this.id = id;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public Board getNum() {
-        return num;
+    public Board getBoard() {
+        return board;
     }
 
-    public void setNum(Board num) {
-        this.num = num;
+    public void setBoard(Board board) {
+        this.board = board;
     }
 }

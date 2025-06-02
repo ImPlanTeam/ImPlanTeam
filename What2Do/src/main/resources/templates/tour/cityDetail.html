@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title th:text>가게 상세</title>
+
+  <style>
+    body {
+        background-color: #f3f4f6;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 40px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 16px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .thumbnail {
+        width: 100%;
+        height: 580px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 24px;
+    }
+
+    .title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 12px;
+    }
+
+    .overview {
+        font-size: 1.1rem;
+        color: #374151;
+        line-height: 1.6;
+        margin-bottom: 24px;
+    }
+
+    .address {
+        font-size: 1rem;
+        color: #6b7280;
+        margin-bottom: 36px;
+    }
+
+    .section-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+        border-bottom: 2px solid #3b82f6;
+        display: inline-block;
+        padding-bottom: 4px;
+        color: #1e40af;
+    }
+
+    .reviews {
+        background-color: #f9fafb;
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .review-item {
+        border-bottom: 1px solid #e5e7eb;
+        padding: 12px 0;
+        font-size: 0.95rem;
+        color: #374151;
+    }
+
+    .review-item:last-child {
+        border-bottom: none;
+    }
+
+     .map_wrap {
+     position:relative;width:600px;height:350px;
+     }
+        .title {
+        font-weight:bold;display:block;
+        }
+        .hAddr {
+        position:absolute;left:10px;top:10px;border-radius: 2px;background:#fff;background:rgba(255,255,255,0.8);z-index:1;padding:5px;
+        }
+        #centerAddr {
+        display:block;margin-top:2px;font-weight: normal;
+        }
+        .bAddr {
+        padding:5px;text-overflow: ellipsis;overflow: hidden;white-space: nowrap; font-size: 15px;
+        }
+    .title {
+    font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+
+<div class="container">
+  <div class="title" th:text="${tour.title}"></div>
+  <img th:if="${tour.firstimage != null}" th:src="${tour.firstimage}" alt="" class="thumbnail"/>
+
+
+
+  <div class="overview" th:text="${tour.overview}"></div>
+
+  <div class="address" th:text="${tour.addr1}"></div>
+
+  <div class="map_wrap">
+    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+    <div class="hAddr">
+    </div>
+  </div>
+
+  <div class="section-title">리뷰</div>
+  <div class="reviews">
+    <div class="review-item">좋았어요! 분위기 굿👍</div>
+    <div class="review-item">직원분이 친절했어요.</div>
+    <div class="review-item">재방문의사 있습니다 :)</div>
+    <!-- 추후 리뷰가 있을 경우 반복 출력 가능 -->
+  </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+</body>
+</html>
+
+<script type="text/javascript"
+        src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fca66437ffd757b4f7019de36217ec4b&libraries=services"></script>
+
+<script>
+  window.onload = function () {
+  var ps = new kakao.maps.services.Places();
+  var mapContainer = document.getElementById('map'),
+      mapOption = {
+          center: new kakao.maps.LatLng([[${tour.mapy}]],[[${tour.mapx}]] ),
+          level: 1
+      };
+
+  var map = new kakao.maps.Map(mapContainer, mapOption);
+  var geocoder = new kakao.maps.services.Geocoder();
+  var marker = new kakao.maps.Marker();
+  var infowindow = new kakao.maps.InfoWindow({ zindex: 1 });
+
+  // 지도 중심 좌표로 주소 표시
+  searchAddrFromCoords(map.getCenter(), displayCenterInfo);
+
+  // 지도 중심 좌표로 마커 및 주소 표시
+  searchDetailAddrFromCoords(map.getCenter(), showMarkerWithAddress);
+6
+
+  function searchAddrFromCoords(coords, callback) {
+      geocoder.coord2RegionCode(coords.getLng(), coords.getLat(), callback);
+  }
+
+  function searchDetailAddrFromCoords(coords, callback) {
+      geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+  }
+
+  function displayCenterInfo(result, status) {
+      if (status === kakao.maps.services.Status.OK) {
+          var infoDiv = document.getElementById('centerAddr');
+          for (var i = 0; i < result.length; i++) {
+              if (result[i].region_type === 'H') {
+                  infoDiv.innerHTML = result[i].address_name;
+                  break;
+              }
+          }
+      }
+  }
+
+  // 중심좌표나 클릭 시 마커 + 주소 표시하는 함수
+  function showMarkerWithAddress(result, status) {
+      if (status === kakao.maps.services.Status.OK) {
+          var detailAddr = !!result[0].road_address
+              ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>'
+              : '';
+          detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
+
+          var content = '<div class="bAddr">' +
+              '<span class="title">[[${tour.title}]]</span>' +
+              detailAddr + '</div>';
+
+          marker.setPosition(map.getCenter()); // 현재 중심좌표
+          marker.setMap(map);
+          infowindow.setContent(content);
+          infowindow.open(map, marker);
+      }
+  }
+
+};
+</script>

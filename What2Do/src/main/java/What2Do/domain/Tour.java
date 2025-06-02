@@ -12,21 +12,26 @@ public class Tour {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String facltnm; 	//FACLT_NM 관광지명
-    private String facltdivnm;	//FACLT_DIV_NM 관광지구분
-    private String refinlotnoaddr;		//REFINE_LOTNO_ADDR 소재지지번주소
     @Column(length = 2000)
-    private String touresrtinfo;	//TOURESRT_INFO 관광지 소개
+    private String addr1;//주소
+    private String addr2;//상세주소
+    private String areacode; //지역코드
+    private String cat1; //대분류코드
+    private String cat2; //중분류코드
+    private String cat3; //소분류코드
+    private String contenttypeid; //콘텐츠타입id
     @Column(length = 2000)
-    private String convncefacltinfo;	//CONVNCE_FACLT_INFO 공공편익시설정보
+    private String firstimage; //대표이미지
     @Column(length = 2000)
-    private String stayngfacltinfo;		//STAYNG_FACLT_INFO 숙박시설정
+    private String firstimage2; //썸네일
+    private double mapx; //GPS X좌표
+    private double mapy; //GPS Y좌표
     @Column(length = 2000)
-    private String recratnfacltinfo;	//RECRATN_FACLT_INFO 운동및오락시설정보
-    @Column(length = 2000)
-    private String culturfacltinfo;		//CULTUR_FACLT_INFO 휴양및문화시설정보
-    private Double refinewgs84lat; 	//REFINE_WGS84_LAT 위도
-    private Double refinewgs84logt; 	//REFINE_WGS84_LOGT 경도
+    private String sigungucode; //시군구 코드
+    private String title; //제목
+    private String contentid;
+    @Column(length = 3000)
+    private String overview;    //내용
 
 
 }

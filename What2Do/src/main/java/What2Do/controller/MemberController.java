@@ -30,13 +30,17 @@ public class MemberController {
     @Autowired
     private UserService service;
 
- /*   @PostMapping ("save") //C
-    public String save(User u ){
-        System.out.println("아이디 : "+u.getId());
-        service.save(u);
-        return "main";
+    /*   @PostMapping ("save") //C
+       public String save(User u ){
+           System.out.println("아이디 : "+u.getId());
+           service.save(u);
+           return "main";
+       }
+   */
+    @RequestMapping("myPage")
+    public String mp(){
+        return "member/myPage";
     }
-*/
 
     @PostMapping("save2")
     public String save2(@Valid UserDTO userDTO, Errors errors, Model model ){
@@ -61,8 +65,8 @@ public class MemberController {
             return "/ask/what2do";
         }
         User u = userDTO.toEntity(); // DTO를 Entity로 변환
-        if ("xjzl8520".equals(userDTO.getId())) {
-            u.setRole("ADMIN");
+        if ("1111".equals(userDTO.getId())) {
+            u.setRole("1111");
         } else {
             u.setRole("USER");
 
@@ -72,10 +76,10 @@ public class MemberController {
         return "redirect:/login2";
     }
 
-    @GetMapping("/list") //R
-    public String list(Model model ){
+    @RequestMapping("list")
+    public String list2(Model model){
         List<User> list = service.findAll();
-        model.addAttribute("list",list);
+        model.addAttribute("list", list);
         return "admin/memberlist";
     }
 
@@ -86,8 +90,8 @@ public class MemberController {
             throw new BadRequestException("이미 사용중인 아이디 입니다.");
         }else {
             return ResponseEntity.ok("사용 가능한 아이디 입니다.");
-       }
-   }
+        }
+    }
 
     //삭제
     @GetMapping("/delete/{id}")
@@ -96,18 +100,41 @@ public class MemberController {
         return "redirect:/list";
     }
 
+    //삭제
+    @GetMapping("/delete2/{id}")
+    public String deleteUser2(@PathVariable String id) {
+        service.deleteUser(id);
+        return "redirect:/logout";
+    }
+
     //검색
     @GetMapping("/searchUser")
     public String searchUser(@RequestParam("id") String id, Model model) {
         System.out.println("유저검색");
-        User user = service.findById(id);
-        if (user == null){
-            model.addAttribute("error", "아이디가 존재하지 않습니다.");
-            return "member/memberList";
+        List<User> list = service.findByIdContaining(id);
+        if (id == null) {
+            return "admin/memberlist";
+        }if (list != null) {
+            model.addAttribute("list", list);
+            return "admin/memberlist";  // 위에서 만든 Thymeleaf 파일명
+        }else{
+            model.addAttribute("error", "해당 아이디가 존재하지 않습니다.");
+            return "admin/memberlist";
         }
-        model.addAttribute("user", user);
-        return "admin/viewUser";
     }
+    //유저검색결과
+    @GetMapping("/list2/{id}")
+    public String l2(@PathVariable String id, Model model) {
+        User user = userRepository.findById(id);
+        if (user == null) {
+            // 없으면 에러 페이지나 404 처리
+            return "error/404";
+        }
+        model.addAttribute("list", user);
+        return "admin/memberlist";  // 위에서 만든 Thymeleaf 파일명
+    }
+
+
 
     //유저 상세보기
     @GetMapping("/viewUser/{id}")
@@ -119,6 +146,18 @@ public class MemberController {
         }
         model.addAttribute("user", user);
         return "admin/viewUser";  // 위에서 만든 Thymeleaf 파일명
+    }
+
+    //유저 상세보기
+    @GetMapping("/viewUser2/{id}")
+    public String editUserForm2(@PathVariable String id, Model model) {
+        User user = userRepository.findById(id);
+        if (user == null) {
+            // 없으면 에러 페이지나 404 처리
+            return "error/404";
+        }
+        model.addAttribute("user", user);
+        return "member/viewUser2";  // 위에서 만든 Thymeleaf 파일명
     }
 
     //유저정보 수정
@@ -142,6 +181,22 @@ public class MemberController {
 
         return "redirect:/viewUser/" + id;  // 수정 완료 후 상세보기로 리다이렉트
     }
+
+    //유저정보 수정
+    @PostMapping("/update2/{id}")
+    public String updateUser2(@PathVariable String id,
+                              @RequestParam String mail,
+                              @RequestParam String pass) {
+        User user = userRepository.findById(id);
+        user.setMail(mail);
+        user.setPass(pass);
+        userRepository.save(user);  // 저장 (추가, 수정 둘 다 가능)
+
+        return "redirect:/viewUser2/" + id;  // 수정 완료 후 상세보기로 리다이렉트
+    }
+
+
+
 
 
 
