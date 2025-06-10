@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>광주</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+</head>
+<body class="bg-gray-100 font-sans">
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div class="max-w-5xl mx-auto p-6">
+    <h1 class="text-3xl font-bold text-center mb-6">마스코트를 선택해주세요</h1>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <!-- 마스코트 카드 -->
+        <a href="/category?city=광주&areacode=5&sigungucode=1" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/광산구.PNG" alt="광산구 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">광산구</p>
+            </div>
+        </a>
+
+        <a href="/category?city=광주&areacode=5&sigungucode=2" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/광주남구.PNG" alt="남구 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">남구</p>
+            </div>
+        </a>
+
+        <a href="/category?city=광주&areacode=5&sigungucode=3" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/광주동구.PNG" alt="동구 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">동구</p>
+            </div>
+        </a>
+
+        <a href="/category?city=광주&areacode=5&sigungucode=4" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/광주북구.PNG" alt="북구 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">북구</p>
+            </div>
+        </a>
+
+        <a href="/category?city=광주&areacode=5&sigungucode=5" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/광주서구.PNG" alt="서구 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">서구</p>
+            </div>
+        </a>
+
+
+
+
+        <!-- 원하는 만큼 카드 추가 -->
+    </div>
+    <div th:replace="~{fragments/footer :: footerFragment}"></div>
+</div>
+</body>
+</html>

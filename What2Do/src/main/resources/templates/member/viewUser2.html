@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 정보 수정</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
             background-color: #f7f9fc;
-            margin: 0;
-            padding: 2rem;
         }
 
         .main-container {
@@ -75,7 +74,7 @@
         }
 
         .submit-btn {
-            background-color: #0d6efd;
+            background-color: #1a2e45;
             color: white;
         }
 
@@ -84,9 +83,6 @@
             color: white;
         }
 
-        .submit-btn:hover {
-            background-color: #0b5ed7;
-        }
 
         .back-btn:hover {
             background-color: #5a6268;
@@ -186,13 +182,17 @@
         <input type="text" th:value="${#strings.substring(user.indate,0,10)}" disabled/>
 
         <div class="btn-group">
-            <input type="submit" class="submit-btn" value="수정 완료" />
-            <a href="/myPage"><button type="button" class="back-btn">뒤로가기</button></a>
+            <input type="submit" class="submit-btn" value="수정 완료"/>
         </div>
-        <form th:action="@{'/delete2/' + ${session.user.id}}" method="get" style="display:inline;">
-            <button type="submit" class="btn btn-delete">회원탈퇴</button>
-        </form>
     </form>
+        <div class="btn-group">
+            <a href="/myPage"><button type="button" class="back-btn">뒤로가기</button></a>
+            <form th:action="@{'/delete2/' + ${session.user.id}}" method="get" style="display:inline;">
+                <button type="submit" class="btn btn-delete">회원탈퇴</button>
+            </form>
+        </div>
+
+
 </div>
 <script>
     function checkPass() {
@@ -208,5 +208,6 @@
     }
   }
 </script>
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
 </body>
 </html>

@@ -34,7 +34,7 @@ public class Board {
     private String indate;
     private String area;
 
-    @OneToMany(mappedBy = "postnum", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "postnum", cascade=CascadeType.ALL, orphanRemoval = true)
     private List<BoardFile> files=new ArrayList<>();
 
     public List<BoardFile> getFiles() {

@@ -4,12 +4,6 @@
   <meta charset="UTF-8">
   <title>오늘 뭐하지? - 게시글 수정</title>
   <style>
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      background: #f6f9fc;
-      margin: 0;
-      padding: 2rem;
-    }
 
     .container {
       max-width: 800px;
@@ -83,13 +77,14 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
   </style>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 
 <body>
 <div th:replace="~{fragments/top :: headerFragment}"></div>
 
 <div class="container">
-  <h2>📝 자유게시판 글 수정</h2>
+  <h2> 자유게시판 글 수정</h2>
 
   <form action="/modify" method="post" enctype="multipart/form-data">
     <input type="hidden" name="num" th:value="${board.num}">
@@ -117,6 +112,7 @@
     <input type="submit" value="수정 완료">
   </form>
 </div>
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
 
 </body>
 </html>

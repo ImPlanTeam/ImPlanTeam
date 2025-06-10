@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -38,7 +39,6 @@ public class BoardService {
 
     public BoardService(BoardRepository boardRepository, FileRepository fileRepository, LikeRepository likeRepository, UserRepository userRepository) {
         this.boardRepository = boardRepository;
-
         this.fileRepository = fileRepository;
         this.likeRepository = likeRepository;
         this.userRepository = userRepository;
@@ -74,8 +74,7 @@ public class BoardService {
     }
     //게시글 리스트
     public Page<Board> listV(Pageable pageable){
-        Page<Board> list=boardRepository.findAll(pageable);
-        return list;
+        return boardRepository.findAllOrderByNoticeFirst(pageable);
     }
 
     //검색된 게시글 리스트
@@ -130,6 +129,7 @@ public class BoardService {
     }
     //게시글 삭제
     public void del(Integer num){
+        likeRepository.deleteAll();
         boardRepository.deleteById(num);
     }
     //수정할 게시글 불러오기
@@ -145,13 +145,34 @@ public class BoardService {
         boardRepository.save(b);
     }
 
+    public List<Board> myPage(@RequestParam("userId")String userId){
+        return likeRepository.findLikedBoardsByUserId(userId);
+    }
 
 
+    public List<Board> searchwriting(String userId) {
+        return boardRepository.findByWriter(userId);
+    }
 
+    @Transactional
+    public void del2(String id) {
+        if (likeRepository.existsByUser_id(id)) {
+            likeRepository.deleteByUser_id(id);
+        }
+        if (boardRepository.existsByWriter(id)) {
+            boardRepository.deleteByWriter(id);
+        }
+    }
 
+    public Page<Board> listSearch2(Pageable pageable,String search){
+        Page<Board> list=boardRepository.findByAreaContaining(search,pageable);
+        return list;
+    }
 
-
-
-
+    //공지사항조회
+    public List<Board> findNotices() {
+        List<Board> blist=boardRepository.findTop3ByAreaOrderByIndateDesc("공지사항");
+        return blist;
+    }
 }
 

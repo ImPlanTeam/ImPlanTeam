@@ -3,6 +3,7 @@ package What2Do.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.ColumnDefault;
 
 @Entity
 @Getter
@@ -30,8 +31,11 @@ public class Tour {
     private String sigungucode; //시군구 코드
     private String title; //제목
     private String contentid;
+    @ColumnDefault("'0'")
+    private int like_count;
     @Column(length = 3000)
-    private String overview;    //내용
+    private String overview;
+
 
 
 }

@@ -11,12 +11,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findById(String id);
 
+    User findByTel(String tel);
+
+    User findByMail(String mail);
+
     boolean existsById(String id);
+
+    boolean existsByTel(String tel);
+
+    boolean existsByMail(String mail);
 
     long deleteById(String id); // 삭제된 개수 반환
 
     List<User> findByIdContaining(String id);
-
-
 
 }

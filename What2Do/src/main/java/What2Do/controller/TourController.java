@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
@@ -31,8 +30,8 @@ public class TourController {
     public String callTourApi() {
         StringBuilder result = new StringBuilder();
         String urlStr = "http://apis.data.go.kr/B551011/KorService2/areaBasedList2?" +
-                "serviceKey=HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D" +
-                "&numOfRows=51000&pageNo=1&MobileOS=ETC&MobileApp=TestApp&_type=json";
+                "serviceKey=hX6d4qEvqhBk%2BcXkqrbaw0IEglp1qav4orCTbUuUVz6ozUBAKgXyfX9cGPMXTJ8nZOG%2Fa3EJdrDr70iitLHTYA%3D%3D" +
+                "&numOfRows=1000&pageNo=4&MobileOS=ETC&MobileApp=TestApp&_type=json";
 
         try {
             HttpURLConnection urlConnection = (HttpURLConnection) new URL(urlStr).openConnection();
@@ -67,14 +66,20 @@ public class TourController {
 
             for (JsonNode item : items) {
                 Tour tour = new Tour();
-                tour.setTitle(item.path("title").asText(""));
                 tour.setAddr1(item.path("addr1").asText(""));
+                tour.setAddr2(item.path("addr2").asText(""));
+                tour.setAreacode(item.path("areacode").asText(""));
+                tour.setCat1(item.path("cat1").asText(""));
+                tour.setCat2(item.path("cat2").asText(""));
+                tour.setCat3(item.path("cat3").asText(""));
+                tour.setContenttypeid(item.path("contenttypeid").asText(""));
+                tour.setFirstimage(item.path("firstimage").asText(""));
+                tour.setFirstimage2(item.path("firstimage2").asText(""));
                 tour.setMapx(item.path("mapx").asDouble());
                 tour.setMapy(item.path("mapy").asDouble());
-                tour.setContentid(item.path("contentid").asText(""));
-                tour.setFirstimage(item.path("firstimage").asText(""));
-                tour.setContenttypeid(item.path("contenttypeid").asText(""));
                 tour.setSigungucode(item.path("sigungucode").asText(""));
+                tour.setTitle(item.path("title").asText(""));
+                tour.setContentid(item.path("contentid").asText(""));
 
                 // 상세 정보 요청
                 String contentId = tour.getContentid();
@@ -127,7 +132,7 @@ public class TourController {
     private JsonNode fetchDetailInfo(String contentId) {
         try {
             String urlStr = "https://apis.data.go.kr/B551011/KorService2/detailCommon2?" +
-                    "serviceKey=HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D" +
+                    "serviceKey=hX6d4qEvqhBk%2BcXkqrbaw0IEglp1qav4orCTbUuUVz6ozUBAKgXyfX9cGPMXTJ8nZOG%2Fa3EJdrDr70iitLHTYA%3D%3D" +
                     "&MobileApp=AppTest&MobileOS=ETC&_type=json" +
                     "&contentId=" + contentId;
 
@@ -202,4 +207,3 @@ public class TourController {
         return "모든 overview 업데이트 완료 - 총 " + totalUpdated + "건 업데이트됨";
     }
 }
-

@@ -8,7 +8,7 @@
           font-family: 'Segoe UI', sans-serif;
           background-color: #f7f9fc;
           margin: 0;
-          padding: 2rem;
+          padding: 20px;
         }
 
         .main-container {
@@ -97,6 +97,15 @@
         .pagination strong {
           color: #0d6efd;
         }
+        .write-link {
+            display: block;
+            text-align: right;
+            margin-top: 15px;
+        }
+        .notice-row {
+    background-color: #fff7e6 !important;
+    font-weight: bold;
+}
     </style>
 </head>
 <body>
@@ -121,31 +130,32 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="list : ${list}">
+        <tr th:each="list : ${list}"
+            th:class="${list.area == '공지사항'} ? 'notice-row' : ''">
             <td th:text="${list.num}"></td>
             <td th:text="${list.area}"></td>
             <td>
-                <a th:href="@{/view(num=${list.num})}" th:text="${list.title}"></a>
+                <a th:href="@{/bview(num=${list.num})}" th:text="${list.title}"></a>
             </td>
             <td th:text="${list.writer}"></td>
             <td th:text="${#strings.substring(list.indate, 0, 10)}"></td>
             <td th:text="${list.view_count}"></td>
             <td>
-                <form th:action="@{/deleteM(num=${list.num})}" method="get" style="display:inline;">
-                    <button type="submit" class="delete-btn">삭제</button>
-                </form>
+                <a th:href="@{/deleteM(num=${list.num})}" class="delete-btn">삭제</a>
+
             </td>
         </tr>
         </tbody>
     </table>
+    <a class="write-link" th:href="@{/board2}">➕ 글쓰기</a>
 
     <div class="pagination">
-        <a th:if="${startPage > 0}" th:href="@{/listView(page=${startPage - 1})}">이전</a>
+        <a th:if="${startPage > 0}" th:href="@{/manager(page=${startPage - 1})}">이전</a>
         <th:block th:each="page : ${#numbers.sequence(startPage,endPage)}">
-            <a th:if="${page != nowPage}" th:href="@{/listView(page=${page}, searchKeyword=${param.searchKeyword})}" th:text="${page+1}"></a>
+            <a th:if="${page != nowPage}" th:href="@{/manager(page=${page}, searchKeyword=${param.searchKeyword})}" th:text="${page+1}"></a>
             <strong th:if="${page == nowPage}" th:text="${page+1}"></strong>
         </th:block>
-        <a th:if="${endPage < totalPages - 1}" th:href="@{/listView(page=${endPage + 1})}">다음</a>
+        <a th:if="${endPage < totalPages - 1}" th:href="@{/manager(page=${endPage + 1})}">다음</a>
     </div>
 </div>
 

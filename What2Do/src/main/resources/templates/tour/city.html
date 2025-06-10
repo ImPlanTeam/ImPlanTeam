@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8" />
     <title>오늘 뭐하지?</title>
@@ -103,8 +104,18 @@
           font-weight: 700;
           margin: 0 0 16px 0;
         }
+        .category-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;  /* 가운데 정렬 */
+            align-items: center;
+            margin-top: 30px;
+            margin-bottom: 40px;
+            gap: 12px;
+        }
 
     </style>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body class="bg-gray-100">
 
@@ -114,43 +125,71 @@
     <div th:text="${city}">도시명</div>
 </h1>
 
-<form>
+
+<!-- 카테고리 라디오 버튼 영역 감싸기 -->
+<div class="category-wrapper">
     <label class="checkbox-label">
-        <input type="radio" name="category" value="전체" />
+        <input type="radio" name="category" value="전체"
+               th:onclick="|location.href='@{/category(city=${city},areacode=${tlist[0].areacode},sigungucode=${tlist[0].sigungucode})}'|"/>
         <span>전체</span>
     </label>
     <label class="checkbox-label">
-        <input type="radio" name="category" value="관광지" th:onclick="categoryC(12)"/>
+        <input type="radio" name="category" value="관광지"
+               th:data-num="12"
+               th:data-areacode="${tlist[0].areacode}"
+               th:data-sigungucode="${tlist[0].sigungucode}"
+               onclick="categoryC(this)" />
         <span>관광지</span>
     </label>
+    <!-- 나머지 항목도 동일 -->
     <label class="checkbox-label">
-        <input type="radio" name="category" value="문화시설" th:onclick="categoryC(14)"/>
+        <input type="radio" name="category" value="문화시설"
+               th:data-num="14"
+               th:data-areacode="${tlist[0].areacode}"
+               th:data-sigungucode="${tlist[0].sigungucode}"
+               onclick="categoryC(this)" />
         <span>문화시설</span>
     </label>
     <label class="checkbox-label">
-        <input type="radio" name="category" value="행사/공연/축제" th:onclick="categoryC(15)"/>
+        <input type="radio" name="category" value="행사/공연/축제"
+               th:data-num="15"
+               th:data-areacode="${tlist[0].areacode}"
+               th:data-sigungucode="${tlist[0].sigungucode}"
+               onclick="categoryC(this)" />
         <span>행사/공연/축제</span>
     </label>
     <label class="checkbox-label">
-        <input type="radio" name="category" value="먹거리" th:onclick="categoryC(39)"/>
+        <input type="radio" name="category" value="먹거리"
+               th:data-num="39"
+               th:data-areacode="${tlist[0].areacode}"
+               th:data-sigungucode="${tlist[0].sigungucode}"
+               onclick="categoryC(this)" />
         <span>먹거리</span>
     </label>
     <label class="checkbox-label">
-        <input type="radio" name="category" value="레포츠" th:onclick="categoryC(28)"/>
+        <input type="radio" name="category" value="레포츠"
+               th:data-num="28"
+               th:data-areacode="${tlist[0].areacode}"
+               th:data-sigungucode="${tlist[0].sigungucode}"
+               onclick="categoryC(this)" />
         <span>레포츠</span>
     </label>
     <label class="checkbox-label">
-        <input type="radio" name="category" value="숙박" th:onclick="categoryC(32)"/>
+        <input type="radio" name="category" value="숙박"
+               th:data-num="32"
+               th:data-areacode="${tlist[0].areacode}"
+               th:data-sigungucode="${tlist[0].sigungucode}"
+               onclick="categoryC(this)" />
         <span>숙박</span>
     </label>
-
-</form>
+</div>
 
 <div class="card-container" id="categoryTable">
     <tr th:each="tlist : ${tlist}">
         <a th:href="@{/detail(id=${tlist.id})}" class="card"  >
             <img th:src="${tlist.firstimage2}" alt="" class="pic" />
             <p th:text="${tlist.title}"></p>
+
         </a>
     </tr>
 
@@ -162,12 +201,18 @@
 </body>
 </html>
 <script>
-    function categoryC(num) {
+    function categoryC(elem) {
+        const num = elem.dataset.num;
+        const areacode = elem.dataset.areacode;
+        const sigungucode = elem.dataset.sigungucode;
+
     $.ajax({
       type: "post",
       url: "/categoryView",
       data:
-      { "num" : num
+      { num : num,
+      areacode : areacode,
+      sigungucode : sigungucode
        },
 
      success: function(tlist) {
@@ -179,6 +224,7 @@
      }
     });
   }
+
 
 
 </script>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -44,7 +44,7 @@
         input[type="submit"] {
             width: 100%;
             padding: 12px;
-            background-color: #0d6efd;
+            background-color: #1a2e45;
             color: white;
             font-size: 16px;
             font-weight: bold;
@@ -53,9 +53,6 @@
             cursor: pointer;
         }
 
-        input[type="submit"]:hover {
-            background-color: #0b5ed7;
-        }
 
         .links {
             margin-top: 20px;
@@ -65,7 +62,7 @@
 
         .links a {
             text-decoration: none;
-            color: #0d6efd;
+            color: #1a2e45;
             font-weight: 500;
         }
 
@@ -77,8 +74,12 @@
 </head>
 
 <body>
-
 <div class="container">
+    <div class="logo" style="text-align: center;">
+        <a th:href="@{/what2do}">
+            <img src="/img/로고1big.png" alt="로고">
+        </a>
+    </div>
     <h2>로그인</h2>
     <form action="logincheck" method="post">
         <input type="text" name="id" placeholder="아이디" required>
@@ -90,8 +91,10 @@
 
     <div class="links">
         <a href="/join">회원가입</a>
-        <a href="/">뒤로가기</a>
+        <a href="/myInfo">아이디/비밀번호 찾기</a>
+        <a href="/">홈으로</a>
     </div>
 </div>
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
 </body>
 </html>

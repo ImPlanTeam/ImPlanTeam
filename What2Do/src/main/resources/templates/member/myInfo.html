@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>아이디/비밀번호 찾기</title>
@@ -34,7 +34,7 @@
             display: block;
             margin: 10px 0;
             padding: 12px;
-            background-color: #0d6efd;
+            background-color: #1a2e45;
             color: white;
             font-weight: bold;
             text-decoration: none;
@@ -42,9 +42,6 @@
             transition: background-color 0.3s;
         }
 
-        .link-buttons a:hover {
-            background-color: #0b5ed7;
-        }
 
         .back-home {
             margin-top: 20px;
@@ -70,6 +67,6 @@
         <a href="/login2">로그인으로 돌아가기</a>
     </div>
 </div>
-
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
 </body>
 </html>

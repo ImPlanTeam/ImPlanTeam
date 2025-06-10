@@ -69,10 +69,6 @@
               cursor: pointer;
               transition: background-color 0.3s;
             }
-
-            .login-btn:hover {
-              background-color: #0b5ed7;
-            }
         </style>
     </div>
     <th:block th:if="${session.user != null and session.user.role == 'ADMIN'}">

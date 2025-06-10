@@ -1,10 +1,7 @@
 package What2Do.domain;
 
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,11 +18,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class UserDTO { //클라이언트가 회원가입 폼에 입력한 데이터를 담는다.
 
-    @NotBlank(message = "아이디를 입력하세요.")
+    //@NotBlank(message = "아이디를 입력하세요.")
     private String id;
 
     @NotBlank(message = "비밀번호를 입력하세요.")
-    @Size(min = 4, max = 15, message = "비밀번호는 4 ~ 15자 사이로 입력해주세요")
+    @Pattern(regexp = "(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,16}",
+            message = "비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.")
+    @Size(min = 4, max = 15, message = "비밀번호는 8 ~ 16자 사이로 입력해주세요")
     private String pass;
 
     @Transient
@@ -37,15 +36,17 @@ public class UserDTO { //클라이언트가 회원가입 폼에 입력한 데이
         return pass != null && pass.equals(pass2);
     }
 
-    @NotBlank(message = "닉네임을 입력하세요")
+    //    @NotBlank(message = "닉네임을 입력하세요")
     private String name;
 
-    @Email(message = "올바른 이메일 주소를 입력해주세요.")
+    //    @Email(message = "올바른 이메일 주소를 입력해주세요.")
     private String mail;
 
     private String mail1;
     private String mail2;
 
+    //    @Pattern(regexp = "^010-\\d{3,4}-\\d{4}$",
+//            message = "전화번호는 010으로 시작하는 11자리 숫자와 '-'로 구성되어야 합니다.")
     private String tel;
 
     private String jender;
@@ -153,5 +154,7 @@ public class UserDTO { //클라이언트가 회원가입 폼에 입력한 데이
         user.setTel(this.tel);
         return user;
     }
+
+
 
 }

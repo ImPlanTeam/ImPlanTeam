@@ -4,12 +4,6 @@
     <meta charset="UTF-8">
     <title>1:1 문의 상세</title>
     <style>
-        body {
-          font-family: 'Segoe UI', sans-serif;
-          background-color: #f9fafc;
-          margin: 0;
-          padding: 2rem;
-        }
 
         .main-container {
           max-width: 900px;
@@ -70,6 +64,7 @@
           font-size: 1rem;
         }
     </style>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body>
 
@@ -77,7 +72,7 @@
 <div th:replace="~{fragments/top :: headerFragment}"></div>
 
 <div class="main-container">
-    <h3>📨 나의 문의 상세 보기</h3>
+    <h3> 나의 문의 상세 보기</h3>
 
     <div class="section">
         <span class="label">글번호</span>
@@ -100,7 +95,7 @@
     </div>
 
     <div class="section" th:if="${answer != null}">
-        <h3>✅ 답변 내용</h3>
+        <h3> 답변 내용</h3>
         <div class="answer-box">
             <div th:text="${answer.content}"></div>
             <small th:text="${#temporals.format(answer.answeredAt, 'yyyy-MM-dd HH:mm')}"></small>

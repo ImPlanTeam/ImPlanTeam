@@ -1,10 +1,14 @@
 package What2Do.service;
 
 
+import What2Do.domain.LikeIt;
 import What2Do.domain.User;
+import What2Do.repository.LikeRepository;
 import What2Do.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.Errors;
@@ -60,15 +64,35 @@ UserService {
         return u;
     }
 
+    public User findByTel(String tel){
+        User u = userRepository.findByTel(tel);
+
+        return u;
+    }
+
 
 
     @Transactional
     public boolean checkId(String id){
         return userRepository.existsById(id);
     }
+
+    @Transactional
+    public boolean checkTel(String tel){
+        return userRepository.existsByTel(tel);
+    }
+
+    @Transactional
+    public boolean checkMail(String mail){
+        return userRepository.existsByMail(mail);
+    }
+
+    LikeRepository likeRepository;
+
     //회원관리 삭제기능
     @Transactional
     public void deleteUser(String id) {
+
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
         }

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body class="bg-gray-100 font-sans">
 <div th:replace="~{fragments/top :: headerFragment}"></div>
@@ -16,13 +17,6 @@
             <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
                 <img src="/img/수원.PNG" alt="수원 마스코트" class="w-full h-40 object-contain mb-2" />
                 <p class="text-center text-lg font-semibold">수원</p>
-            </div>
-        </a>
-
-        <a href="/category?city=인천&areacode=2" class="block">
-            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
-                <img src="/img/인천.PNG" alt="인천 마스코트" class="w-full h-40 object-contain mb-2" />
-                <p class="text-center text-lg font-semibold">인천</p>
             </div>
         </a>
 

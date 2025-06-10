@@ -90,6 +90,9 @@ public class AskController {
 
         int startPage = currentBlock * blockLimit; // ex) 0, 5, 10
         int endPage = Math.min(startPage + blockLimit - 1, totalPages -1);
+        if(totalPages ==0){
+            endPage = 0;
+        }
 
         model.addAttribute("list", alist);
         model.addAttribute("nowPage",nowPage);
