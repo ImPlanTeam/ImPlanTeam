@@ -1,0 +1,31 @@
+<!-- fragments/header.html -->
+<div class="navbar" th:fragment="headerFragment" xmlns:th="http://www.thymeleaf.org">
+    <div class="logo">
+        <a th:href="@{/what2do}">
+            <img src="/img/로고1.png" alt="로고">
+        </a>
+    </div>
+
+    <nav class="menu1">
+        <a th:href="@{/todo}">오늘 뭐하지?</a>
+        <a th:href="@{/lego}">놀러가자!</a>
+        <a th:href="@{/listView}">자유게시판</a>
+        <a th:href="@{/ask}">1:1 문의하기</a>
+    </nav>
+
+    <div class="auth-section">
+    <span th:if="${session.user != null}">
+      <span th:text="${session.user.id + '님'}"></span>
+      <a th:href="@{/logout}" id="a1">로그아웃</a>
+      <a th:href="@{/myPage}" id="a2">
+        <button class="login-btn">마이페이지</button>
+      </a>
+    </span>
+
+        <span th:if="${session.user == null}">
+      <a th:href="@{/login2}" id="a3">
+        <button class="login-btn">로그인</button>
+      </a>
+    </span>
+    </div>
+</div>

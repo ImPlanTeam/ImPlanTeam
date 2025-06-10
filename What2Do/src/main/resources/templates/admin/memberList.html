@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 목록 관리</title>
+
+    <style>
+        body {
+          font-family: 'Segoe UI', sans-serif;
+          background-color: #f7f9fc;
+          margin: 0;
+          padding: 2rem;
+        }
+
+        .main-container {
+          max-width: 1000px;
+          margin: auto;
+          background: #ffffff;
+          padding: 2rem 2.5rem;
+          border-radius: 1rem;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+          text-align: center;
+          margin-bottom: 1.5rem;
+          color: #333;
+        }
+
+        form#searchForm {
+          text-align: right;
+          margin-bottom: 1.5rem;
+        }
+
+        form#searchForm input[type="text"] {
+          padding: 0.5rem;
+          border: 1px solid #ccc;
+          border-radius: 6px;
+          font-size: 14px;
+        }
+
+        form#searchForm button {
+          background-color: #0d6efd;
+          color: white;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+          margin-left: 8px;
+        }
+
+        form#searchForm button:hover {
+          background-color: #0b5ed7;
+        }
+
+        .error-msg {
+          color: red;
+          text-align: center;
+          margin-bottom: 1rem;
+        }
+
+        .main-container table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 1rem;
+        }
+
+        .main-container table thead {
+          background-color: #eaf2ff;
+        }
+
+        .main-container table th,
+        .main-container table td {
+          padding: 1rem;
+          text-align: center;
+          border-bottom: 1px solid #eee;
+          font-size: 0.95rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .main-container table th:nth-child(1),
+        .main-container table td:nth-child(1) {
+          min-width: 150px;
+        }
+
+        .main-container table th:nth-child(2),
+        .main-container table td:nth-child(2) {
+          min-width: 120px;
+        }
+
+        .main-container table th:nth-child(3),
+        .main-container table td:nth-child(3) {
+          min-width: 140px;
+        }
+
+        .main-container table th:nth-child(4),
+        .main-container table td:nth-child(4),
+        .main-container table th:nth-child(5),
+        .main-container table td:nth-child(5) {
+          min-width: 90px;
+        }
+
+        .action-btn {
+          background-color: #e74c3c;
+          border: none;
+          padding: 0.4rem 0.8rem;
+          border-radius: 6px;
+          color: white;
+          font-size: 13px;
+          margin: 0 2px;
+          cursor: pointer;
+        }
+
+        .edit-btn {
+          background-color: #2ecc71;
+        }
+
+        .action-btn:hover {
+          opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 관리자 상단 메뉴 -->
+<div th:replace="~{fragments/admintop :: headerFragment}"></div>
+
+<!-- 메인 콘텐츠 -->
+<div class="main-container">
+    <h2>👥 회원 목록 관리</h2>
+
+    <!-- 검색 -->
+    <form id="searchForm">
+        <label for="id">아이디 검색:</label>
+        <input type="text" id="id" name="id" placeholder="아이디 입력" />
+        <button type="submit">검색</button>
+    </form>
+    <div class="error-msg" th:text="${error}"></div>
+
+    <!-- 회원 테이블 -->
+    <table>
+        <thead>
+        <tr>
+            <th>아이디</th>
+            <th>이름</th>
+            <th>가입일자</th>
+            <th colspan="2">관리</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="list : ${list}">
+            <td th:text="${list.id}"></td>
+            <td th:text="${list.name}"></td>
+            <td th:text="${#strings.substring(list.indate,0,10)}"></td>
+            <td>
+                <form th:action="@{'/delete/' + ${list.id}}" method="get" style="display:inline;">
+                    <button type="submit" class="action-btn">삭제</button>
+                </form>
+            </td>
+            <td>
+                <a th:href="@{'/viewUser/' + ${list.id}}">
+                    <button type="button" class="action-btn edit-btn">수정</button>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- 하단 푸터 -->
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+<!-- 검색 스크립트 -->
+<script>
+    document.getElementById("searchForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const id = document.getElementById("id").value;
+      if (id) {
+        window.location.href = "/searchUser?id=" + encodeURIComponent(id);
+      }
+    });
+</script>
+
+</body>
+</html>

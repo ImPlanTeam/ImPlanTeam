@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans">
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div class="max-w-5xl mx-auto p-6">
+  <h1 class="text-3xl font-bold text-center mb-6">마스코트를 선택해주세요</h1>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <!-- 마스코트 카드 -->
+    <a href="/category?city=목포&areacode=38&sigungucode=8" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/목포.PNG" alt="목포 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">목포</p>
+      </div>
+    </a>
+
+    <a href="/category?city=여수&areacode=38&sigungucode=13" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/여수.PNG" alt="여수 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">여수</p>
+      </div>
+    </a>
+
+    <a href="/category?city=순천&areacode=38&sigungucode=11" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/순천.PNG" alt="순천 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">순천</p>
+      </div>
+    </a>
+
+    <a href="/category?city=광양&areacode=38&sigungucode=4" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/광양.PNG" alt="광양 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">광양</p>
+      </div>
+    </a>
+
+    <a href="/category?city=담양&areacode=38&sigungucode=7" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/담양.PNG" alt="담양 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">담양</p>
+      </div>
+    </a>
+
+    <a href="/category?city=곡성&areacode=38&sigungucode=3" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/곡성.PNG" alt="곡성 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">곡성</p>
+      </div>
+    </a>
+
+    <a href="/category?city=보성&areacode=38&sigungucode=10" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/보성.PNG" alt="보성 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">보성</p>
+      </div>
+    </a>
+
+    <a href="/category?city=나주&areacode=38&sigungucode=6" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/나주.PNG" alt="나주 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">나주</p>
+      </div>
+    </a>
+
+    <a href="/category?city=해남&areacode=38&sigungucode=23" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/해남.PNG" alt="해남 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">해남</p>
+      </div>
+    </a>
+
+    <a href="/category?city=무안&areacode=38&sigungucode=9" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/무안.PNG" alt="무안 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">무안</p>
+      </div>
+    </a>
+
+    <a href="/category?city=함평&areacode=38&sigungucode=22" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/함평.PNG" alt="함평 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">함평</p>
+      </div>
+    </a>
+
+    <a href="/category?city=완도&areacode=38&sigungucode=18" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/완도.PNG" alt="완도 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">완도</p>
+      </div>
+    </a>
+
+
+
+    <!-- 원하는 만큼 카드 추가 -->
+  </div>
+  <div th:replace="~{fragments/footer :: footerFragment}"></div>
+</div>
+</body>
+</html>

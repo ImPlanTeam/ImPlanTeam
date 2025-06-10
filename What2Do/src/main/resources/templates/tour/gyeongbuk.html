@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans">
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div class="max-w-5xl mx-auto p-6">
+    <h1 class="text-3xl font-bold text-center mb-6">마스코트를 선택해주세요</h1>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <!-- 마스코트 카드 -->
+        <a href="/category?city=경산&areacode=35&sigungucode=1" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/경산.PNG" alt="경산시 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">경산</p>
+            </div>
+        </a>
+
+        <a href="/category?city=경주&areacode=35&sigungucode=2" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\경주.JPG" alt="경주시 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">경주</p>
+            </div>
+        </a>
+
+        <a href="/category?city=구미&areacode=35&sigungucode=4" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\구미.PNG" alt="구미시 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">구미</p>
+            </div>
+        </a>
+
+        <a href="/category?city=김천&areacode=35&sigungucode=6" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\김천.JPG" alt="김천시 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">김천</p>
+            </div>
+        </a>
+
+        <a href="/category?city=문경&areacode=35&sigungucode=7" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\문경.PNG" alt="문경시 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">문경</p>
+            </div>
+        </a>
+
+        <a href="/category?city=안동&areacode=35&sigungucode=11" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\안동.JPG" alt="안동시 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">안동</p>
+            </div>
+        </a>
+
+        <a href="/category?city=영주&areacode=35&sigungucode=14" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\영주.WEBP" alt="영주시 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">영주</p>
+            </div>
+        </a>
+
+        <a href="/category?city=영천&areacode=35&sigungucode=15" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\영천.JPG" alt="영천시 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">영천</p>
+            </div>
+        </a>
+
+        <a href="/category?city=포항&areacode=35&sigungucode=23" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\포항.WEBP" alt="포항시 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">포항</p>
+            </div>
+        </a>
+
+        <a href="/category?city=고령&areacode=35&sigungucode=3" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\고령.JPG" alt="고령군 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">고령</p>
+            </div>
+        </a>
+
+        <a href="/category?city=봉화&areacode=35&sigungucode=8" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\봉화.JPG" alt="봉화군 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">봉화</p>
+            </div>
+        </a>
+
+        <a href="/category?city=성주&areacode=35&sigungucode=10" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\성주.PNG" alt="성주군 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">성주</p>
+            </div>
+        </a>
+
+        <a href="/category?city=상주&areacode=35&sigungucode=9" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\상주.PNG" alt="상주군 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">상주</p>
+            </div>
+        </a>
+
+        <a href="/category?city=영덕&areacode=35&sigungucode=12" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\영덕.JPG" alt="영덕군 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">영덕</p>
+            </div>
+        </a>
+
+        <a href="/category?city=영양&areacode=35&sigungucode=13" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\영양.JPG" alt="영양군 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">영양</p>
+            </div>
+        </a>
+
+        <a href="/category?city=예천&areacode=35&sigungucode=16" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\예천.PNG" alt="예천군 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">예천</p>
+            </div>
+        </a>
+
+        <a href="/category?city=울릉&areacode=35&sigungucode=17" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\울릉.WEBP" alt="울릉군 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">울릉</p>
+            </div>
+        </a>
+
+        <a href="/category?city=울진&areacode=35&sigungucode=18" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\울진.PNG" alt="울진군 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">울진</p>
+            </div>
+        </a>
+
+        <a href="/category?city=의성&areacode=35&sigungucode=19" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\의성.PNG" alt="의성군 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">의성</p>
+            </div>
+        </a>
+
+        <a href="/category?city=청도&areacode=35&sigungucode=20" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\청도.JPG" alt="청도군 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">청도</p>
+            </div>
+        </a>
+
+        <a href="/category?city=청송&areacode=35&sigungucode=21" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\청송.JPG" alt="청송군 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">청송</p>
+            </div>
+        </a>
+
+        <a href="/category?city=칠곡&areacode=35&sigungucode=22" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="\img\칠곡.JPG" alt="칠곡군 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">칠곡</p>
+            </div>
+        </a>
+
+    </div>
+</div>
+</body>
+</html>

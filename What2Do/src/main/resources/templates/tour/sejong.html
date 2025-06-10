@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>세종</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans">
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div class="max-w-5xl mx-auto p-6">
+  <h1 class="text-3xl font-bold text-center mb-6">마스코트를 선택해주세요</h1>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <!-- 마스코트 카드 -->
+    <a href="/category?city=세종&areacode=8&sigungucode=1" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/세종.PNG" alt="세종 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">세종특별자치시</p>
+      </div>
+    </a>
+
+
+    <!-- 원하는 만큼 카드 추가 -->
+  </div>
+  <div th:replace="~{fragments/footer :: footerFragment}"></div>
+</div>
+</body>
+</html>

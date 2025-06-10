@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>오늘 뭐하지?</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        /* 기본 바디 스타일 */
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          margin: 0;
+          padding: 0;
+        }
+
+        /* 체크박스 폼 영역 */
+        form {
+          max-width: 800px;
+          margin: 40px auto 20px auto;
+          text-align: center;
+        }
+
+        /* 체크박스 라벨 */
+        .checkbox-label {
+          display: inline-block;
+          cursor: pointer;
+          user-select: none;
+          margin: 0 10px 12px 10px;
+        }
+
+        /* 라디오 버튼 숨기기 */
+        .checkbox-label input[type="radio"] {
+          display: none;
+        }
+
+        /* 체크박스 텍스트 스타일 */
+        .checkbox-label span {
+          display: inline-block;
+          padding: 10px 26px;
+          border: 2px solid #3b82f6; /* 파란색 */
+          border-radius: 24px;
+          font-weight: 600;
+          font-size: 16px;
+          color: #3b82f6;
+          transition: all 0.3s ease;
+          background-color: white;
+          box-shadow: 0 2px 6px rgb(59 130 246 / 0.2);
+        }
+
+        /* 선택된 경우 */
+        .checkbox-label input[type="radio"]:checked + span {
+          background-color: #3b82f6; /* 파란색 배경 */
+          color: white;
+          border-color: #3b82f6;
+          box-shadow: 0 4px 12px rgb(59 130 246 / 0.5);
+        }
+
+        /* 마우스 오버 */
+        .checkbox-label span:hover {
+          background-color: #dbeafe; /* 연한 파랑 */
+          color: #1e40af; /* 진한 파랑 */
+        }
+
+        /* 카드 컨테이너 */
+        .card-container {
+          max-width: 1200px;
+          margin: 0 auto 60px auto;
+          padding: 0 20px;
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          gap: 24px;
+        }
+
+        /* 카드 스타일 */
+        .card {
+          background-color: white;
+          border-radius: 16px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          overflow: hidden;
+          transition: box-shadow 0.3s ease;
+          cursor: pointer;
+          text-decoration: none;
+          color: inherit;
+        }
+
+        .card:hover {
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        /* 카드 이미지 */
+        .card img {
+          width: 100%;
+          height: 160px;
+          object-fit: contain;
+          margin-bottom: 12px;
+          background-color: #f9fafb; /* 약간 밝은 배경 */
+        }
+
+        /* 카드 텍스트 */
+        .card p {
+          text-align: center;
+          font-size: 18px;
+          font-weight: 700;
+          margin: 0 0 16px 0;
+        }
+        .category-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;  /* 가운데 정렬 */
+            align-items: center;
+            margin-top: 30px;
+            margin-bottom: 40px;
+            gap: 12px;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100">
+
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+
+<h1 style="text-align: center; margin-top: 40px; font-size: 2rem; font-weight: 700;">
+    <div th:text="${city}">도시명</div>
+</h1>
+
+
+<!-- 카테고리 라디오 버튼 영역 감싸기 -->
+<div class="category-wrapper">
+    <label class="checkbox-label">
+        <input type="radio" name="category" value="전체"
+               th:onclick="|location.href='@{/category(city=${city},areacode=${tlist[0].areacode},sigungucode=${tlist[0].sigungucode})}'|"/>
+        <span>전체</span>
+    </label>
+    <label class="checkbox-label">
+        <input type="radio" name="category" value="관광지"
+               th:data-num="12"
+               th:data-areacode="${tlist[0].areacode}"
+               th:data-sigungucode="${tlist[0].sigungucode}"
+               onclick="categoryC(this)" />
+        <span>관광지</span>
+    </label>
+    <!-- 나머지 항목도 동일 -->
+    <label class="checkbox-label">
+        <input type="radio" name="category" value="문화시설"
+               th:data-num="14"
+               th:data-areacode="${tlist[0].areacode}"
+               th:data-sigungucode="${tlist[0].sigungucode}"
+               onclick="categoryC(this)" />
+        <span>문화시설</span>
+    </label>
+    <label class="checkbox-label">
+        <input type="radio" name="category" value="행사/공연/축제"
+               th:data-num="15"
+               th:data-areacode="${tlist[0].areacode}"
+               th:data-sigungucode="${tlist[0].sigungucode}"
+               onclick="categoryC(this)" />
+        <span>행사/공연/축제</span>
+    </label>
+    <label class="checkbox-label">
+        <input type="radio" name="category" value="먹거리"
+               th:data-num="39"
+               th:data-areacode="${tlist[0].areacode}"
+               th:data-sigungucode="${tlist[0].sigungucode}"
+               onclick="categoryC(this)" />
+        <span>먹거리</span>
+    </label>
+    <label class="checkbox-label">
+        <input type="radio" name="category" value="레포츠"
+               th:data-num="28"
+               th:data-areacode="${tlist[0].areacode}"
+               th:data-sigungucode="${tlist[0].sigungucode}"
+               onclick="categoryC(this)" />
+        <span>레포츠</span>
+    </label>
+    <label class="checkbox-label">
+        <input type="radio" name="category" value="숙박"
+               th:data-num="32"
+               th:data-areacode="${tlist[0].areacode}"
+               th:data-sigungucode="${tlist[0].sigungucode}"
+               onclick="categoryC(this)" />
+        <span>숙박</span>
+    </label>
+</div>
+
+<div class="card-container" id="categoryTable">
+    <tr th:each="tlist : ${tlist}">
+        <a th:href="@{/detail(id=${tlist.id})}" class="card"  >
+            <img th:src="${tlist.firstimage2}" alt="" class="pic" />
+            <p th:text="${tlist.title}"></p>
+
+        </a>
+    </tr>
+
+
+</div>
+
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+</body>
+</html>
+<script>
+    function categoryC(elem) {
+        const num = elem.dataset.num;
+        const areacode = elem.dataset.areacode;
+        const sigungucode = elem.dataset.sigungucode;
+
+    $.ajax({
+      type: "post",
+      url: "/categoryView",
+      data:
+      { num : num,
+      areacode : areacode,
+      sigungucode : sigungucode
+       },
+
+     success: function(tlist) {
+        $("#categoryTable").replaceWith(tlist);
+
+      },
+      error: function() {
+       alert("오류가 발생했습니다.");
+     }
+    });
+  }
+
+
+
+</script>

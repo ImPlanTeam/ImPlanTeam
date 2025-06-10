@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>게시글 보기</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f7f9fc;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 2rem 2.5rem;
+      border-radius: 1rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .back-link {
+      margin-bottom: 1.5rem;
+      display: inline-block;
+      color: #0d6efd;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    h2 {
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .info {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
+
+    .images {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .images img {
+      width: 200px;
+      border-radius: 0.5rem;
+      object-fit: cover;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .content {
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .delete-btn {
+      background-color: #dc3545;
+    }
+
+    .edit-btn {
+      background-color: #198754;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .like-count {
+      font-size: 1rem;
+      font-weight: bold;
+      color: #0d6efd;
+    }
+    #heartBtn {
+    cursor: pointer;
+    transition: fill 0.3s, stroke 0.3s;
+  }
+
+  #heartBtn.liked {
+    fill: red;
+    stroke: red;
+  }
+  </style>
+
+</head>
+<body>
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+
+<div class="container">
+  <a th:href="@{/listView}" class="back-link">← 목록으로 돌아가기</a>
+
+  <h2 th:text="${board.title}">제목</h2>
+
+  <div class="info">
+    지역: <span th:text="${board.area}"></span> |
+    작성일: <span th:text="${#strings.substring(board.indate,0,10)}"></span> |
+    작성자: <span th:text="${board.writer}"></span> |
+    조회수: <span th:text="${board.view_count}"></span>
+  </div>
+
+  <div class="images" th:if="${file != null}">
+    <div th:each="filename : ${file}">
+      <img th:src="@{'/upload/' + ${filename.originFileName}}" alt="첨부 이미지">
+    </div>
+  </div>
+
+  <div class="content" th:text="${board.content}"></div>
+
+  <div class="button-group">
+    <!--    <button type="button" th:onclick="|likeIt(${board.num})|">좋아요</button>-->
+    <svg id="heartBtn" width="24" height="24" fill="none"
+         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+         viewBox="0 0 24 24" th:onclick="|likeIt(${board.num})|" th:classappend="${like} ? 'liked'">
+      <path d="M12 21s-6.4-5.3-9-9c-2-3 0-7 4-7 2.1 0 3.4 1.4 5 3 1.6-1.6 2.9-3 5-3 4 0 6 4 4 7-2.6 3.7-9 9-9 9z"/>
+    </svg>
+
+
+    <span class="like-count" id="CNT" th:text="${board.like_count}">0</span>
+
+
+    <th:block th:if="${board.writer == session.user.id}">
+      <a th:href="@{/update(num=${board.num})}">
+        <button type="button" class="edit-btn">수정</button>
+      </a>
+      <a th:href="@{/delete(num=${board.num})}">
+        <button type="button" class="delete-btn">삭제</button>
+      </a>
+    </th:block>
+  </div>
+</div>
+
+<script>
+  const heart = document.getElementById('heartBtn');
+  function likeIt(num) {
+    $.ajax({
+      type: "post",
+      url: "/likeB",
+      data:
+      { "num" : num },
+      success: function(likeAll) {
+        $("#CNT").text(likeAll.likeCnt);
+         if (likeAll.like ==false) {
+        heart.classList.add('liked');
+      } else {
+        heart.classList.remove('liked');
+      }
+    },
+      error: function() {
+        alert("좋아요 처리 중 오류가 발생했습니다.");
+      }
+    });
+  }
+</script>
+
+</body>
+</html>

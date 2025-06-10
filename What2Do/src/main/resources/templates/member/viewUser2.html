@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원 정보 수정</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f7f9fc;
+        }
+
+        .main-container {
+            max-width: 700px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 2rem 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 1rem;
+            color: #444;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.7rem;
+            margin-top: 0.3rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #fff;
+        }
+
+        input[disabled] {
+            background-color: #f1f1f1;
+            color: #888;
+        }
+
+        .radio-group {
+            margin-top: 1rem;
+        }
+
+        .radio-group label {
+            margin-right: 1rem;
+            font-weight: normal;
+        }
+
+        .btn-group {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .btn-group button,
+        .btn-group input[type="submit"] {
+            padding: 0.6rem 1.5rem;
+            font-size: 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 0.5rem;
+        }
+
+        .submit-btn {
+            background-color: #1f2937;
+            color: white;
+        }
+
+        .back-btn {
+            background-color: #1f2937;
+            color: white;
+        }
+
+        .submit-btn:hover {
+        }
+
+        .back-btn:hover {
+        }
+      .btn-check,
+      input[type="submit"],
+     .back-btn {
+      background-color: #1f2937;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+  }
+  .btn-check {
+      background-color: #1a2e45;
+      color: white;
+      padding: 10px 18px;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-left: 10px;
+      vertical-align: middle;
+
+      /* 추가로 수평 중앙 정렬과 버튼과 입력창 간격 맞추기 */
+      display: inline-block;
+      box-shadow: 0 3px 8px rgba(13, 110, 253, 0.3);
+      transition: background-color 0.3s ease;
+  }
+
+  .btn-check:hover {
+      box-shadow: 0 5px 12px rgba(11, 94, 215, 0.5);
+  }
+
+  /* 패스워드 입력창과 버튼을 한 줄에 잘 배치하기 위해 부모에 flex 적용 */
+  .pass-check-group {
+      display: flex;
+      align-items: center;
+      margin-top: 0.3rem;
+      gap: 10px; /* 입력창과 버튼 사이 간격 */
+  }
+
+  /* input도 flex 아이템으로 맞춰 높이 통일 */
+  #pass2 {
+      flex-grow: 1;
+      padding: 0.7rem;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+  }
+
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+
+<div class="main-container">
+    <h2>👤 회원 정보 수정</h2>
+
+    <form th:action="@{/update2/{id}(id=${user.id})}" method="post">
+        <label>유저 아이디</label>
+        <input type="text" th:value="${user.id}" disabled/>
+
+        <label>*비밀번호</label>
+        <input type="text" name="pass" id="pass" th:value="${user.pass}" minlength="4" maxlength="20" placeholder="최소 4글자 이상, 최대 20글자 이하" required>
+
+        <label>*비밀번호 확인</label>
+        <div class="pass-check-group">
+            <input type="password" name="pass2" id="pass2" required>
+            <button type="button" class="btn-check" onclick="checkPass()">확인</button>
+        </div>
+
+        <label>이름</label>
+        <input type="text" name="name" th:value="${user.name}" disabled/>
+
+        <label>전화번호</label>
+        <input type="text" name="tel" th:value="${user.tel}" disabled/>
+
+        <label>생년월일</label>
+        <input type="date" name="birth" th:value="${user.birth}" disabled/>
+
+        <label>이메일</label>
+        <input type="text" name="mail" th:value="${user.mail}" />
+
+        <label>성별</label>
+        <div class="radio-group">
+            <label><input type="radio" name="jender" value="m" th:checked="${user.jender == 'm'}" disabled/> 남</label>
+            <label><input type="radio" name="jender" value="f" th:checked="${user.jender == 'f'}" disabled/> 여</label>
+        </div>
+
+        <label>가입일자</label>
+        <input type="text" th:value="${#strings.substring(user.indate,0,10)}" disabled/>
+
+
+    </form>
+        <div class="btn-group">
+            <a href="/myPage"><button type="button" class="back-btn">뒤로가기</button></a>
+            <input type="submit" class="submit-btn" value="수정 완료"/>
+            <form th:action="@{'/delete2/' + ${session.user.id}}" method="get" style="display:inline;">
+                <button type="submit" class="btn btn-delete">회원탈퇴</button>
+            </form>
+        </div>
+
+
+</div>
+<script>
+    function checkPass() {
+    var p1 = document.getElementById('pass').value;
+    var p2 = document.getElementById('pass2').value;
+    if( p1 != p2 ) {
+      alert("비밀번호가 일치 하지 않습니다");
+      document.getElementById('pass2').value="";
+      return false;
+    } else{
+      alert("비밀번호가 일치합니다");
+      return true;
+    }
+  }
+</script>
+</body>
+</html>

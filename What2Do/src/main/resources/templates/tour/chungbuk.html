@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="font-sans">
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div class="max-w-5xl mx-auto p-6">
+  <h1 class="text-3xl font-bold text-center mb-6">마스코트를 선택해주세요</h1>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <!-- 마스코트 카드 -->
+    <a href="/category?city=청주&areacode=33&sigungucode=10" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="\img\청주.png" alt="청주시 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">청주</p>
+      </div>
+    </a>
+
+    <a href="/category?city=충주&areacode=33&sigungucode=11" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="\img\충주.jpg" alt="충주시 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">충주</p>
+      </div>
+    </a>
+
+    <a href="/category?city=제천&areacode=33&sigungucode=7" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="\img\제천.jpg" alt="제천시 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">제천</p>
+      </div>
+    </a>
+
+    <a href="/category?city=괴산&areacode=33&sigungucode=1" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="\img\괴산.png" alt="괴산군 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">괴산</p>
+      </div>
+    </a>
+
+    <a href="/category?city=단양&areacode=33&sigungucode=2" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="\img\단양.jpg" alt="단양군 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">단양</p>
+      </div>
+    </a>
+
+    <a href="/category?city=옥천&areacode=33&sigungucode=5" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="\img\옥천.jpg" alt="옥천군 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">옥천</p>
+      </div>
+    </a>
+
+    <a href="/category?city=음성&areacode=33&sigungucode=6" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="\img\음성.jpg" alt="음성군 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">음성</p>
+      </div>
+    </a>
+
+    <a href="/category?city=영동&areacode=33&sigungucode=4" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="\img\영동.jpg" alt="영동군 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">영동</p>
+      </div>
+    </a>
+
+    <a href="/category?city=진천&areacode=33&sigungucode=8" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="\img\진천.png" alt="진천군 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">진천</p>
+      </div>
+    </a>
+
+    <a href="/category?city=보은&areacode=33&sigungucode=3" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="\img\보은.png" alt="보은군 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">보은</p>
+      </div>
+    </a>
+
+    <a href="/category?city=증평&areacode=33&sigungucode=12" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="\img\증평.jpg" alt="증평군 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">증평</p>
+      </div>
+    </a>
+
+
+    <!-- 원하는 만큼 카드 추가 -->
+  </div>
+</div>
+</body>
+</html>

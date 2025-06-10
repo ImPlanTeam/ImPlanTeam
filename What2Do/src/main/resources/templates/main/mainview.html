@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>놀면 뭐하지?</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .slider__btn a {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          width: 50px;
+          height: 50px;
+          background-color: #00000018;
+          color: #fff;
+          text-align: center;
+          border-radius: 50%;
+          font-size: 35px;
+          line-height: 43px;
+          text-decoration: none;
+        }
+        .slider__btn a:hover {
+          background-color: #00000079;
+        }
+        #rbtn { right: 15px; top: 370px; }
+        #lbtn { left: 15px; top: 370px; }
+
+        .slider {
+          width: 700px;
+          height: 400px;
+          overflow: hidden;
+          position: absolute;
+          left: 0;
+        }
+        .slides {
+      display: flex;
+      width: 400%;
+      transition: 1s;
+    }
+        .slides input {
+          display: none;
+        }
+        .slide {
+      width: 100%;
+      flex-shrink: 0;
+    }
+        .slide img {
+          width: 850px;
+          height: 400px;
+          object-fit: cover;
+        }
+        #radio1:checked ~ .first { margin-left: 0; }
+        #radio2:checked ~ .first { margin-left: -100%; }
+        #radio3:checked ~ .first { margin-left: -200%; }
+        #radio4:checked ~ .first { margin-left: -300%; }
+
+        a {
+          text-decoration: none;
+          color: black;
+          margin-left: 10px;
+          display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<!-- 상단 네비게이션 -->
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<body class="bg-white text-gray-800">
+
+
+<!-- 슬라이드 + 공지사항 -->
+<section class="flex flex-col md:flex-row p-4 gap-4 items-start">
+
+    <!-- 슬라이드 배너 -->
+    <div class="relative w-full md:w-2/3 h-[400px] overflow-hidden rounded-lg shadow">
+        <div class="slides flex transition-all duration-700">
+            <input type="radio" name="radio-btn" id="radio1" checked>
+            <input type="radio" name="radio-btn" id="radio2">
+            <input type="radio" name="radio-btn" id="radio3">
+            <input type="radio" name="radio-btn" id="radio4">
+
+            <div class="slide first"><img src="/img/배너4.png" class="w-full h-[400px] object-cover" alt=""></div>
+            <div class="slide"><img src="/img/썸네일3.jpg" class="w-full h-[230px] object-cover" alt=""></div>
+            <div class="slide"><img src="/img/썸네일1.jpg" class="w-full h-[230px] object-cover" alt=""></div>
+            <div class="slide"><img src="/img/썸네일5.jpg" class="w-full h-[230px] object-cover" alt=""></div>
+        </div>
+
+        <!-- 슬라이드 버튼 -->
+        <div class="absolute inset-0 flex justify-between items-center px-4">
+            <a href="#" onclick="prev()" class="slider__btn">&lt;</a>
+            <a href="#" onclick="next()" class="slider__btn">&gt;</a>
+        </div>
+    </div>
+
+    <!-- 공지사항 (슬라이드 옆) -->
+    <div class="w-full md:w-1/3 p-4 bg-white rounded-lg shadow">
+        <h2 class="text-lg font-semibold mb-3"> 공지사항</h2>
+        <ul class="text-sm space-y-1">
+            <li th:each="board : ${blist}">
+                <a th:href="@{/view(num=${board.num})}" class="hover:underline">
+                    • [[${board.title}]]
+                </a>
+            </li>
+            <li th:if="${#lists.isEmpty(blist)}">등록된 공지사항이 없습니다.</li>
+        </ul>
+    </div>
+</section>
+
+<!-- 인기 관광지 BEST 4 -->
+<section class="p-4">
+    <h2 class="text-xl font-bold mb-4">🔥 인기 관광지 BEST 5</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div th:each="bestFive : ${bestFive}" class="bg-white rounded-xl shadow hover:shadow-md transition duration-300 overflow-hidden" th:onclick="|location.href='@{detail(id=${bestFive.id})}'|">
+            <img th:src="${bestFive.firstimage2}" alt="" class="w-full h-48 object-cover" />
+            <div class="p-3 text-center">
+                <p th:text="${bestFive.title}" class="text-base font-semibold text-gray-800 truncate"></p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 하단 -->
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+<!-- 슬라이드 스크립트 -->
+<script>
+    let counter = 1;
+    setInterval(() => {
+      document.getElementById('radio' + counter).checked = true;
+      counter = counter % 4 + 1;
+    }, 5000);
+
+    function prev() {
+      event.preventDefault();
+      counter = (counter - 2 + 4) % 4 + 1;
+      document.getElementById('radio' + counter).checked = true;
+    }
+
+    function next() {
+      event.preventDefault();
+      counter = counter % 4 + 1;
+      document.getElementById('radio' + counter).checked = true;
+    }
+
+
+</script>
+</body>
+</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>자유게시판 관리</title>
+    <style>
+        body {
+          font-family: 'Segoe UI', sans-serif;
+          background-color: #f7f9fc;
+          margin: 0;
+          padding: 20px;
+        }
+
+        .main-container {
+          max-width: 1100px;
+          margin: auto;
+          background: #fff;
+          padding: 2rem 2.5rem;
+          border-radius: 1rem;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+          text-align: center;
+          color: #333;
+          margin-bottom: 1.5rem;
+        }
+
+        .main-container table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        .main-container table thead {
+          background-color: #e9f0fb;
+        }
+
+        .main-container table th,
+        .main-container table td {
+          padding: 1rem;
+          text-align: center;
+          border-bottom: 1px solid #ddd;
+          font-size: 0.95rem;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .main-container table th:nth-child(3),
+        .main-container table td:nth-child(3) {
+          min-width: 200px;
+          max-width: 250px;
+        }
+
+        .main-container table th:nth-child(5),
+        .main-container table td:nth-child(5),
+        .main-container table th:nth-child(6),
+        .main-container table td:nth-child(6) {
+          min-width: 100px;
+        }
+
+        .main-container table th:nth-child(4),
+        .main-container table td:nth-child(4) {
+          min-width: 120px;
+        }
+
+        .main-container table tr:hover {
+          background-color: #f1f8ff;
+        }
+
+        .delete-btn {
+          background-color: #e74c3c;
+          color: #fff;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 0.5rem;
+          cursor: pointer;
+          font-size: 0.85rem;
+        }
+
+        .delete-btn:hover {
+          opacity: 0.9;
+        }
+
+        .pagination {
+          margin-top: 2rem;
+          text-align: center;
+        }
+
+        .pagination a,
+        .pagination strong {
+          margin: 0 6px;
+          font-size: 1rem;
+          text-decoration: none;
+        }
+
+        .pagination strong {
+          color: #0d6efd;
+        }
+        .write-link {
+            display: block;
+            text-align: right;
+            margin-top: 15px;
+        }
+        .notice-row {
+    background-color: #fff7e6 !important;
+    font-weight: bold;
+}
+    </style>
+</head>
+<body>
+
+<!-- 상단 관리자 메뉴 -->
+<div th:replace="~{fragments/admintop :: headerFragment}"></div>
+
+<!-- 메인 콘텐츠 -->
+<div class="main-container">
+    <h2>📋 자유게시판 게시글 관리</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>지역</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회수</th>
+            <th>관리</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="list : ${list}"
+            th:class="${list.area == '공지사항'} ? 'notice-row' : ''">
+            <td th:text="${list.num}"></td>
+            <td th:text="${list.area}"></td>
+            <td>
+                <a th:href="@{/bview(num=${list.num})}" th:text="${list.title}"></a>
+            </td>
+            <td th:text="${list.writer}"></td>
+            <td th:text="${#strings.substring(list.indate, 0, 10)}"></td>
+            <td th:text="${list.view_count}"></td>
+            <td>
+                <a th:href="@{/deleteM(num=${list.num})}" class="delete-btn">삭제</a>
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a class="write-link" th:href="@{/board2}">➕ 글쓰기</a>
+
+    <div class="pagination">
+        <a th:if="${startPage > 0}" th:href="@{/manager(page=${startPage - 1})}">이전</a>
+        <th:block th:each="page : ${#numbers.sequence(startPage,endPage)}">
+            <a th:if="${page != nowPage}" th:href="@{/manager(page=${page}, searchKeyword=${param.searchKeyword})}" th:text="${page+1}"></a>
+            <strong th:if="${page == nowPage}" th:text="${page+1}"></strong>
+        </th:block>
+        <a th:if="${endPage < totalPages - 1}" th:href="@{/manager(page=${endPage + 1})}">다음</a>
+    </div>
+</div>
+
+<!-- 푸터 -->
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+</body>
+</html>
