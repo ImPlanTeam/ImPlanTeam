@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>1:1 문의 상세</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <style>
+        body {
+          font-family: 'Segoe UI', sans-serif;
+          background-color: #f9fafc;
+
+        }
+
+        .main-container {
+          max-width: 900px;
+          margin: auto;
+          background: #ffffff;
+          padding: 2rem 2.5rem;
+          border-radius: 1rem;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        h3 {
+          color: #333;
+          margin-bottom: 1rem;
+        }
+
+        .section {
+          margin-bottom: 2rem;
+        }
+
+        .label {
+          font-weight: bold;
+          margin-top: 1rem;
+          color: #555;
+          display: block;
+        }
+
+        .value {
+          margin-bottom: 1rem;
+          color: #222;
+        }
+
+        .image-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+          margin-top: 1rem;
+        }
+
+        .image-list img {
+          width: 200px;
+          height: auto;
+          border-radius: 10px;
+          object-fit: cover;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .answer-box {
+          background-color: #f0f4ff;
+          padding: 1.5rem;
+          border-radius: 0.8rem;
+          color: #333;
+        }
+
+        .no-answer {
+          text-align: center;
+          color: #888;
+          margin-top: 1.5rem;
+          font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 사용자 상단 메뉴 -->
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+
+<div class="main-container">
+    <h3>나의 문의 상세 보기</h3>
+
+    <div class="section">
+        <span class="label">글번호</span>
+        <div class="value" th:text="${askview.no}"></div>
+
+        <span class="label">제목</span>
+        <div class="value" th:text="${askview.title}"></div>
+
+        <span class="label">내용</span>
+        <div class="value" th:text="${askview.contents}"></div>
+
+        <span class="label">작성일</span>
+        <div class="value" th:text="${#strings.substring(askview.indate,0,10)}"></div>
+
+        <div class="image-list" th:if="${file != null}">
+            <div th:each="filename : ${file}">
+                <img th:src="@{'/upload/' + ${filename.storedFilename}}" alt="첨부 이미지" />
+            </div>
+        </div>
+    </div>
+
+    <div class="section" th:if="${answer != null}">
+        <h3>✅ 답변 내용</h3>
+        <div class="answer-box">
+            <div th:text="${answer.content}"></div>
+            <small th:text="${#temporals.format(answer.answeredAt, 'yyyy-MM-dd HH:mm')}"></small>
+        </div>
+    </div>
+
+    <div class="no-answer" th:if="${answer == null}">
+        아직 답변이 등록되지 않았습니다.
+    </div>
+</div>
+
+<!-- 사용자 하단 -->
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+</body>
+</html>

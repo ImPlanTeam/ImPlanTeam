@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>1:1 문의 리스트</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .main-container {
+            max-width: 1100px;
+            margin: auto;
+            background: #fff;
+            padding: 2rem 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        h3 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1.5rem;
+        }
+
+        .main-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .main-container table thead {
+            background-color: #e8f0fe;
+        }
+
+        .main-container table th,
+        .main-container table td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            font-size: 0.95rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .main-container table th:nth-child(2),
+        .main-container table td:nth-child(2) {
+            min-width: 200px;
+            max-width: 250px;
+        }
+
+        .main-container table th:nth-child(3),
+        .main-container table td:nth-child(3) {
+            min-width: 120px;
+        }
+
+        .main-container table th:nth-child(4),
+        .main-container table td:nth-child(4) {
+            min-width: 100px;
+        }
+
+        .main-container table th:nth-child(5),
+        .main-container table td:nth-child(5) {
+            min-width: 120px;
+        }
+
+        .main-container table th:nth-child(6),
+        .main-container table td:nth-child(6) {
+            min-width: 100px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #1a73e8;
+            font-weight: 500;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-done {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .pagination a,
+        .pagination strong {
+            margin: 0 5px;
+            text-decoration: none;
+            font-size: 1rem;
+        }
+
+        .pagination strong {
+            color: #0d6efd;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 상단 관리자 메뉴 -->
+<div th:replace="~{fragments/adminTop :: headerFragment}"></div>
+
+<!-- 메인 콘텐츠 -->
+<div class="main-container">
+    <h3>1:1 문의 리스트</h3>
+
+    <table>
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>날짜</th>
+            <th>공개 여부</th>
+            <th>작성자</th>
+            <th>상태</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ask : ${list.content}">
+            <td th:text="${ask.no}"></td>
+            <td>
+                <a th:href="@{'/admin/answer/' + ${ask.no}}" th:text="${ask.title}"></a>
+            </td>
+            <td th:text="${#strings.substring(ask.indate,0,10)}"></td>
+            <td th:text="${ask.vicibility}"></td>
+            <td th:text="${ask.user.id}">작성자</td>
+            <td>
+                <span th:if="${statusMap[ask.no]} == '검토중'" class="status-badge status-pending">검토중</span>
+                <span th:if="${statusMap[ask.no]} == '완료'" class="status-badge status-done">완료</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+        <a th:if="${startPage > 0}" th:href="@{/admin/ask(page=${startPage - 1})}">이전</a>
+
+        <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+            <a th:if="${page != nowPage}" th:href="@{/admin/ask(page=${page})}" th:text="${page + 1}"></a>
+            <strong th:if="${page == nowPage}" th:text="${page + 1}"></strong>
+        </th:block>
+
+        <a th:if="${endPage < totalPages - 1}" th:href="@{/admin/ask(page=${endPage + 1})}">다음</a>
+    </div>
+</div>
+
+<!-- 하단 푸터 -->
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+</body>
+</html>

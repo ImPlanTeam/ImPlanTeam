@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>오늘 뭐하지?</title>
+</head>
+
+<body>
+<div class="navbar" th:fragment="headerFragment">
+    <div class="logo">
+        <a th:href="@{/what2do}">
+            <img src="/img/로고1.png" alt="로고">
+        </a>
+    </div>
+    <div class="menu">
+        <a th:href="@{/todo}">오늘 뭐하지?</a>
+        <a th:href="@{/lego}">놀러가자!</a>
+        <a th:href="@{/listView}">자유게시판</a>
+        <a th:href="@{/ask}">1:1 문의하기</a>
+
+        <style>
+            body {
+              margin: 0;
+              font-family: 'Segoe UI', sans-serif;
+              background-color: #f9f9f9;
+            }
+
+            a {
+              text-decoration: none;
+              color: #222;
+            }
+
+            .navbar {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 16px 40px;
+              background-color: #ffffff;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+              margin: 20px auto;
+              max-width: 1200px;
+            }
+
+            .menu {
+              display: flex;
+              gap: 55px;
+            }
+
+            .menu a {
+              font-weight: 600;
+              font-size: 19px;
+              transition: color 0.3s;
+            }
+
+            .menu a:hover {
+              color: #0d6efd;
+            }
+
+            .login-btn {
+              background-color: #1a2e45;
+              color: white;
+              padding: 10px 20px;
+              border: none;
+              border-radius: 5px;
+              font-weight: bold;
+              font-size: 14px;
+              cursor: pointer;
+              transition: background-color 0.3s;
+            }
+
+
+            .auth-section {
+             display: flex;
+             align-items: center;
+             gap: 12px;
+}
+        </style>
+    </div>
+    <div class="auth-section">
+        <!-- 로그인 -->
+        <span th:if="${session.user != null}">
+        <!--만일 세션 유저에 값이 있다면-->
+    <span th:text="${session.user.id} + '님' "></span>
+        <a href="/logout">로그아웃</a>
+            <a href="/myPage"><button class="login-btn">마이페이지</button></a>
+</span>
+        <!-- 로그인 X-->
+        <a th:if="${session.user == null}" href="/login2">
+            <button class="login-btn">로그인</button>
+        </a>
+    </div>
+</div>
+</body>
+</html>

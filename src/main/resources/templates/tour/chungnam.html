@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>충청남도</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div class="max-w-5xl mx-auto p-6">
+    <h1 class="text-3xl font-bold text-center mb-6">마스코트을 선택해주세요</h1>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <!-- 마스코트 카드 -->
+        <a href="/category?city=천안&areacode=34&sigungucode=12" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/천안.png" alt="천안 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">천안</p>
+            </div>
+        </a>
+
+        <a href="/category?city=공주&areacode=34&sigungucode=1" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/공주.png" alt="공주 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">공주</p>
+            </div>
+        </a>
+
+        <a href="/category?city=보령&areacode=34&sigungucode=5" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/보령.png" alt="보령 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">보령</p>
+            </div>
+        </a>
+
+        <a href="/category?city=아산&areacode=34&sigungucode=9" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/아산.png" alt="아산 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">아산</p>
+            </div>
+        </a>
+
+        <a href="/category?city=서산&areacode=34&sigungucode=7" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/서산.png" alt="서산 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">서산</p>
+            </div>
+        </a>
+
+        <a href="/category?city=논산&areacode=34&sigungucode=3" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/논산.png" alt="논산 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">논산</p>
+            </div>
+        </a>
+
+        <a href="/category?city=태안&areacode=34&sigungucode=14" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/태안.png" alt="태안 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">태안</p>
+            </div>
+        </a>
+
+        <a href="/category?city=당진&areacode=34&sigungucode=4" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/당진.png" alt="당진 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">당진</p>
+            </div>
+        </a>
+
+        <a href="/category?city=서천&areacode=34&sigungucode=8" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/서천.png" alt="서천 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">서천</p>
+            </div>
+        </a>
+
+        <a href="/category?city=예산&areacode=34&sigungucode=11" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/예산.png" alt="예산 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">예산</p>
+            </div>
+        </a>
+
+        <a href="/category?city=부여&areacode=34&sigungucode=6" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/부여.png" alt="부여 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">부여</p>
+            </div>
+        </a>
+
+
+
+    </div>
+    <div th:replace="~{fragments/footer :: footerFragment}"></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>경기도</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div class="max-w-5xl mx-auto p-6">
+    <h1 class="text-3xl font-bold text-center mb-6">마스코트를 선택해주세요</h1>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <!-- 마스코트 카드 -->
+        <a href="/category?city=수원&areacode=31&sigungucode=13" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/수원.PNG" alt="수원 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">수원</p>
+            </div>
+        </a>
+
+        <a href="/category?city=의정부&areacode=31&sigungucode=25" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/의정부.PNG" alt="의정부 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">의정부</p>
+            </div>
+        </a>
+
+        <a href="/category?city=안양&areacode=31&sigungucode=17" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/안양.PNG" alt="안양 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">안양</p>
+            </div>
+        </a>
+
+        <a href="/category?city=부천&areacode=31&sigungucode=11" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/부천.PNG" alt="부천 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">부천</p>
+            </div>
+        </a>
+
+        <a href="/category?city=광명&areacode=31&sigungucode=4" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/광명.PNG" alt="광명 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">광명</p>
+            </div>
+        </a>
+
+        <a href="/category?city=동두천&areacode=31&sigungucode=10" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/동두천.PNG" alt="동두천 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">동두천</p>
+            </div>
+        </a>
+
+        <a href="/category?city=과천&areacode=31&sigungucode=3" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/과천.PNG" alt="과천 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">과천</p>
+            </div>
+        </a>
+
+        <a href="/category?city=남양주&areacode=31&sigungucode=9" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/남양주.PNG" alt="남양주 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">남양주</p>
+            </div>
+        </a>
+
+        <a href="/category?city=시흥&areacode=31&sigungucode=14" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/시흥.PNG" alt="시흥 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">시흥</p>
+            </div>
+        </a>
+
+        <a href="/category?city=군포&areacode=31&sigungucode=7" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/군포.PNG" alt="군포 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">군포</p>
+            </div>
+        </a>
+
+        <a href="/category?city=의왕&areacode=31&sigungucode=24" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/의왕.PNG" alt="의왕 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">의왕</p>
+            </div>
+        </a>
+
+        <a href="/category?city=용인&areacode=31&sigungucode=23" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/용인.PNG" alt="용인 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">용인</p>
+            </div>
+        </a>
+
+        <a href="/category?city=파주&areacode=31&sigungucode=27" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/파주.PNG" alt="파주 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">파주</p>
+            </div>
+        </a>
+
+        <a href="/category?city=김포&areacode=31&sigungucode=8" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/김포.PNG" alt="김포 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">김포</p>
+            </div>
+        </a>
+
+        <a href="/category?city=화성&areacode=31&sigungucode=31" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/화성.PNG" alt="화성 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">화성</p>
+            </div>
+        </a>
+
+        <a href="/category?city=여주&areacode=31&sigungucode=20" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/여주.PNG" alt="여주 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">여주</p>
+            </div>
+        </a>
+
+        <a href="/category?city=가평&areacode=31&sigungucode=1" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/가평.PNG" alt="가평 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">가평</p>
+            </div>
+        </a>
+
+        <a href="/category?city=양평&areacode=31&sigungucode=19" class="block">
+            <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+                <img src="/img/양평.PNG" alt="양평 마스코트" class="w-full h-40 object-contain mb-2" />
+                <p class="text-center text-lg font-semibold">양평</p>
+            </div>
+        </a>
+
+        <!-- 원하는 만큼 카드 추가 -->
+    </div>
+    <div th:replace="~{fragments/footer :: footerFragment}"></div>
+</div>
+</body>
+</html>

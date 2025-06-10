@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>인천</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div class="max-w-5xl mx-auto p-6">
+  <h1 class="text-3xl font-bold text-center mb-6">마스코트를 선택해주세요</h1>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+    <!-- 마스코트 카드 -->
+    <a href="/category?city=인천&areacode=2&sigungucode=1" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/강화군.PNG" alt="강화군 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">강화군</p>
+      </div>
+    </a>
+    <a href="/category?city=인천&areacode=2&sigungucode=2" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/계양구.PNG" alt="계양구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">계양구</p>
+      </div>
+    </a>
+    <a href="/category?city=인천&areacode=2&sigungucode=3" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/미추홀구.PNG" alt="미추홀구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">미추홀구</p>
+      </div>
+    </a>
+    <a href="/category?city=인천&areacode=2&sigungucode=4" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/남동구.PNG" alt="남동구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">남동구</p>
+      </div>
+    </a>
+    <a href="/category?city=인천&areacode=2&sigungucode=5" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/동구.PNG" alt="동구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">동구</p>
+      </div>
+    </a>
+    <a href="/category?city=인천&areacode=2&sigungucode=6" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/부평구.PNG" alt="부평구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">부평구</p>
+      </div>
+    </a>
+    <a href="/category?city=인천&areacode=2&sigungucode=7" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/서구.PNG" alt="서구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">서구</p>
+      </div>
+    </a>
+    <a href="/category?city=인천&areacode=2&sigungucode=8" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/연수구.PNG" alt="연수구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">연수구</p>
+      </div>
+    </a>
+    <a href="/category?city=인천&areacode=2&sigungucode=9" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/옹진군.PNG" alt="옹진군 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">옹진군</p>
+      </div>
+    </a>
+    <a href="/category?city=인천&areacode=2&sigungucode=10" class="block">
+      <div class="bg-white rounded-xl shadow hover:shadow-lg p-4 transition duration-200">
+        <img src="/img/중구2.PNG" alt="중구 마스코트" class="w-full h-40 object-contain mb-2" />
+        <p class="text-center text-lg font-semibold">중구</p>
+      </div>
+    </a>
+
+
+
+    <!-- 원하는 만큼 카드 추가 -->
+  </div>
+  <div th:replace="~{fragments/footer :: footerFragment}"></div>
+</div>
+</body>
+</html>
