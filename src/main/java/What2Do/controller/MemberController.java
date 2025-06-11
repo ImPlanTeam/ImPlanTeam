@@ -149,15 +149,19 @@ public class MemberController {
         model.addAttribute("user", userDTO);
         if (service.checkId(userDTO.getId())){
             model.addAttribute("errID", "이미 사용중인 아이디입니다.");
+            return "member/join";
         }
         if (service.checkTel(userDTO.getTel())){
             model.addAttribute("errTel", "이미 사용중인 전화번호입니다.");
+            return "member/join";
         }
         if (service.checkMail(userDTO.getMail1()+"@"+userDTO.getMail2())){
             model.addAttribute("errMail", "이미 사용중인 이메일입니다.");
+            return "member/join";
         }
         if (!Objects.equals(userDTO.getPass(), userDTO.getPass2())){
             model.addAttribute("errPass", "비밀번호가 일치하지 않습니다.");
+            return "member/join";
         }
         if (errors.hasErrors()){
             System.out.println("유효성 검사 실패: " + errors.getAllErrors());

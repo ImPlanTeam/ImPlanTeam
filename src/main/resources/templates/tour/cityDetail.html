@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -78,11 +79,15 @@
           padding: 5px;
           z-index: 1;
           border-radius: 4px;
+<!--          height: 150px;-->
         }
 
         .bAddr {
-          padding: 5px;
-          font-size: 15px;
+         padding:5px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        font-size: 15px;
         }
 
         #heartBtn {

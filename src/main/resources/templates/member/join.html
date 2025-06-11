@@ -7,7 +7,7 @@
 <style>
   body {
       font-family: 'Segoe UI', sans-serif;
-
+      background-color: #f5f5f5;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -20,15 +20,6 @@
       list-style: none;
       padding-left: 0;
   }
-  .container {
-      background-color: #ffffff;
-      padding: 40px;
-
-
-      width: 100%;
-      max-width: 600px;
-  }
-
   h2 {
       margin-bottom: 30px;
       color: #333;
@@ -66,7 +57,6 @@
   }
 
   .btn-check,
-  input[type="submit"],
   .back-btn {
       background-color: #1a2e45;
       color: white;
@@ -77,7 +67,21 @@
       cursor: pointer;
   }
 
+  #my-form{
+        background-color: #1a2e45;
+      color: white;
+      padding: 10px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+  }
 
+  .btn-check:hover,
+  input[type="submit"]:hover,
+  .back-btn:hover {
+      background-color: #1a2e45;
+  }
 
   .radio-group {
       display: flex;
@@ -105,15 +109,14 @@
 </head>
 <body>
 
-
 <div class="container">
   <h2>회원가입</h2>
 
 
-  <form action="save2" method="post">
+  <form action="save2" method="post" onsubmit="return validateForm(this);">
     <label>*아이디</label>
     <input type="text" name="id" id="id" oninput="onlyAlphaNum(this)"  minlength="8" maxlength="16" placeholder="아이디는 8~16자 영문과 숫자만 사용가능합니다." required>
-    <button type="button" class="btn-check" id="duplenxid">중복확인</button>
+    <button type="button" class="btn-check" id="duplenxid" value="1">중복확인</button>
 
     <p th:text="${errID}"></p>
 
@@ -123,7 +126,8 @@
 
     <label>*비밀번호 확인</label>
     <input type="password" name="pass2" id="pass2" required>
-    <button type="button" class="btn-check" onclick="checkPass()">확인</button>
+    <button type="button" class="btn-check" value="1"
+            id="checkPass" onclick="checkPass()">확인</button>
 
     <ul class="error-messages">
       <li th:each="msg : ${errList}" th:text="${msg}"></li>
@@ -143,11 +147,11 @@
     <div class="email-group">
       <input type="text" name="mail1" required> @
       <input type="text" class="box" id="domain-txt" name="mail2" required>
-      <select class="box" id="domain-list" name="mail2">
+      <select class="box" id="domain-list">
         <option value="">직접 입력</option>
-        <option value="naver.com" name="mail2">naver.com</option>
-        <option value="google.com" name="mail2">google.com</option>
-        <option value="nate.com" name="mail2">nate.com</option>
+        <option value="naver.com">naver.com</option>
+        <option value="google.com">google.com</option>
+        <option value="nate.com">nate.com</option>
       </select>
     </div>
     <p th:text="${errMail}"></p>
@@ -158,7 +162,8 @@
       <label><input type="radio" value="f" name="jender"> 여</label>
     </div>
 
-    <input type="submit" value="가입하기">
+    <button type="submit" id="my-form" onclick="handleSubmit()">가입하기</button>
+
   </form>
 
   <div class="btn-group">
@@ -166,76 +171,100 @@
   </div>
 
 </div>
-</body>
-</html>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js">
 </script>
 
 <script>
-  function onlyAlphaNum(input) {
-    const regex = /^[A-Za-z0-9]*$/;
-    if (!regex.test(input.value)) {
-        input.value = input.value.replace(/[^A-Za-z0-9]/g, '');
+  const form = document.getElementById('my-form');
+  const button = document.getElementById("duplenxid");
+  const button2 = document.getElementById("checkPass");
+
+  button.addEventListener('click', function() {
+    button.value = "2";
+  });
+
+  button2.addEventListener('click', function() {
+    button2.value = "2";
+  });
+
+function validateForm(form) {
+
+      if (button.value === "1") {
+      alert("아이디 중복확인은 필수입니다.");
+      return false;
+  }
+
+      if (button2.value === "1") {
+      alert("비밀번호 확인은 필수입니다.");
+      return false;
+  }
+  }
+
+
+
+    function onlyAlphaNum(input) {
+      const regex = /^[A-Za-z0-9]*$/;
+      if (!regex.test(input.value)) {
+          input.value = input.value.replace(/[^A-Za-z0-9]/g, '');
+      }
+  }
+
+
+  const domainListEl = document.querySelector('#domain-list')
+  const domainInputEl = document.querySelector('#domain-txt')
+
+  domainListEl.addEventListener('change', (event) => {
+    // option에 있는 도메인 선택 시
+    if(event.target.value !== "") {
+      // 선택한 도메인을 input에 입력하고 disabled
+      domainInputEl.value = event.target.value
+      domainInputEl.disabled = true
+    } else { // 직접 입력 시
+      // input 내용 초기화 & 입력 가능하도록 변경
+      domainInputEl.value = ""
+      domainInputEl.disabled = false
     }
-}
+  })
 
 
+  $('#duplenxid').click(function () {
+  const userId = $('#id').val();
 
-const domainListEl = document.querySelector('#domain-list')
-const domainInputEl = document.querySelector('#domain-txt')
-
-domainListEl.addEventListener('change', (event) => {
-  // option에 있는 도메인 선택 시
-  if(event.target.value !== "") {
-    // 선택한 도메인을 input에 입력하고 disabled
-    domainInputEl.value = event.target.value
-    domainInputEl.disabled = true
-  } else { // 직접 입력 시
-    // input 내용 초기화 & 입력 가능하도록 변경
-    domainInputEl.value = ""
-    domainInputEl.disabled = false
+  if (!userId || userId.trim() === '') {
+  alert("아이디를 입력해주세요.");
+  return;
   }
-})
+
+  $.ajax({
+    url: '/checkId',  // 실제 API URL로 변경
+    type: 'GET',
+    headers: {
+        "X-CSRF-TOKEN": $("meta[name='_csrf']").attr("content")  // CSRF 토큰이 필요할 경우
+    },
+    data: {
+      id: userId  // id를 전달
+    },
+    success: function(result) {
+      alert("사용가능한 아이디 입니다.");
+    },
+    error: function(error) {
+      alert("이미 사용중인 아이디 입니다.");
+   }
+  });
+  });
 
 
-$('#duplenxid').click(function () {
-const userId = $('#id').val();
-
-if (!userId || userId.trim() === '') {
-alert("아이디를 입력해주세요.");
-return;
-}
-
-$.ajax({
-  url: '/checkId',  // 실제 API URL로 변경
-  type: 'GET',
-  headers: {
-      "X-CSRF-TOKEN": $("meta[name='_csrf']").attr("content")  // CSRF 토큰이 필요할 경우
-  },
-  data: {
-    id: userId  // id를 전달
-  },
-  success: function(result) {
-    alert("사용가능한 아이디 입니다.");
-  },
-  error: function(error) {
-    alert("이미 사용중인 아이디 입니다.");
- }
-});
-});
-
-
-function checkPass() {
-  var p1 = document.getElementById('pass').value;
-  var p2 = document.getElementById('pass2').value;
-  if( p1 != p2 ) {
-    alert("비밀번호가 일치 하지 않습니다");
-    document.getElementById('pass2').value="";
-    return false;
-  } else{
-    alert("비밀번호가 일치합니다");
-    return true;
+  function checkPass() {
+    var p1 = document.getElementById('pass').value;
+    var p2 = document.getElementById('pass2').value;
+    if( p1 != p2 ) {
+      alert("비밀번호가 일치 하지 않습니다");
+      document.getElementById('pass2').value="";
+      return false;
+    } else{
+      alert("비밀번호가 일치합니다");
+      return true;
+    }
   }
-}
 
 </script>

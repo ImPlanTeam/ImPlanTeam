@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>오늘 뭐하지? - 게시글 수정</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
   <style>
     body {
       font-family: 'Noto Sans KR', sans-serif;
@@ -48,7 +49,7 @@
     }
 
     input[type="submit"] {
-      background-color: #0d6efd;
+      background-color:#1a2e45;
       color: white;
       border: none;
       padding: 0.8rem 1.5rem;
@@ -58,9 +59,6 @@
       cursor: pointer;
     }
 
-    input[type="submit"]:hover {
-      background-color: #0b5ed7;
-    }
 
     .info-bar {
       font-size: 0.9rem;
@@ -100,7 +98,7 @@
       지역: <span th:text="${board.area}"></span> |
       작성일: <span th:text="${#strings.substring(board.indate,0,10)}"></span> |
       작성자: <span th:text="${board.writer}"></span> |
-      조회수: <span th:text="${board.view_count}"></span>
+<!--      조회수: <span th:text="${board.view_count}"></span>-->
     </div>
 
     <label>첨부된 이미지</label>
