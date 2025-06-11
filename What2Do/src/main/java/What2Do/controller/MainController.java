@@ -1,15 +1,13 @@
 package What2Do.controller;
 
-import What2Do.domain.Board;
-import What2Do.domain.Comment;
-import What2Do.domain.Tour;
-import What2Do.domain.User;
+import What2Do.domain.*;
 import What2Do.service.BoardService;
 import What2Do.service.CommentService;
 import What2Do.service.TourService;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,7 +44,9 @@ public class MainController {
 
 
     @GetMapping("join")
-    public String join() {
+    public String join(Model model) {
+        UserDTO userDTO = new UserDTO();
+        model.addAttribute("user", userDTO);
         return "/member/join";
     }
 
