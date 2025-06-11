@@ -149,15 +149,19 @@ public class MemberController {
         model.addAttribute("user", userDTO);
         if (service.checkId(userDTO.getId())){
             model.addAttribute("errID", "이미 사용중인 아이디입니다.");
+            return "member/join";
         }
         if (service.checkTel(userDTO.getTel())){
             model.addAttribute("errTel", "이미 사용중인 전화번호입니다.");
+            return "member/join";
         }
         if (service.checkMail(userDTO.getMail1()+"@"+userDTO.getMail2())){
             model.addAttribute("errMail", "이미 사용중인 이메일입니다.");
+            return "member/join";
         }
         if (!Objects.equals(userDTO.getPass(), userDTO.getPass2())){
             model.addAttribute("errPass", "비밀번호가 일치하지 않습니다.");
+            return "member/join";
         }
         if (errors.hasErrors()){
             System.out.println("유효성 검사 실패: " + errors.getAllErrors());
@@ -270,17 +274,36 @@ public class MemberController {
         model.addAttribute("user", user);
         return "member/viewUser2";  // 위에서 만든 Thymeleaf 파일명
     }
-    @PostMapping("/update2/{id}")
+    @PostMapping("update2/{id}")
     public String updateUser2(@PathVariable String id,
-                              @RequestParam String mail,
-                              @RequestParam String pass) {
+                              @Valid UserDTO userDTO, Errors errors,
+                              @RequestParam String pass2,
+                              Model model) {
+
         User user = userRepository.findById(id);
-        user.setMail(mail);
-        user.setPass(pass);
 
-        userRepository.save(user);  // 저장 (추가, 수정 둘 다 가능)
+        if (!userDTO.getPass().equals(pass2)) {
+            model.addAttribute("errPass2", "비밀번호가 일치하지 않습니다.");
+            model.addAttribute("user", user);
+            return "member/viewUser2";
+        }
 
-        return "redirect:/viewUser2/" + id;  // 수정 완료 후 상세보기로 리다이렉트
+        if (errors.hasErrors()) {
+            System.out.println("유효성 검사 실패: " + errors.getAllErrors());
+            List<String> errorMessages = errors.getAllErrors()
+                    .stream()
+                    .map(error -> error.getDefaultMessage())
+                    .collect(Collectors.toList());
+            model.addAttribute("errList", errorMessages);
+            model.addAttribute("user", user); // ← 이거 꼭 추가!
+            return "member/viewUser2";
+        }
+
+        user.setMail(userDTO.getMail());
+        user.setPass(userDTO.getPass());
+        userRepository.save(user);
+
+        return "redirect:/viewUser2/" + id;
     }
 
 }

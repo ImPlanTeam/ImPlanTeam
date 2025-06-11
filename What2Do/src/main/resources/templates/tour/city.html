@@ -127,7 +127,7 @@
 
 
 <!-- 카테고리 라디오 버튼 영역 감싸기 -->
-<div class="category-wrapper">
+<div class="category-wrapper" th:if="${not #lists.isEmpty(tlist)}">
     <label class="checkbox-label">
         <input type="radio" name="category" value="전체"
                th:onclick="|location.href='@{/category(city=${city},areacode=${tlist[0].areacode},sigungucode=${tlist[0].sigungucode})}'|"/>
@@ -185,16 +185,18 @@
 </div>
 
 <div class="card-container" id="categoryTable">
-    <tr th:each="tlist : ${tlist}">
-        <a th:href="@{/detail(id=${tlist.id})}" class="card"  >
-            <img th:src="${tlist.firstimage2}" alt="" class="pic" />
-            <p th:text="${tlist.title}"></p>
-
+    <div th:each="item : ${tlist}">
+        <a th:href="@{/detail(id=${item.id})}" class="card">
+            <img th:src="${item.firstimage2}" alt="" class="pic" />
+            <p th:text="${item.title}"></p>
         </a>
-    </tr>
-
-
+    </div>
 </div>
+<div th:if="${#lists.isEmpty(tlist)}" style="text-align:center; font-size:1.2rem; margin: 40px;">
+    선택한 지역에 대한 정보가 없습니다.
+</div>
+
+
 
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
 

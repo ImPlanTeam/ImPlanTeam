@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <title>활동 추천 설문</title>
-  <link rel="stylesheet" th:href="@{/css/common.css}">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=KAKAO_APP_KEY&libraries=services"></script>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body>
 <div th:replace="~{fragments/top :: headerFragment}"></div>
 <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow">
   <h2 class="text-2xl font-semibold mb-6 text-center">오늘의 상태를 알려주세요</h2>
-  <form action="/today/result" method="get">
+  <form id="surveyForm" action="/today/result" method="get">
     <div class="mb-4">
       <label class="block mb-1 font-medium">현재 기분</label>
       <select name="mood" class="w-full border p-2 rounded">
@@ -28,15 +29,101 @@
         <option>운동</option>
       </select>
     </div>
-    <div class="mb-6">
+    <div class="mb-4">
       <label class="block mb-1 font-medium">현재 위치 (시/도)</label>
-      <input type="text" name="location" class="w-full border p-2 rounded" placeholder="예: 서울특별시">
+      <input type="text" id="locationInput" name="location" class="w-full border p-2 rounded" placeholder="예: 서울특별시">
     </div>
+    <input type="hidden" name="weather" id="weatherInput">
     <div class="text-center">
       <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">추천 확인하기</button>
     </div>
   </form>
 </div>
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+<script>
+  const SERVICE_KEY = "YOUR_ENCODED_FORECAST_API_KEY"; // 기상청 인코딩된 키
+
+  function dfs_xy_conv(code, v1, v2) {
+    var RE = 6371.00877, GRID = 5.0, SLAT1 = 30.0, SLAT2 = 60.0, OLON = 126.0, OLAT = 38.0, XO = 43, YO = 136;
+    var DEGRAD = Math.PI / 180.0;
+    var re = RE / GRID, slat1 = SLAT1 * DEGRAD, slat2 = SLAT2 * DEGRAD;
+    var olon = OLON * DEGRAD, olat = OLAT * DEGRAD;
+    var sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+    sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
+    var sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+    sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
+    var ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
+    ro = re * sf / Math.pow(ro, sn);
+    var rs = {};
+    if (code == "toXY") {
+      rs['lat'] = v1;
+      rs['lng'] = v2;
+      var ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
+      ra = re * sf / Math.pow(ra, sn);
+      var theta = v2 * DEGRAD - olon;
+      if (theta > Math.PI) theta -= 2.0 * Math.PI;
+      if (theta < -Math.PI) theta += 2.0 * Math.PI;
+      theta *= sn;
+      rs['x'] = Math.floor(ra * Math.sin(theta) + XO + 0.5);
+      rs['y'] = Math.floor(ro - ra * Math.cos(theta) + YO + 0.5);
+    }
+    return rs;
+  }
+
+  function interpretSky(value) {
+    return { "1": "맑음", "3": "구름많음", "4": "흐림" }[value] || "정보 없음";
+  }
+
+  document.getElementById('surveyForm').addEventListener('submit', function (e) {
+    e.preventDefault(); // 기본 제출 중단
+
+    const locationText = document.getElementById('locationInput').value.trim();
+    if (!locationText) {
+      alert("지역을 입력해주세요");
+      return;
+    }
+
+    const geocoder = new kakao.maps.services.Geocoder();
+    geocoder.addressSearch(locationText, function (result, status) {
+      if (status === kakao.maps.services.Status.OK) {
+        const lat = result[0].y;
+        const lon = result[0].x;
+        const grid = dfs_xy_conv("toXY", lat, lon);
+        const x = grid.x;
+        const y = grid.y;
+
+        // 시간 세팅
+        let now = new Date();
+        let ymd = now.getFullYear().toString() + ('0' + (now.getMonth() + 1)).slice(-2) + ('0' + now.getDate()).slice(-2);
+        let hour = now.getHours();
+        if (now.getMinutes() < 30) hour--;
+        hour = ('0' + hour).slice(-2);
+        let baseTime = hour + "30";
+
+        const apiURL = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${SERVICE_KEY}&pageNo=1&numOfRows=1000&dataType=JSON&base_date=${ymd}&base_time=${baseTime}&nx=${x}&ny=${y}`;
+
+        fetch(apiURL)
+          .then(res => res.json())
+          .then(data => {
+            const items = data.response.body.items.item;
+            const sky = items.find(i => i.category === "SKY");
+            const skyValue = sky ? interpretSky(sky.fcstValue) : "정보 없음";
+
+            document.getElementById("weatherInput").value = skyValue;
+
+            // 이제 폼 제출
+            e.target.submit();
+          })
+          .catch(err => {
+            alert("날씨 정보를 불러오지 못했습니다.");
+            console.error(err);
+          });
+      } else {
+        alert("지역 검색 실패");
+      }
+    });
+  });
+</script>
 </body>
 </html>

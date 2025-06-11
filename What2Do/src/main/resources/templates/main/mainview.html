@@ -8,6 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .slider__btn a {
+      z-index: 20;
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
@@ -20,6 +21,9 @@
       font-size: 35px;
       line-height: 43px;
       text-decoration: none;
+    }
+    .slider__btn {
+      z-index: 20;
     }
     .slider__btn a:hover {
       background-color: #00000079;
@@ -49,6 +53,7 @@
     .slide img {
       width: 850px;
       height: 450px;
+      pointer-events: none;
     }
     #radio1:checked ~ .first { margin-left: 0; }
     #radio2:checked ~ .first { margin-left: -100%; }
@@ -61,6 +66,13 @@
 
       display: inline-block;
     }
+    .slide a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 10;
+}
   </style>
 </head>
 <body class="bg-white text-gray-800">
@@ -79,10 +91,10 @@
       <input type="radio" name="radio-btn" id="radio3">
       <input type="radio" name="radio-btn" id="radio4">
 
-      <div class="slide first"><img src="/img/배너4.png" class="w-full h-[230px] object-cover" alt=""></div>
-      <div class="slide"><img src="/img/배너5.png" class="w-full h-[230px] object-cover" alt=""></div>
+      <div class="slide first"><img src="/img/배너1.png" class="w-full h-[230px] object-cover" alt=""></div>
+      <div class="slide"><a th:href="@{/lego}" class="block w-full h-full relative z-10"><img src="/img/배너2.png" class="w-full h-[230px] object-cover" alt=""></a></div>
       <div class="slide"><img src="/img/배너4.PNG" class="w-full h-[230px] object-cover" alt=""></div>
-      <div class="slide"><img src="/img/배너3.PNG" class="w-full h-[230px] object-cover" alt=""></div>
+      <div class="slide"><img src="/img/배너1.PNG" class="w-full h-[230px] object-cover" alt=""></div>
     </div>
 
     <!-- 슬라이드 버튼 -->

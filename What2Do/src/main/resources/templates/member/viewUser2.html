@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>회원 정보 수정</title>
@@ -74,23 +74,24 @@
         }
 
         .submit-btn {
-            background-color: #1a2e45;
+            background-color: #1f2937;
             color: white;
         }
 
         .back-btn {
-            background-color: #6c757d;
+            background-color: #1f2937;
             color: white;
         }
 
+        .submit-btn:hover {
+        }
 
         .back-btn:hover {
-            background-color: #5a6268;
         }
       .btn-check,
       input[type="submit"],
      .back-btn {
-      background-color: #0d6efd;
+      background-color: #1f2937;
       color: white;
       padding: 10px;
       font-weight: bold;
@@ -99,7 +100,7 @@
       cursor: pointer;
   }
   .btn-check {
-      background-color: #0d6efd;
+      background-color: #1a2e45;
       color: white;
       padding: 10px 18px;
       font-weight: 700;
@@ -117,7 +118,6 @@
   }
 
   .btn-check:hover {
-      background-color: #0b5ed7;
       box-shadow: 0 5px 12px rgba(11, 94, 215, 0.5);
   }
 
@@ -137,7 +137,22 @@
       border: 1px solid #ccc;
       border-radius: 6px;
   }
+   p {
+        color: red;
+      margin-top: 10px;
+      list-style: none;
+      padding-left: 0;
+  }
+  .error-messages {
+      color: red;
+      margin-top: 10px;
+      list-style: none;
+      padding-left: 0;
+  }
 
+  .error-messages li {
+      margin-bottom: 5px;
+  }
     </style>
 </head>
 <body>
@@ -148,17 +163,25 @@
     <h2>👤 회원 정보 수정</h2>
 
     <form th:action="@{/update2/{id}(id=${user.id})}" method="post">
+
+
         <label>유저 아이디</label>
         <input type="text" th:value="${user.id}" disabled/>
 
         <label>*비밀번호</label>
-        <input type="text" name="pass" id="pass" th:value="${user.pass}" minlength="4" maxlength="20" placeholder="최소 4글자 이상, 최대 20글자 이하" required>
+        <input type="text" name="pass" id="pass" th:value="${user.pass}" minlength="8" maxlength="16"
+               placeholder="비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요."  required>
 
         <label>*비밀번호 확인</label>
         <div class="pass-check-group">
             <input type="password" name="pass2" id="pass2" required>
             <button type="button" class="btn-check" onclick="checkPass()">확인</button>
         </div>
+        <p th:text="${errPass2}"></p>
+        <ul class="error-messages">
+            <li th:each="msg : ${errList}" th:text="${msg}"></li>
+        </ul>
+
 
         <label>이름</label>
         <input type="text" name="name" th:value="${user.name}" disabled/>
@@ -181,16 +204,21 @@
         <label>가입일자</label>
         <input type="text" th:value="${#strings.substring(user.indate,0,10)}" disabled/>
 
+
         <div class="btn-group">
             <input type="submit" class="submit-btn" value="수정 완료"/>
         </div>
+
     </form>
-        <div class="btn-group">
-            <a href="/myPage"><button type="button" class="back-btn">뒤로가기</button></a>
-            <form th:action="@{'/delete2/' + ${session.user.id}}" method="get" style="display:inline;">
-                <button type="submit" class="btn btn-delete">회원탈퇴</button>
-            </form>
-        </div>
+
+    <div class="btn-group">
+        <a href="/myPage"><button type="button" class="back-btn">뒤로가기</button></a>
+
+
+        <form th:action="@{'/delete2/' + ${session.user.id}}" method="get" style="display:inline;">
+            <button type="submit" class="btn btn-delete">회원탈퇴</button>
+        </form>
+    </div>
 
 
 </div>

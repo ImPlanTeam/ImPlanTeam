@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <style>
+
+        ul, ol { list-style: none; }
+        a { text-decoration: none; color: #000000; }
+        input, textarea { outline: none; }
+
+        #wrapper { width: 100vw; }
+
+        main {
+            width: 100%;
+            height: calc(100vh - 130px);
+            margin-top: 30px;
+            margin-bottom: 50px;
+            background: #F9F7F7;
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 40px;
+        }
+
+        .ct_footer { font-size: 15px; }
+
+        .ct_search {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .search_bar { position: relative; }
+        .search_bar > img {
+            position: absolute;
+            left: 20px;
+            top: 21px;
+            width: 30px;
+        }
+        .searchText {
+            width: 700px;
+            height: 70px;
+            font-size: 30px;
+            padding-left: 72px;
+            padding-right: 30px;
+            border: 1px solid #D2DFE5;
+            border-radius: 5px;
+        }
+        .btnSearch {
+            border: 1px solid;
+            width: 100px;
+            height: 70px;
+            font-size: 30px;
+            font-weight: 600;
+            line-height: 68px;
+            text-align: center;
+            background: #3F72AF;
+            color:#F9F7F7;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .ly_content {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .ct_map, .ct_weather {
+            width: 48%;
+            height: 600px;
+            background: #fff;
+            border: 1px solid #D2DFE5;
+            padding: 20px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div id="wrapper">
+    <main>
+        <div class="ct_search">
+            <div class="search_bar">
+                <img src="/img/돋보기.png">
+                <input class="searchText" type="text" placeholder="장소 입력 후 검색 버튼 클릭">
+            </div>
+            <div class="btnSearch">검색</div>
+        </div>
+        <div class="ly_content">
+            <div class="ct_map" id="map"></div>
+            <div class="ct_weather">날씨 정보를 불러오는 중...</div>
+        </div>
+    </main>
+</div>
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fca66437ffd757b4f7019de36217ec4b&libraries=services"></script>
+<script>
+    const SERVICE_KEY = "HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D";
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const mapContainer = document.getElementById('map');
+        const inputObjSearchText = document.querySelector('.searchText');
+        const searchButton = document.querySelector('.btnSearch');
+        const weatherBox = document.querySelector('.ct_weather');
+
+        const map = new kakao.maps.Map(mapContainer, {
+            center: new kakao.maps.LatLng(33.450701, 126.570667),
+            level: 3
+        });
+
+        const geocoder = new kakao.maps.services.Geocoder();
+
+        function dfs_xy_conv(code, v1, v2) {
+            var RE = 6371.00877, GRID = 5.0, SLAT1 = 30.0, SLAT2 = 60.0, OLON = 126.0, OLAT = 38.0, XO = 43, YO = 136;
+            var DEGRAD = Math.PI / 180.0;
+            var re = RE / GRID, slat1 = SLAT1 * DEGRAD, slat2 = SLAT2 * DEGRAD;
+            var olon = OLON * DEGRAD, olat = OLAT * DEGRAD;
+
+            var sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+            sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
+            var sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+            sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
+            var ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
+            ro = re * sf / Math.pow(ro, sn);
+            var rs = {};
+            if (code == "toXY") {
+                rs['lat'] = v1;
+                rs['lng'] = v2;
+                var ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
+                ra = re * sf / Math.pow(ra, sn);
+                var theta = v2 * DEGRAD - olon;
+                if (theta > Math.PI) theta -= 2.0 * Math.PI;
+                if (theta < -Math.PI) theta += 2.0 * Math.PI;
+                theta *= sn;
+                rs['x'] = Math.floor(ra * Math.sin(theta) + XO + 0.5);
+                rs['y'] = Math.floor(ro - ra * Math.cos(theta) + YO + 0.5);
+            }
+            return rs;
+        }
+
+        function interpretValue(category, value) {
+            if (category === "SKY") {
+                return { "1": "맑음", "3": "구름많음", "4": "흐림" }[value] || value;
+            } else if (category === "PTY") {
+                return {
+                    "0": "없음", "1": "비", "2": "비/눈", "3": "눈", "4": "소나기",
+                    "5": "빗방울", "6": "빗방울/눈날림", "7": "눈날림"
+                }[value] || value;
+            }
+            return value;
+        }
+
+        function getWeather(lat, lon) {
+            const result = dfs_xy_conv("toXY", lat, lon);
+            const xPoint = result.x;
+            const yPoint = result.y;
+
+            let now = new Date();
+            let y = now.getFullYear();
+            let m = ('0' + (now.getMonth() + 1)).slice(-2);
+            let d = ('0' + now.getDate()).slice(-2);
+            let formattedDate = y + m + d;
+
+            let hour = now.getHours();
+            if (now.getMinutes() < 30) hour--;
+            hour = ('0' + hour).slice(-2);
+            let formattedTime = hour + "30";
+
+            const url = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${SERVICE_KEY}&pageNo=1&numOfRows=1000&dataType=JSON&base_date=${formattedDate}&base_time=${formattedTime}&nx=${xPoint}&ny=${yPoint}`;
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    const items = data.response.body.items.item;
+                    let text = "<h2>날씨 정보</h2><ul>";
+                    items.forEach(item => {
+                        if (["T1H", "SKY", "PTY"].includes(item.category)) {
+                            let label = item.category === "T1H" ? "기온" : item.category === "SKY" ? "하늘상태" : "강수형태";
+                            let interpreted = interpretValue(item.category, item.fcstValue);
+                            text += `<li><strong>${label}</strong> (${item.fcstTime}): ${interpreted}</li>`;
+                        }
+                    });
+                    text += "</ul>";
+                    weatherBox.innerHTML = text;
+                })
+                .catch(err => {
+                    weatherBox.innerHTML = "날씨 정보를 가져오지 못했습니다.";
+                    console.error(err);
+                });
+        }
+
+        function searchLocation(query) {
+            geocoder.addressSearch(query, function (result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+                    new kakao.maps.Marker({ map: map, position: coords });
+                    map.setCenter(coords);
+                    getWeather(result[0].y, result[0].x);
+                } else {
+                    weatherBox.innerHTML = "검색 결과가 없습니다.";
+                }
+            });
+        }
+
+        searchButton.addEventListener('click', function () {
+            const query = inputObjSearchText.value.trim();
+            if (query) searchLocation(query);
+        });
+
+        const locationParam = new URLSearchParams(window.location.search).get('location');
+        if (locationParam) {
+            inputObjSearchText.value = locationParam;
+            searchLocation(locationParam);
+        }
+    });
+</script>
+</body>
+</html>

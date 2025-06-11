@@ -256,7 +256,9 @@
       var map = new kakao.maps.Map(mapContainer, mapOption);
       var geocoder = new kakao.maps.services.Geocoder();
       var marker = new kakao.maps.Marker();
-      var infowindow = new kakao.maps.InfoWindow({ zindex: 1 });
+      var infowindow = new kakao.maps.InfoWindow({
+       zindex: 1
+       });
 
       function searchDetailAddrFromCoords(coords, callback) {
         geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);

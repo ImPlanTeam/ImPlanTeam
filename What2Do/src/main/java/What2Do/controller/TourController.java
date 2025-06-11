@@ -30,8 +30,8 @@ public class TourController {
     public String callTourApi() {
         StringBuilder result = new StringBuilder();
         String urlStr = "http://apis.data.go.kr/B551011/KorService2/areaBasedList2?" +
-                "serviceKey=hX6d4qEvqhBk%2BcXkqrbaw0IEglp1qav4orCTbUuUVz6ozUBAKgXyfX9cGPMXTJ8nZOG%2Fa3EJdrDr70iitLHTYA%3D%3D" +
-                "&numOfRows=1000&pageNo=4&MobileOS=ETC&MobileApp=TestApp&_type=json";
+                "serviceKey=HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D" +
+                "&numOfRows=10000&pageNo=2&MobileOS=ETC&MobileApp=TestApp&_type=json";
 
         try {
             HttpURLConnection urlConnection = (HttpURLConnection) new URL(urlStr).openConnection();
@@ -102,37 +102,11 @@ public class TourController {
         }
     }
 
-    @GetMapping("/api/tour/updateOverview")
-    public String updateTourOverviews() {
-        List<Tour> allTours = tourRepository.findAll();
-        int updatedCount = 0;
-
-        for (Tour tour : allTours) {
-            try {
-                if (tour.getOverview() != null && !tour.getOverview().isBlank()) continue;
-
-                JsonNode detail = fetchDetailInfo(tour.getContentid());
-                if (detail != null) {
-                    String newOverview = detail.path("overview").asText("");
-                    if (!newOverview.isBlank()) {
-                        tour.setOverview(newOverview);
-                        tourRepository.save(tour);
-                        updatedCount++;
-                        Thread.sleep(150); // API 요청 딜레이
-                    }
-                }
-            } catch (Exception e) {
-                logger.warn("상세정보 갱신 실패 - contentId: {}, 이유: {}", tour.getContentid(), e.getMessage());
-            }
-        }
-
-        return "상세정보 업데이트 완료. 총 " + updatedCount + "건 업데이트됨.";
-    }
 
     private JsonNode fetchDetailInfo(String contentId) {
         try {
             String urlStr = "https://apis.data.go.kr/B551011/KorService2/detailCommon2?" +
-                    "serviceKey=hX6d4qEvqhBk%2BcXkqrbaw0IEglp1qav4orCTbUuUVz6ozUBAKgXyfX9cGPMXTJ8nZOG%2Fa3EJdrDr70iitLHTYA%3D%3D" +
+                    "serviceKey=HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D" +
                     "&MobileApp=AppTest&MobileOS=ETC&_type=json" +
                     "&contentId=" + contentId;
 
