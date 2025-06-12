@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>오늘 뭐하지?</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #loading {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            background: white;
+            opacity: 0.9;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #loading img {
+            width: 400px;
+            max-width: 20vw;
+            height: auto;
+        }
+
+        #main-content {
+            display: none;
+            padding: 40px;
+        }
+
+        .content-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+
+<!-- 로딩 화면 -->
+<div id="loading">
+    <img src="/img/로딩3.gif" alt="로딩 중...">
+</div>
+
+<!-- 본문 내용 -->
+<div id="main-content">
+    <span th:text="${rlist[0].name}">활동 이름</span><br>
+    <span th:text="${rlist[0].description}">활동 설명</span><br><br>
+
+    <!-- 안전한 방법: data-* 속성 사용 -->
+    <input type="button" th:value="${area}" th:onclick="cityView([[${area}]],[[${city}]])">
+</div>
+
+<!-- 푸터 -->
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+<!-- 스크립트 -->
+<script type="text/javascript">
+    // 로딩 애니메이션 처리
+    $(window).on('load', function () {
+        setTimeout(function () {
+            $('#loading').fadeOut(500, function () {
+                $('#main-content').fadeIn(300);
+            });
+        }, 2500);
+    });
+
+    // 버튼 클릭 시 해당 지역으로 이동
+    function cityView(area2,city2){
+        location.href='/cityFind?area=' + area2 +'&city=' + city2;
+    }
+</script>
+
+</body>
+</html>

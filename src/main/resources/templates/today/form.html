@@ -4,9 +4,21 @@
   <meta charset="UTF-8">
   <title>활동 추천 설문</title>
   <link rel="stylesheet" th:href="@{/css/common.css}">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<style>
+  .sgg{
+  width: 253px;
+  border p-2 rounded
+}
+  .sgg2{
+  width: 253px;
+  border p-2 rounded
+}
+</style>
 <body>
+
 <div th:replace="~{fragments/top :: headerFragment}"></div>
 <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow">
   <h2 class="text-2xl font-semibold mb-6 text-center">오늘의 상태를 알려주세요</h2>
@@ -36,6 +48,7 @@
         <option value="혼자">혼자</option>
         <option value="친구">친구</option>
         <option value="연인">연인</option>
+        <option value="가족">가족</option>
       </select>
     </div>
     <div class="mb-4">
@@ -49,9 +62,34 @@
       </select>
     </div>
     <div class="mb-6">
-      <label class="block mb-1 font-medium">현재 위치 (시/도)</label>
-      <input type="text" name="area" class="w-full border p-2 rounded" placeholder="예: 서울특별시">
+      <label class="block mb-1 font-medium">현재 위치 (도/시)</label>
+      <span>
+        <select  class="sgg" name="area" th:onchange="cityList(value)">
+            <option disabled selected>도/광역시를 선택하세요</option>
+            <option value="서울특별시">서울특별시</option>
+            <option value="경기도">경기도</option>
+            <option value="인천광역시">인천광역시</option>
+            <option value="강원도">강원도</option>
+            <option value="충청북도">충청북도</option>
+            <option value="충청남도">충청남도</option>
+            <option value="세종특별자치시">세종특별자치시</option>
+            <option value="대전광역시">대전광역시</option>
+            <option value="경상북도">경상북도</option>
+            <option value="경상남도">경상남도</option>
+            <option value="대구광역시">대구광역시</option>
+            <option value="전라북도">전라북도</option>
+            <option value="전라남도">전라남도</option>
+            <option value="광주광역시">광주광역시</option>
+            <option value="부산광역시">부산광역시</option>
+            <option value="울산광역시">울산광역시</option>
+            <option value="제주도">제주도</option>
+      </select>
+      <select  class="sgg2" name="city" id="cityL">
+<!--        <option value=""></option>-->
+      </select>
+      </span>
     </div>
+
     <div class="text-center">
       <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">추천 확인하기</button>
     </div>
@@ -61,3 +99,26 @@
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
 </body>
 </html>
+<script>
+    function cityList(area3){
+    var clistL=document.getElementById('cityL');
+    clistL.innerHTML="";
+    $.ajax({
+      type: "get",
+      url: "/cityListV",
+      data:
+      { "area3" : area3 },
+      success: function(clist) {
+      for(let i=0; i<clist.length; i++){
+          const option = document.createElement("option");
+          option.value = clist[i].city;
+          option.textContent = clist[i].city;
+          clistL.appendChild(option);
+      }
+    },
+      error: function() {
+        alert("오류가 발생했습니다.");
+      }
+    });
+  }
+</script>

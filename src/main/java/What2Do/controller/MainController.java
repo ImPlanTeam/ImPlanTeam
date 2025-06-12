@@ -1,10 +1,8 @@
 package What2Do.controller;
 
-import What2Do.domain.Board;
-import What2Do.domain.Comment;
-import What2Do.domain.Tour;
-import What2Do.domain.User;
+import What2Do.domain.*;
 import What2Do.service.BoardService;
+import What2Do.service.CityService;
 import What2Do.service.CommentService;
 import What2Do.service.TourService;
 import jakarta.persistence.EntityManager;
@@ -26,12 +24,14 @@ public class MainController {
     private final CommentService commentService;
     private final EntityManager entityManager;
     private final BoardService boardService;
+    private final CityService cityService;
 
-    public MainController(TourService tourService, CommentService commentService, EntityManager entityManager, BoardService boardService) {
+    public MainController(TourService tourService, CommentService commentService, EntityManager entityManager, BoardService boardService, CityService cityService) {
         this.tourService = tourService;
         this.commentService = commentService;
         this.entityManager = entityManager;
         this.boardService = boardService;
+        this.cityService = cityService;
     }
 
     @RequestMapping("/lego")
@@ -51,7 +51,9 @@ public class MainController {
 
 
     @GetMapping("join")
-    public String join() {
+    public String join(Model model) {
+        UserDTO userDTO = new UserDTO();
+        model.addAttribute("user", userDTO);
         return "/member/join";
     }
 

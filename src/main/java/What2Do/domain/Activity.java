@@ -1,7 +1,10 @@
 package What2Do.domain;
 
 import jakarta.persistence.*;
-
+import lombok.Getter;
+import lombok.Setter;
+@Getter
+@Setter
 @Entity
 public class Activity {
     @Id
@@ -16,6 +19,6 @@ public class Activity {
     private String mood;         // ex) "우울;지침"
     private String companions;   // ex) "혼자;친구"
     private String tags;         // ex) "실내;휴식"
-    private String area;
+
 
 }

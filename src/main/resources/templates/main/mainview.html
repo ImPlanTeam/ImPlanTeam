@@ -22,12 +22,20 @@
           text-decoration: none;
           z-index: 10;
         }
-        .slider__btn {
-      z-index: 20;
-    }
-        .slider__btn a:hover {
-          background-color: #00000079;
-        }
+       .slider__btn {
+    z-index: 20;
+    color: white;
+    background-color: #00000086;
+    width: 30px;
+    height: 30px;
+    line-height: 28px;
+    border-radius: 50px;
+    text-align: center;
+}
+     .slider__btn:hover{
+     color: black;
+     background-color: #ffffffc4;
+     }
         #rbtn { right: 15px; top: 370px; }
         #lbtn { left: 15px; top: 370px; }
 
@@ -94,7 +102,7 @@
             <div class="slide first"><img src="/img/배너4.png" class="w-full h-[450px] object-cover" alt=""></div>
             <div class="slide"><a th:href="@{/lego}" ><img src="/img/배너2.png" class="w-full h-[450px] object-cover" alt=""></a></div>
             <div class="slide"><img src="/img/배너3.PNG" class="w-full h-[450px] object-cover" alt=""></div>
-            <div class="slide"><img src="/img/배너5.PNG" class="w-full h-[450px] object-cover" alt=""></div>
+            <div class="slide"><a th:href="@{/lego}" ><img src="/img/배너5.PNG" class="w-full h-[450px] object-cover" alt=""></a></div>
         </div>
 
         <!-- 슬라이드 버튼 -->
