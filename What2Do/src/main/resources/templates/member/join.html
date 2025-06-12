@@ -206,36 +206,26 @@
   const button = document.getElementById("duplenxid");
   const button2 = document.getElementById("checkP");
 
-
-
   button.addEventListener('click', function() {
     button.value = "2";
   });
 
-
-
 function validateForm(form) {
-
       if (button.value === "1") {
       alert("아이디 중복확인은 필수입니다.");
       return false;
   }
-
       if (button2.value === "1") {
       alert("비밀번호 확인은 필수입니다.");
       return false;
+    }
   }
-  }
-
-
-
     function onlyAlphaNum(input) {
       const regex = /^[A-Za-z0-9]*$/;
       if (!regex.test(input.value)) {
           input.value = input.value.replace(/[^A-Za-z0-9]/g, '');
       }
   }
-
 
   const domainListEl = document.querySelector('#domain-list')
   const domainInputEl = document.querySelector('#domain-txt')

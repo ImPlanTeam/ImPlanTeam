@@ -12,6 +12,13 @@
     }
     * {
       box-sizing: border-box;
+      }
+    .my{
+        text-align: center;
+    }
+    #userID{
+    color: gray;
+    font-weight : bold;
     }
 
     .navbar {

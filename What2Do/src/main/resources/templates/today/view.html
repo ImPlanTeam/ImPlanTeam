@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+</head>
+<body>
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div>
+  <span th:text="${rlist[0].name}"> </span>
+  <br>
+  <span th:text="${rlist[0].description}"></span>
+  <input type="button" th:value="${area}" th:onclick="cityView([[${area}]],[[${city}]])">
+</div>
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+</body>
+</html>
+<script>
+  function cityView(area2,city2){
+      location.href='/cityFind?area=' + area2 +'&city=' + city2;
+  }
+</script>

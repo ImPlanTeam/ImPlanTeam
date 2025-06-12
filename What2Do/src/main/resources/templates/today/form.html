@@ -6,35 +6,58 @@
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 min-h-screen py-10 px-4">
+<body>
 <div th:replace="~{fragments/top :: headerFragment}"></div>
 <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow">
     <h2 class="text-2xl font-semibold mb-6 text-center">오늘의 상태를 알려주세요</h2>
-    <form action="/today/result" method="get">
+    <form action="/recommend" method="get">
         <div class="mb-4">
             <label class="block mb-1 font-medium">현재 기분</label>
             <select name="mood" class="w-full border p-2 rounded">
-                <option>😴 피곤해요</option>
-                <option>😐 그냥 그래요</option>
-                <option>😊 기분 좋아요</option>
+                <option value="기분좋아요">😊 기분 좋아요</option>
+                <option value="그냥그래요">😐 그냥 그래요</option>
+                <option value="피곤해요">😴 피곤해요</option>
+                <option value="스트레스">😑 스트레스</option>
+                <option value="우울해요">😥 우울 해요</option>
             </select>
         </div>
         <div class="mb-4">
             <label class="block mb-1 font-medium">선호하는 활동 유형</label>
-            <select name="preference" class="w-full border p-2 rounded">
-                <option>실내</option>
-                <option>실외</option>
-                <option>문화/예술</option>
-                <option>운동</option>
+            <select class="w-full border p-2 rounded" name="tags">
+                <option value="실내">실내</option>
+                <option value="실외">실외</option>
+                <option value="문화/예술">문화/예술</option>
+                <option value="운동">운동</option>
+            </select>
+        </div>
+        <div class="mb-4">
+            <label class="block mb-1 font-medium">동행인</label>
+            <select class="w-full border p-2 rounded" name="companions">
+                <option value="혼자">혼자</option>
+                <option value="친구">친구</option>
+                <option value="연인">연인</option>
+                <option value="가족">가족</option>
+            </select>
+        </div>
+        <div class="mb-4">
+            <label class="block mb-1 font-medium">날씨</label>
+            <select  class="w-full border p-2 rounded" name="weather">
+                <option value="맑음">맑음</option>
+                <option value="약간흐림">약간 흐림</option>
+                <option value="흐림">흐림</option>
+                <option value="비">비</option>
+                <option value="눈">눈</option>
             </select>
         </div>
         <div class="mb-6">
             <label class="block mb-1 font-medium">현재 위치 (시/도)</label>
-            <input type="text" name="location" class="w-full border p-2 rounded" placeholder="예: 서울특별시">
+            <input type="text" name="area" class="w-full border p-2 rounded" placeholder="예: 서울특별시">
         </div>
+
         <div class="text-center">
             <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition">추천 확인하기</button>
         </div>
+
     </form>
 </div>
 <div th:replace="~{fragments/footer :: footerFragment}"></div>

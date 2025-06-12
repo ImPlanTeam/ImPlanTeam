@@ -14,13 +14,16 @@
     </nav>
 
     <div class="auth-section">
-    <span th:if="${session.user != null}">
-      <span th:text="${session.user.id + '님'}"></span>
-      <a th:href="@{/logout}" id="a1">로그아웃</a>
-      <a th:href="@{/myPage}" id="a2">
-        <button class="login-btn">마이페이지</button>
-      </a>
-    </span>
+        <div class="my">
+            <span th:if="${session.user != null}">
+                <a th:href="@{/myPage}" >
+                    <img src="/img/기본프로필.webp" width="35px" height="35px" onclick="toggleSelect()" id="profile">
+                </a>
+                <div th:text="${session.user.id + '님'}" id="userID" ></div>
+            </span>
+        </div>
+
+
 
         <span th:if="${session.user == null}">
       <a th:href="@{/login2}" id="a3">
