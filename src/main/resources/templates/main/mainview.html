@@ -1,86 +1,52 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>오늘 뭐하지?</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .slider__btn a {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          width: 50px;
-          height: 50px;
-          background-color: #00000018;
-          color: #fff;
-          text-align: center;
-          border-radius: 50%;
-          font-size: 35px;
-          line-height: 43px;
-          text-decoration: none;
-          z-index: 10;
+        .slider__wrap {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
         }
-       .slider__btn {
-    z-index: 20;
-    color: white;
-    background-color: #00000086;
-    width: 30px;
-    height: 30px;
-    line-height: 28px;
-    border-radius: 50px;
-    text-align: center;
-}
-     .slider__btn:hover{
-     color: black;
-     background-color: #ffffffc4;
-     }
-        #rbtn { right: 15px; top: 370px; }
-        #lbtn { left: 15px; top: 370px; }
+
+        .slider__img {
+            height: auto;
+            aspect-ratio: 16 / 9;
+            background-color: #f0f0f0;
+        }
+
+        .slider__inner {
+            display: flex;
+            width: 100%;
+        }
 
         .slider {
-          width: 700px;
-          height: 450px;
-          overflow: hidden;
-          position: absolute;
+            flex-shrink: 0;
+            width: 100%;
+        }
 
+        .slider__btn button {
+            font-size: 24px;
         }
-        .slides {
-      display: flex;
-      width: 400%;
-      transition: 1s;
-    }
-        .slides input {
-          display: none;
-        }
-        .slide {
-      width: 100%;
-      flex-shrink: 0;
-    }
-        .slide img {
-          width: 850px;
-          height: 450px;
-          pointer-events: none;
-        }
-        #radio1:checked ~ .first { margin-left: 0; }
-        #radio2:checked ~ .first { margin-left: -100%; }
-        #radio3:checked ~ .first { margin-left: -200%; }
-        #radio4:checked ~ .first { margin-left: -300%; }
 
-        a {
-          text-decoration: none;
-          color: black;
-
-          display: inline-block;
+        .slider__dot .dot {
+            width: 14px;
+            height: 14px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 50%;
+            text-indent: -9999px;
+            transition: background 0.3s;
+            cursor: pointer;
         }
-        .slide a {
-      display: block;
-      width: 100%;
-      height: 100%;
-      position: relative;
-      z-index: 10;
-    }
+
+        .slider__dot .dot.active {
+            background: rgba(255,255,255,0.9);
+        }
     </style>
 </head>
 <body class="bg-white text-gray-800">
@@ -92,32 +58,47 @@
 <section class="flex flex-col md:flex-row p-4 gap-4 items-start">
 
     <!-- 슬라이드 배너 -->
-    <div class="relative w-full md:w-[850px] h-[450px] overflow-hidden rounded-lg shadow">
-        <div class="slides flex transition-all duration-700">
-            <input type="radio" name="radio-btn" id="radio1" checked>
-            <input type="radio" name="radio-btn" id="radio2">
-            <input type="radio" name="radio-btn" id="radio3">
-            <input type="radio" name="radio-btn" id="radio4">
+    <main id="main" class="w-full md:w-2/3">
+        <section id="sliderType01">
+            <div class="slider__wrap relative">
+                <div class="slider__img relative overflow-hidden rounded-xl shadow-lg">
+                    <div class="slider__inner flex transition-all duration-500">
+                        <div class="slider" role="group" aria-label="1/4"><img src="/img/배너4.PNG" alt="이미지1" class="w-full h-auto"></div>
 
-            <div class="slide first"><img src="/img/배너4.png" class="w-full h-[450px] object-cover" alt=""></div>
-            <div class="slide"><a th:href="@{/lego}" ><img src="/img/배너2.png" class="w-full h-[450px] object-cover" alt=""></a></div>
-            <div class="slide"><img src="/img/배너3.PNG" class="w-full h-[450px] object-cover" alt=""></div>
-            <div class="slide"><a th:href="@{/lego}" ><img src="/img/배너5.PNG" class="w-full h-[450px] object-cover" alt=""></a></div>
-        </div>
+                        <div class="slider" role="group" aria-label="2/4">
+                            <a href="/lego" class="block w-full h-full relative z-10">
+                                <img src="/img/배너5.PNG" alt="배너 이미지" class="w-full h-full object-cover rounded-xl">
+                            </a>
+                        </div>
 
-        <!-- 슬라이드 버튼 -->
-        <div class="absolute inset-0 flex justify-between items-center px-4">
-            <a href="#" onclick="prev()" class="slider__btn">&lt;</a>
-            <a href="#" onclick="next()" class="slider__btn">&gt;</a>
-        </div>
-    </div>
+                        <div class="slider" role="group" aria-label="3/4"><img src="/img/배너3.PNG" alt="이미지3" class="w-full h-auto"></div>
+                        <div class="slider" role="group" aria-label="4/4"><img src="/img/배너7.PNG" alt="이미지4" class="w-full h-auto"></div>
+                    </div>
 
+                    <!-- 좌우 버튼 -->
+                    <div class="slider__btn absolute top-1/2 left-0 w-full flex justify-between items-center px-4 z-10">
+                        <button class="prev bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center transition">
+                            &#10094;
+                        </button>
+                        <button class="next bg-black/50 text-white w-10 h-10 rounded-full flex items-center justify-center transition">
+                            &#10095;
+                        </button>
+                    </div>
+
+                    <!-- 닷 버튼 -->
+                    <div class="slider__dot absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
+                        <!-- JS에서 자동 생성 -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
     <!-- 공지사항 -->
     <div class="w-full md:w-1/3 p-4 bg-white rounded-lg shadow">
         <h2 class="text-lg font-semibold mb-3"> 공지사항</h2>
         <ul class="text-sm space-y-1">
             <li th:each="board : ${blist}">
-                <a th:href="@{/view(num=${board.num})}" class="hover:underline">
+                <a class="hover:underline" th:href="@{/view(num=${board.num})}">
                     • [[${board.title}]]
                 </a>
             </li>
@@ -126,14 +107,17 @@
     </div>
 </section>
 
+
 <!-- 인기 관광지 BEST 4 -->
 <section class="p-4">
     <h2 class="text-xl font-bold mb-4"> 인기 관광지 BEST 5</h2>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        <div th:each="bestFive : ${bestFive}" class="bg-white rounded-xl shadow hover:shadow-md transition duration-300 overflow-hidden" th:onclick="|location.href='@{detail(id=${bestFive.id})}'|">
-            <img th:src="${bestFive.firstimage2}" alt="" class="w-full h-48 object-cover" />
+        <div class="bg-white rounded-xl shadow hover:shadow-md transition duration-300 overflow-hidden"
+             th:each="bestFive : ${bestFive}"
+             th:onclick="|location.href='@{detail(id=${bestFive.id})}'|">
+            <img alt="" class="w-full h-48 object-cover" th:src="${bestFive.firstimage2}"/>
             <div class="p-3 text-center">
-                <p th:text="${bestFive.title}" class="text-base font-semibold text-gray-800 truncate"></p>
+                <p class="text-base font-semibold text-gray-800 truncate" th:text="${bestFive.title}"></p>
             </div>
         </div>
     </div>
@@ -144,25 +128,42 @@
 
 <!-- 슬라이드 스크립트 -->
 <script>
-    let counter = 1;
-    setInterval(() => {
-      document.getElementById('radio' + counter).checked = true;
-      counter = counter % 4 + 1;
-    }, 5000);
+    const sliderInner = document.querySelector(".slider__inner");
+ const sliders = document.querySelectorAll(".slider");
+ const sliderDot = document.querySelector(".slider__dot");
 
-    function prev() {
-      event.preventDefault();
-      counter = (counter - 2 + 4) % 4 + 1;
-      document.getElementById('radio' + counter).checked = true;
-    }
+ let currentIndex = 0;
+ const sliderCount = sliders.length;
+ const sliderWidth = document.querySelector(".slider__img").offsetWidth;
 
-    function next() {
-      event.preventDefault();
-      counter = counter % 4 + 1;
-      document.getElementById('radio' + counter).checked = true;
-    }
+ // 닷 메뉴 생성
+ sliderDot.innerHTML = "";
+ sliders.forEach((_, idx) => {
+     const dot = document.createElement("span");
+     dot.className = "dot";
+     dot.title = `이미지 ${idx + 1}`;
+     dot.addEventListener("click", () => gotoSlider(idx));
+     sliderDot.appendChild(dot);
+ });
+ sliderDot.children[0]?.classList.add("active");
 
+ // 슬라이드 이동
+ function gotoSlider(index) {
+     sliderInner.style.transform = `translateX(-${sliderWidth * index}px)`;
+     currentIndex = index;
+     Array.from(sliderDot.children).forEach(dot => dot.classList.remove("active"));
+     sliderDot.children[index]?.classList.add("active");
+ }
 
+ // 좌우 버튼 이벤트
+ document.querySelector(".prev").addEventListener("click", () => {
+     const prev = (currentIndex - 1 + sliderCount) % sliderCount;
+     gotoSlider(prev);
+ });
+ document.querySelector(".next").addEventListener("click", () => {
+     const next = (currentIndex + 1) % sliderCount;
+     gotoSlider(next);
+ });
 </script>
 </body>
 </html>

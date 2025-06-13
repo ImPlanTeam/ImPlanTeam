@@ -33,11 +33,6 @@ public class TodayController {
     @GetMapping("/todo")
     public String todo(){
 
-        return "today/index";
-    }
-
-    @GetMapping("/form")
-    public String form(){
         return "today/form";
     }
 
