@@ -41,6 +41,10 @@ public class MainController {
     public String mainview() {
         return "/main/mainview";
     }
+    @RequestMapping("/testDot")
+    public String testDot() {
+        return "/main/testDot";
+    }
 
 
     @GetMapping("join")

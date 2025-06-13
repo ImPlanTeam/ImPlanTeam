@@ -20,4 +20,10 @@ public class CityService {
         List<City> clist=cityRepository.findByAreaAndCity(area,city);
         return clist;
     }
+
+    public List<City> cityList(String area) {
+        List<City> clist=cityRepository.findByArea(area);
+        return clist;
+    }
+
 }

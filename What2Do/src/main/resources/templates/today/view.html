@@ -2,22 +2,149 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>오늘 뭐하지?</title>
   <link rel="stylesheet" th:href="@{/css/common.css}">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+    }
+
+    #loading {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        background: white;
+        opacity: 0.9;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #loading img {
+        width: 400px;
+        max-width: 20vw;
+        height: auto;
+    }
+
+    #main-content {
+        display: none;
+        padding: 60px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .card {
+        background: white;
+        border-radius: 16px;
+        padding: 40px;
+        max-width: 800px;
+        width: 100%;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .card h2 {
+        font-size: 28px;
+        margin-bottom: 20px;
+        color: #1a2e45;
+    }
+
+    .card p {
+        font-size: 18px;
+        line-height: 1.6;
+        color: #333;
+        margin-bottom: 40px;
+    }
+
+    .card button {
+        background-color: #1a2e45;
+        color: white;
+        font-size: 16px;
+        padding: 14px 24px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .card button:hover {
+        background-color: #2f4e6e;
+    }
+    .go-button {
+    background-color: #1a2e45;
+    color: white;
+    font-size: 16px;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+  </style>
 </head>
 <body>
+
+<!-- 헤더 -->
 <div th:replace="~{fragments/top :: headerFragment}"></div>
-<div>
-  <span th:text="${rlist[0].name}"> </span>
-  <br>
-  <span th:text="${rlist[0].description}"></span>
-  <input type="button" th:value="${area}" th:onclick="cityView([[${area}]],[[${city}]])">
+
+<!-- 로딩 화면 -->
+<div id="loading">
+  <img src="/img/로딩3.gif" alt="로딩 중...">
 </div>
+
+<!-- 본문 내용 -->
+<div id="main-content">
+  <div class="card">
+    <!-- 추천 결과 -->
+    <h2>추천결과: <span th:text="${rlist[0].name}">활동 이름</span></h2>
+
+    <!-- 활동 설명 -->
+    <p th:text="${rlist[0].description}">활동 설명이 여기에 표시됩니다.</p>
+    <img th:src="|/img2/${rlist[0].name}.jpg|" style="width:600px; height:400px;" alt=""/>
+    <br>
+    <br>
+    <!-- 버튼: area + city -->
+    <button
+            class="go-button"
+            th:text="${area} + ' ' + ${city} + ' 둘러보기'"
+            th:attr="data-area=${area}, data-city=${city}"
+            onclick="cityView(this)">
+    </button>
+  </div>
+</div>
+
+<!-- 푸터 -->
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+<!-- 스크립트 -->
+<script type="text/javascript">
+  $(window).on('load', function () {
+      setTimeout(function () {
+          $('#loading').fadeOut(500, function () {
+              $('#main-content').fadeIn(300);
+          });
+      }, 2000);
+  });
+
+  function cityView(element) {
+  const area = element.getAttribute('data-area');
+  const city = element.getAttribute('data-city');
+
+  // 안전하게 URL 이동
+  location.href = '/cityFind?area=' + encodeURIComponent(area) + '&city=' + encodeURIComponent(city);
+}
+</script>
+
 </body>
 </html>
-<script>
-  function cityView(area2,city2){
-      location.href='/cityFind?area=' + area2 +'&city=' + city2;
-  }
-</script>

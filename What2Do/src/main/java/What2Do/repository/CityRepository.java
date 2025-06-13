@@ -13,4 +13,6 @@ public interface CityRepository extends JpaRepository<City,Integer> {
 
     List<City> findByAreaAndCity(String area,String city);
 
+    List<City> findByArea(String area);
+
 }

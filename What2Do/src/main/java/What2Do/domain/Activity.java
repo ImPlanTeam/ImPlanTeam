@@ -19,6 +19,5 @@ public class Activity {
     private String mood;         // ex) "우울;지침"
     private String companions;   // ex) "혼자;친구"
     private String tags;         // ex) "실내;휴식"
-    private String area;
 
 }

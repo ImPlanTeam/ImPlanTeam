@@ -7,17 +7,18 @@
     </div>
 
     <nav class="menu1">
-        <a th:href="@{/todo}">오늘 뭐하지?</a>
+        <a th:href="@{/form}">오늘 뭐하지?</a>
         <a th:href="@{/lego}">놀러가자!</a>
         <a th:href="@{/listView}">자유게시판</a>
         <a th:href="@{/ask}">1:1 문의하기</a>
+        <a th:href="@{/weather}">날씨 확인하기</a>
     </nav>
 
     <div class="auth-section">
         <div class="my">
             <span th:if="${session.user != null}">
                 <a th:href="@{/myPage}" >
-                    <img src="/img/기본프로필.webp" width="35px" height="35px" onclick="toggleSelect()" id="profile">
+                    <img src="/img/기본프로필.webp" onclick="toggleSelect()" id="profile">
                 </a>
                 <div th:text="${session.user.id + '님'}" id="userID" ></div>
             </span>

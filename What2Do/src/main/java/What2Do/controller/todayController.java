@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -43,6 +44,13 @@ public class todayController {
         List<City> clist=cityService.findArea(area,city);
         String encodeArea = URLEncoder.encode(clist.get(0).getCity(), StandardCharsets.UTF_8);
         return "redirect:/category?city="+ encodeArea+"&areacode="+clist.get(0).getAreacode()+"&sigungucode="+clist.get(0).getSigungucode();
+    }
+
+    @ResponseBody
+    @GetMapping("/cityListV")
+    public List<City> cityList(@RequestParam("area3")String area){
+        List<City> clist=cityService.cityList(area);
+        return clist;
     }
 
     @GetMapping("/todo")
