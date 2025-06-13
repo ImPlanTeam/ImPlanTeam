@@ -1,10 +1,8 @@
 package What2Do.controller;
 
-import What2Do.domain.Board;
-import What2Do.domain.Comment;
-import What2Do.domain.Tour;
-import What2Do.domain.User;
+import What2Do.domain.*;
 import What2Do.service.BoardService;
+import What2Do.service.CityService;
 import What2Do.service.CommentService;
 import What2Do.service.TourService;
 import jakarta.persistence.EntityManager;
@@ -26,15 +24,19 @@ public class MainController {
     private final CommentService commentService;
     private final EntityManager entityManager;
     private final BoardService boardService;
-    public MainController(BoardService boardService, TourService tourService, CommentService commentService, EntityManager entityManager) {
+    private final CityService cityService;
+
+    public MainController(TourService tourService, CommentService commentService, EntityManager entityManager, BoardService boardService, CityService cityService) {
         this.tourService = tourService;
         this.commentService = commentService;
         this.entityManager = entityManager;
         this.boardService = boardService;
+        this.cityService = cityService;
     }
 
     @RequestMapping("/lego")
     public String main() {
+
         return "/main/what2do";
     }
 
@@ -49,21 +51,17 @@ public class MainController {
 
 
     @GetMapping("join")
-    public String join() {
+    public String join(Model model) {
+        UserDTO userDTO = new UserDTO();
+        model.addAttribute("user", userDTO);
         return "/member/join";
     }
 
-
-
-    @GetMapping("/what2do")
-    public String mainList(Model model) {
-        List<Board> blist = boardService.findNotices();
-        model.addAttribute("blist", blist);
-        List<Tour> bestFive = tourService.findBest();
-        model.addAttribute("bestFive",bestFive);
-        return "main/mainview";
-    }
-
+//    @RequestMapping(value = "/what2do", method = RequestMethod.GET)
+//    public String home() {
+//
+//        return "main/mainview";
+//    }
 
     @RequestMapping(value = "/main/adminmain", method = RequestMethod.GET)
     public String adminmain() {
@@ -123,7 +121,6 @@ public class MainController {
     public String jeju() {
         return "tour/jeju";
     }
-
     @GetMapping("incheon")
     public String incheon() {
         return "tour/incheon";
@@ -152,6 +149,11 @@ public class MainController {
     public String busan() {
         return "tour/busan";
     }
+
+
+
+
+
 
     @GetMapping("/category")
     public String category2(@RequestParam("city") String city, @RequestParam("areacode") String areacode, @RequestParam("sigungucode") String sigungucode, Model model) {
@@ -248,4 +250,18 @@ public class MainController {
 
 
     }
+    @GetMapping("/what2do")
+    public String mainList(Model model) {
+        List<Board> blist = boardService.findNotices();
+        model.addAttribute("blist", blist);
+        List<Tour> bestFive = tourService.findBest();
+        model.addAttribute("bestFive",bestFive);
+        return "main/mainview";
+    }
+//    @GetMapping("/best")
+//    public String best(Model model){
+//        List<Tour> bestFive = tourService.findBest();
+//        model.addAttribute("bestFive",bestFive);
+//        return "main/";
+//    }
 }

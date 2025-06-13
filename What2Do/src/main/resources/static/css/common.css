@@ -67,3 +67,10 @@
      align-items: center;
      gap: 12px;
 }
+.my{
+    text-align: center;
+}
+#userID{
+color: gray;
+font-weight : bold;
+}

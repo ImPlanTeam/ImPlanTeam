@@ -31,7 +31,7 @@ public class TourController {
         StringBuilder result = new StringBuilder();
         String urlStr = "http://apis.data.go.kr/B551011/KorService2/areaBasedList2?" +
                 "serviceKey=HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D" +
-                "&numOfRows=10000&pageNo=2&MobileOS=ETC&MobileApp=TestApp&_type=json";
+                "&numOfRows=10000&pageNo=4&MobileOS=ETC&MobileApp=TestApp&_type=json";
 
         try {
             HttpURLConnection urlConnection = (HttpURLConnection) new URL(urlStr).openConnection();
@@ -101,7 +101,6 @@ public class TourController {
             return "API 처리 오류: " + e.getMessage();
         }
     }
-
 
     private JsonNode fetchDetailInfo(String contentId) {
         try {

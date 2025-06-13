@@ -12,5 +12,4 @@ public class weatherController {
         return "weather/main";
     }
 
-
 }

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <meta charset="UTF-8">
     <title>회원 정보 수정</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
@@ -121,15 +123,12 @@
       box-shadow: 0 5px 12px rgba(11, 94, 215, 0.5);
   }
 
-  /* 패스워드 입력창과 버튼을 한 줄에 잘 배치하기 위해 부모에 flex 적용 */
   .pass-check-group {
       display: flex;
       align-items: center;
       margin-top: 0.3rem;
-      gap: 10px; /* 입력창과 버튼 사이 간격 */
+      gap: 10px;
   }
-
-  /* input도 flex 아이템으로 맞춰 높이 통일 */
   #pass2 {
       flex-grow: 1;
       padding: 0.7rem;
@@ -153,6 +152,22 @@
   .error-messages li {
       margin-bottom: 5px;
   }
+  .input-group.password {
+      position: relative;
+  }
+  .input-group.password .eyes {
+    position: absolute;
+    top: 3px;
+    bottom: 0px;
+    right: 10px;
+    margin: auto;
+    height: 30px;
+    font-size: 22px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: gray;
+  }
     </style>
 </head>
 <body>
@@ -169,8 +184,13 @@
         <input type="text" th:value="${user.id}" disabled/>
 
         <label>*비밀번호</label>
-        <input type="text" name="pass" id="pass" th:value="${user.pass}" minlength="8" maxlength="16"
-               placeholder="비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요."  required>
+        <div class="input-group mb-4 password">
+            <input type="password" class="form-control login" name="pass" id="pass" minlength="8" maxlength="16"
+                   placeholder="비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요." th:value="${user.pass}" required>
+            <div class="eyes">
+                <i class="fa fa-eye fa-lg"></i>
+            </div>
+        </div>
 
         <label>*비밀번호 확인</label>
         <div class="pass-check-group">
@@ -222,6 +242,8 @@
 
 
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js">
+</script>
 <script>
     function checkPass() {
     var p1 = document.getElementById('pass').value;
@@ -235,7 +257,19 @@
       return true;
     }
   }
+
+  $(function(){
+    $('.eyes').on('click', function(){
+      $(this).toggleClass('active');
+        if ($(this).hasClass('active')) {
+          $(this).find('.fa-eye').attr('class', "fa fa-eye-slash fa-lg")
+          .parents('.input-group').find('#pass').attr('type', "text");
+            }else {
+              $(this).find('.fa-eye-slash').attr('class',"fa fa-eye fa-lg")
+              .parents('.input-group').find('#pass').attr('type', 'password');
+              }
+             });
+            });
 </script>
-<div th:replace="~{fragments/footer :: footerFragment}"></div>
 </body>
 </html>

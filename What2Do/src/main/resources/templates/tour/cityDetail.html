@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title th:text>가게 상세</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
@@ -20,8 +21,8 @@
           margin: 40px auto;
           padding: 20px;
           background-color: white;
-          border-radius: 16px;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+<!--          border-radius: 16px;-->
+<!--          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);-->
         }
 
         .thumbnail {
@@ -77,11 +78,15 @@
           padding: 5px;
           z-index: 1;
           border-radius: 4px;
+<!--          height: 150px;-->
         }
 
         .bAddr {
-          padding: 5px;
-          font-size: 15px;
+         padding:5px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        font-size: 15px;
         }
 
         #heartBtn {
@@ -139,7 +144,7 @@
 
         .comment-user {
           font-weight: 600;
-          color: #2563eb;
+<!--          color: #2563eb;-->
         }
 
         .comment-date {
@@ -172,7 +177,7 @@
 
         .comment-form button {
           margin-top: 12px;
-          background-color: #3b82f6;
+          background-color: #1a2e45;
           color: white;
           font-weight: 600;
           font-size: 16px;
@@ -185,7 +190,7 @@
         }
 
         .comment-form button:hover {
-          background-color: #2563eb;
+          background-color: #1a2e45;
         }
 
         @media screen and (max-width: 768px) {
@@ -198,7 +203,6 @@
           }
         }
     </style>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body>
 
@@ -256,9 +260,7 @@
       var map = new kakao.maps.Map(mapContainer, mapOption);
       var geocoder = new kakao.maps.services.Geocoder();
       var marker = new kakao.maps.Marker();
-      var infowindow = new kakao.maps.InfoWindow({
-       zindex: 1
-       });
+      var infowindow = new kakao.maps.InfoWindow({ zindex: 1 });
 
       function searchDetailAddrFromCoords(coords, callback) {
         geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
