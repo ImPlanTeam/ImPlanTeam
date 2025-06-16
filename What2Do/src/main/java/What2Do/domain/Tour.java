@@ -35,6 +35,4 @@ public class Tour {
     private int like_count;
     private String overview;
 
-
-
 }
