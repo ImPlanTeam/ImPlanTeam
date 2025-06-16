@@ -34,4 +34,9 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     @Query("select t from Tour t order by t.like_count desc Limit 5")
     List<Tour> findAllOrderByLikecountDesc();
 
+    @Modifying
+    @Transactional
+    @Query("select t.contentid from Tour t where t.contenttypeid='12' order by t.id Limit 5")
+    List<String> findAllByContenttypeid();
+
 }

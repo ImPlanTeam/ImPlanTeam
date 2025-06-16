@@ -1,10 +1,7 @@
 package What2Do.service;
 
 import What2Do.domain.*;
-import What2Do.repository.CommentRepository;
-import What2Do.repository.LikeRepository;
-import What2Do.repository.TourRepository;
-import What2Do.repository.UserRepository;
+import What2Do.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
@@ -22,6 +19,7 @@ public class TourService {
     private final TourRepository tourRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
+    private final TourSpotRepository tourSpotRepository;
     private final CommentRepository commentRepository;
     private static final Logger logger = LoggerFactory.getLogger(TourService.class);
 
@@ -29,6 +27,11 @@ public class TourService {
     public void saveAllTour(List<Tour> tourList) {
 
         tourRepository.saveAll(tourList);
+        logger.info("관광지 정보 {}건 저장됨", tourList.size());
+    }
+    @Transactional
+    public void saveAllTour2(List<TourSpot> tourList) {
+        tourSpotRepository.saveAll(tourList);
         logger.info("관광지 정보 {}건 저장됨", tourList.size());
     }
 
@@ -91,6 +94,10 @@ public class TourService {
     }
     public List<Tour> findBest(){
         return tourRepository.findAllOrderByLikecountDesc();
+    }
+
+    public List<String> findC(){
+        return tourRepository.findAllByContenttypeid();
     }
 
 
