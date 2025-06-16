@@ -3,6 +3,7 @@ package What2Do.repository;
 import What2Do.domain.Comment;
 import What2Do.domain.LikeIt;
 import What2Do.domain.Tour;
+import What2Do.domain.TourSpot;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -34,5 +35,13 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     @Query("select t from Tour t order by t.like_count desc Limit 5")
     List<Tour> findAllOrderByLikecountDesc();
 
+    @Modifying
+    @Transactional
+    @Query("select t.contentid from Tour t where t.contenttypeid='12'")
+    List<String> findAllByContenttypeid();
+    public interface TourSpotRepository extends JpaRepository<TourSpot, Long> {
+
+
+    }
 
 }

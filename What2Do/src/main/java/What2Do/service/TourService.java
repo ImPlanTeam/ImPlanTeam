@@ -1,10 +1,7 @@
 package What2Do.service;
 
 import What2Do.domain.*;
-import What2Do.repository.CommentRepository;
-import What2Do.repository.LikeRepository;
-import What2Do.repository.TourRepository;
-import What2Do.repository.UserRepository;
+import What2Do.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
@@ -22,6 +19,7 @@ public class TourService {
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
+    private final TourSpotRepository tourSpotRepository;
     private static final Logger logger = LoggerFactory.getLogger(TourService.class);
 
     @Transactional
@@ -30,7 +28,14 @@ public class TourService {
         tourRepository.saveAll(tourList);
         logger.info("관광지 정보 {}건 저장됨", tourList.size());
     }
-
+    public List<String> findC(){
+        return tourRepository.findAllByContenttypeid();
+    }
+    @Transactional
+    public void saveAllTour2(List<TourSpot> tourList) {
+        tourSpotRepository.saveAll(tourList);
+        logger.info("관광지 정보 {}건 저장됨", tourList.size());
+    }
     private void validateTour(Tour tour) {
         // 필수 필드 체크
         if (tour.getAddr1() == null || tour.getAddr1().isEmpty()) {
@@ -77,6 +82,10 @@ public class TourService {
         likeIt.setTour(tour);
         likeRepository.save(likeIt);
     }
+    public List<Tour> findBest(){
+        return tourRepository.findAllOrderByLikecountDesc();
+    }
+
 
     public void likeD(Long num,String id){
         likeRepository.deleteByTourIdAndUserId(num,id);
@@ -87,9 +96,6 @@ public class TourService {
     }
     public List<Tour> myPage(@RequestParam("userId")String userId){
         return likeRepository.findLikedTourByUserId(userId);
-    }
-    public List<Tour> findBest(){
-        return tourRepository.findAllOrderByLikecountDesc();
     }
 
 

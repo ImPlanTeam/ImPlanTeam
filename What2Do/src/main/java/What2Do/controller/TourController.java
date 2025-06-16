@@ -1,7 +1,9 @@
 package What2Do.controller;
 
 import What2Do.domain.Tour;
+import What2Do.domain.TourSpot;
 import What2Do.repository.TourRepository;
+import What2Do.repository.TourSpotRepository;
 import What2Do.service.TourService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +26,7 @@ public class TourController {
 
     private final TourService tourService;
     private final TourRepository tourRepository;
+    private final TourSpotRepository tourSpotRepository;
     private static final Logger logger = LoggerFactory.getLogger(TourController.class);
 
     @GetMapping("/api/tour")
@@ -31,7 +34,7 @@ public class TourController {
         StringBuilder result = new StringBuilder();
         String urlStr = "http://apis.data.go.kr/B551011/KorService2/areaBasedList2?" +
                 "serviceKey=HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D" +
-                "&numOfRows=10000&pageNo=4&MobileOS=ETC&MobileApp=TestApp&_type=json";
+                "&numOfRows=5000&pageNo=9&MobileOS=ETC&MobileApp=TestApp&_type=json";
 
         try {
             HttpURLConnection urlConnection = (HttpURLConnection) new URL(urlStr).openConnection();
@@ -88,6 +91,7 @@ public class TourController {
                     tour.setOverview(detail.path("overview").asText(""));
                 }
 
+
                 Thread.sleep(300); // 요청 속도 제한 회피
 
                 tourList.add(tour);
@@ -102,6 +106,7 @@ public class TourController {
         }
     }
 
+    //관광지 상세정보
     private JsonNode fetchDetailInfo(String contentId) {
         try {
             String urlStr = "https://apis.data.go.kr/B551011/KorService2/detailCommon2?" +
@@ -139,44 +144,116 @@ public class TourController {
         }
     }
 
-    @GetMapping("/api/tour/updateAllOverviews")
-    public String updateAllOverviews() {
-        int page = 1;
-        int pageSize = 100;
-        int totalUpdated = 0;
+    private JsonNode fetchDetailInfo2(String contentId, String contentTypeId) {
+        try {
+            String urlStr = "https://apis.data.go.kr/B551011/KorService2/detailIntro2?" +
+                    "serviceKey=HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D" +
+                    "&MobileApp=AppTest&MobileOS=ETC&pageNo=1&numOfRows=10&_type=json" +
+                    "&contentTypeId=" + contentTypeId +
+                    "&contentId=" + contentId;
 
-        while (true) {
-            int offset = (page - 1) * pageSize;
-            List<Tour> targetTours = tourRepository.findOverviewEmptyPaged(offset, pageSize);
+            HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
+            conn.setRequestMethod("GET");
 
-            if (targetTours.isEmpty()) {
-                break; // 더 이상 처리할 항목이 없으면 종료
+
+            if (conn.getResponseCode() != 200) {
+                logger.warn("상세 API 상태코드 오류 - contentId: {}, code: {}", contentId, conn.getResponseCode());
+                return null;
             }
 
-            int updatedThisPage = 0;
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) result.append(line);
+            br.close();
+            conn.disconnect();
 
-            for (Tour tour : targetTours) {
-                try {
-                    JsonNode detail = fetchDetailInfo(tour.getContentid());
-                    if (detail != null) {
-                        String overview = detail.path("overview").asText("");
-                        if (!overview.isBlank()) {
-                            tour.setOverview(overview);
-                            tourRepository.save(tour);
-                            updatedThisPage++;
-                            Thread.sleep(150);
-                        }
-                    }
-                } catch (Exception e) {
-                    logger.warn("상세정보 실패 - contentId: {}, 이유: {}", tour.getContentid(), e.getMessage());
-                }
+            if (result.toString().startsWith("<")) {
+                logger.warn("HTML 오류 응답 - contentId: {}, 응답: {}", contentId, result.substring(0, 200));
+                return null;
             }
 
-            logger.info("Page {} 완료 - {}건 업데이트됨", page, updatedThisPage);
-            totalUpdated += updatedThisPage;
-            page++;
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.readTree(result.toString())
+                    .path("response").path("body").path("items").path("item").get(0);
+
+        } catch (Exception e) {
+            logger.warn("상세 API 호출 실패 - contentId: {}, 오류: {}", contentId, e.getMessage());
+            return null;
         }
 
-        return "모든 overview 업데이트 완료 - 총 " + totalUpdated + "건 업데이트됨";
     }
+    @GetMapping("/contentidFind")
+    public String contentidFind() {
+        List<String> tList = tourService.findC();
+        List<TourSpot> tourList = new ArrayList<>();
+        StringBuilder result = new StringBuilder();
+        for (String contentId : tList) {
+            String urlStr ="https://apis.data.go.kr/B551011/KorService2/detailIntro2?" +
+                    "serviceKey=HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D" +
+                    "&MobileApp=AppTest&MobileOS=ETC&pageNo=1&numOfRows=1&_type=json" +
+                    "&contentTypeId=12&contentId=" + contentId;
+            System.out.println(urlStr);
+            try {
+                HttpURLConnection urlConnection = (HttpURLConnection) new URL(urlStr).openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.setConnectTimeout(10000);
+                urlConnection.setReadTimeout(10000);
+
+                int status = urlConnection.getResponseCode();
+                if (status != 200) {
+                    logger.warn("Tour API 응답 오류 - 상태코드: {}", status);
+                    return "API 호출 실패: 상태코드 " + status;
+                }
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
+                StringBuilder response = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) response.append(line);
+                br.close();
+                urlConnection.disconnect();
+
+                String responseBody = response.toString();
+                if (responseBody.startsWith("<")) {
+                    logger.warn("HTML 응답 감지 - JSON 파싱 중단");
+                    return "API 호출 실패: JSON 응답이 아님";
+                }
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode items = objectMapper.readTree(responseBody)
+                        .path("response").path("body").path("items").path("item");
+
+
+
+                for (JsonNode item : items) {
+                    TourSpot tourSpot = new TourSpot();
+                    //tourSpot.setContentid(item.path("contentid").asText(""));
+                    tourSpot.setRestdate(item.path("restdate").asText(""));
+                    tourSpot.setInfocenter(item.path("infocenter").asText(""));
+                    tourSpot.setUsetime(item.path("usetime").asText(""));
+                    tourSpot.setParking(item.path("parking").asText(""));
+                    tourSpot.setChkbabycarriage(item.path("chkbabycarriage").asText(""));
+                    tourSpot.setChkpet(item.path("chkpet").asText(""));
+
+
+                    Thread.sleep(300); // 요청 속도 제한 회피
+
+                    tourList.add(tourSpot);
+                }
+
+
+
+            } catch (Exception e) {
+                logger.error("API 호출 중 오류 발생", e);
+                return "API 처리 오류: " + e.getMessage();
+            }
+
+        }
+        tourService.saveAllTour2(tourList);
+        return "관광지 정보 저장 완료 (" + tourList.size() + "건)";
+
+
+
+    }
+
 }

@@ -6,7 +6,6 @@
     <title>Search</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <style>
-
         ul, ol { list-style: none; }
         a { text-decoration: none; color: #000000; }
         input, textarea { outline: none; }
@@ -81,6 +80,42 @@
             border: 1px solid #D2DFE5;
             padding: 20px;
             overflow: auto;
+        }
+
+        .weather-card {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .weather-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .weather-list {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .weather-item {
+            background-color: #F1F1F1;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            width: 180px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        .weather-item img {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 10px;
+        }
+        .weather-item strong {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 5px;
         }
     </style>
 </head>
@@ -161,43 +196,92 @@
         }
 
         function getWeather(lat, lon) {
-            const result = dfs_xy_conv("toXY", lat, lon);
-            const xPoint = result.x;
-            const yPoint = result.y;
+    const result = dfs_xy_conv("toXY", lat, lon);
+    const xPoint = result.x;
+    const yPoint = result.y;
 
-            let now = new Date();
-            let y = now.getFullYear();
-            let m = ('0' + (now.getMonth() + 1)).slice(-2);
-            let d = ('0' + now.getDate()).slice(-2);
-            let formattedDate = y + m + d;
+    let now = new Date();
+    let y = now.getFullYear();
+    let m = ('0' + (now.getMonth() + 1)).slice(-2);
+    let d = ('0' + now.getDate()).slice(-2);
+    let formattedDate = y + m + d;
 
-            let hour = now.getHours();
-            if (now.getMinutes() < 30) hour--;
-            hour = ('0' + hour).slice(-2);
-            let formattedTime = hour + "30";
+    let hour = now.getHours();
+    if (now.getMinutes() < 30) hour--;
+    hour = ('0' + hour).slice(-2);
+    let formattedTime = hour + "30";
 
-            const url = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${SERVICE_KEY}&pageNo=1&numOfRows=1000&dataType=JSON&base_date=${formattedDate}&base_time=${formattedTime}&nx=${xPoint}&ny=${yPoint}`;
+    const url = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${SERVICE_KEY}&pageNo=1&numOfRows=1000&dataType=JSON&base_date=${formattedDate}&base_time=${formattedTime}&nx=${xPoint}&ny=${yPoint}`;
 
-            fetch(url)
-                .then(res => res.json())
-                .then(data => {
-                    const items = data.response.body.items.item;
-                    let text = "<h2>날씨 정보</h2><ul>";
-                    items.forEach(item => {
-                        if (["T1H", "SKY", "PTY"].includes(item.category)) {
-                            let label = item.category === "T1H" ? "기온" : item.category === "SKY" ? "하늘상태" : "강수형태";
-                            let interpreted = interpretValue(item.category, item.fcstValue);
-                            text += `<li><strong>${label}</strong> (${item.fcstTime}): ${interpreted}</li>`;
-                        }
-                    });
-                    text += "</ul>";
-                    weatherBox.innerHTML = text;
-                })
-                .catch(err => {
-                    weatherBox.innerHTML = "날씨 정보를 가져오지 못했습니다.";
-                    console.error(err);
-                });
-        }
+    fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            const items = data.response.body.items.item;
+            const nowTime = parseInt(formattedTime);
+
+            // 현재 시간 이후의 첫 번째 fcstTime 찾기
+            const validTimes = [...new Set(items.map(i => i.fcstTime))].filter(t => parseInt(t) > nowTime).sort();
+            const nextTime = validTimes[0]; // 다음 예보 시간
+
+            const labels = {
+                T1H: "기온",
+                SKY: "하늘 상태",
+                PTY: "강수 형태",
+                REH: "습도",
+                WSD: "풍속"
+            };
+
+            const imageMap = {
+                맑음: "맑음.png",
+                흐림: "흐림.png",
+                구름많음: "구름많음.png",
+                비: "비.png",
+                "비/눈": "비눈.png",
+                눈: "눈.png",
+                소나기: "소나기.png",
+                없음: "없음.png",
+                기온: "기온.png",
+                습도: "습도.png",
+                풍속: "풍속.png"
+            };
+
+            let displayCategories = ["T1H", "SKY", "PTY", "REH", "WSD"];
+
+            let text = `<div class="weather-card">
+                <div class="weather-title">☁️ 예보 시각: ${nextTime} 기준</div>
+                <div class="weather-list">`;
+
+            displayCategories.forEach(cat => {
+                const item = items.find(i => i.category === cat && i.fcstTime === nextTime);
+                if (!item) return;
+
+                let value = interpretValue(item.category, item.fcstValue);
+                let label = labels[item.category] || item.category;
+
+                let imageFile = imageMap[value] || imageMap[label] || "기본.png";
+                let imgSrc = `/weatherimg/${imageFile}`;
+
+                let unit = "";
+                if (cat === "T1H") unit = "℃";
+                if (cat === "REH") unit = "%";
+                if (cat === "WSD") unit = "m/s";
+
+                text += `
+                    <div class="weather-item">
+                        <img src="${imgSrc}" alt="${label}">
+                        <strong>${label}</strong>
+                        <div>${value}${unit}</div>
+                    </div>`;
+            });
+
+            text += "</div></div>";
+            weatherBox.innerHTML = text;
+        })
+        .catch(err => {
+            weatherBox.innerHTML = "날씨 정보를 가져오지 못했습니다.";
+            console.error(err);
+        });
+}
 
         function searchLocation(query) {
             geocoder.addressSearch(query, function (result, status) {
