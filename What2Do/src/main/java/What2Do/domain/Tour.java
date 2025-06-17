@@ -33,7 +33,7 @@ public class Tour {
     private String contentid;
     @ColumnDefault("'0'")
     private int like_count;
-    @Column(length = 4000)
+    @Column(length = 5000)
     private String overview;
 
 

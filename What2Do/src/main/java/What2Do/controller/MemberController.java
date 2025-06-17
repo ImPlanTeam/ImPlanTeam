@@ -180,8 +180,8 @@ public class MemberController {
             return "member/join";
         }
         User u = userDTO.toEntity(); // DTO를 Entity로 변환
-        if ("1111".equals(userDTO.getId())) {
-            u.setRole("1111");
+        if ("xjzl8520".equals(userDTO.getId())) {
+            u.setRole("ADMIN");
         } else {
             u.setRole("USER");
         }

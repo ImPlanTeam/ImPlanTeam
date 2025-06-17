@@ -94,7 +94,7 @@
 
 <!-- 본문 -->
 <div class="main-container">
-  <h3>📩 문의 상세 보기</h3>
+  <h3>문의 상세 보기</h3>
 
   <div class="section">
     <span class="label">글번호</span>
@@ -118,7 +118,7 @@
   </div>
 
   <div class="section" th:if="${answer != null}">
-    <h3>✅ 답변 내용</h3>
+    <h3>답변 내용</h3>
     <div class="answered">
       <div th:text="${answer.content}"></div>
       <small th:text="${#temporals.format(answer.answeredAt, 'yyyy-MM-dd HH:mm')}">작성일</small>
@@ -126,7 +126,7 @@
   </div>
 
   <div class="section" th:if="${answer == null and session.user?.role == 'ADMIN'}">
-    <h3>📝 답변 작성</h3>
+    <h3>답변 작성</h3>
     <form th:action="@{|/admin/answer/${askview.no}|}" method="post">
       <textarea name="content" rows="5" placeholder="답변 내용을 입력해주세요."></textarea>
       <button type="submit">저장</button>

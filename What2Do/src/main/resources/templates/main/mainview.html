@@ -48,6 +48,47 @@
         background: rgba(255,255,255,0.9);
     }
   </style>
+  <style>
+    #weather-widget{
+position : absolute;
+top: 350px;
+right: 50px;
+
+}
+    .btnSearch {
+            border: 1px solid;
+            width: 60px;
+            height: 30px;
+            font-size: 15px;
+
+            text-align: center;
+            background: #1a2e45;
+            color:#F9F7F7;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    .weather-list {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .weather-item {
+            background-color: #F1F1F1;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            width: 180px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+
+    .weather-item img {
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 6px;
+    }
+  </style>
 </head>
 <body class="bg-white text-gray-800">
 
@@ -104,6 +145,16 @@
       </li>
       <li th:if="${#lists.isEmpty(blist)}">등록된 공지사항이 없습니다.</li>
     </ul>
+  </div>
+  <!-- 날씨조회 -->
+  <div id="weather-widget"
+       class="absolute top-[350px] right-[230px] bg-white border border-gray-300 rounded-lg shadow p-4 w-[360px] text-sm z-50">
+    <div class="flex gap-2 mb-2">
+      <input class="searchText border border-gray-300 px-3 py-1 rounded w-full text-sm" type="text"
+             placeholder="장소 입력"/>
+      <button class="btnSearch bg-blue-800 text-white px-3 rounded text-sm">검색</button>
+    </div>
+    <div class="ct_weather text-gray-700">실시간 날씨 조회서비스</div>
   </div>
 </section>
 
@@ -164,6 +215,145 @@ document.querySelector(".next").addEventListener("click", () => {
    const next = (currentIndex + 1) % sliderCount;
    gotoSlider(next);
 });
+  setInterval(function() {
+     const next = (currentIndex + 1) % sliderCount;
+     gotoSlider(next);
+}, 5000);
+</script>
+<script>
+  const SERVICE_KEY = "HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D"; // 기상청 API 키 (URL 인코딩된 상태)
+
+  document.addEventListener('DOMContentLoaded', function () {
+    const inputObjSearchText = document.querySelector('.searchText');
+    const searchButton = document.querySelector('.btnSearch');
+    const weatherBox = document.querySelector('.ct_weather');
+    const geocoder = new kakao.maps.services.Geocoder();
+
+    function dfs_xy_conv(code, v1, v2) {
+      const RE = 6371.00877, GRID = 5.0, SLAT1 = 30.0, SLAT2 = 60.0,
+            OLON = 126.0, OLAT = 38.0, XO = 43, YO = 136;
+      const DEGRAD = Math.PI / 180.0;
+      const re = RE / GRID, slat1 = SLAT1 * DEGRAD, slat2 = SLAT2 * DEGRAD;
+      const olon = OLON * DEGRAD, olat = OLAT * DEGRAD;
+
+      let sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+      sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
+      let sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+      sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
+      let ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
+      ro = re * sf / Math.pow(ro, sn);
+      const rs = {};
+      if (code === "toXY") {
+        const ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
+        const ra_ = re * sf / Math.pow(ra, sn);
+        let theta = v2 * DEGRAD - olon;
+        if (theta > Math.PI) theta -= 2.0 * Math.PI;
+        if (theta < -Math.PI) theta += 2.0 * Math.PI;
+        theta *= sn;
+        rs['x'] = Math.floor(ra_ * Math.sin(theta) + XO + 0.5);
+        rs['y'] = Math.floor(ro - ra_ * Math.cos(theta) + YO + 0.5);
+      }
+      return rs;
+    }
+
+    function interpretValue(category, value) {
+      if (category === "SKY") {
+        return { "1": "맑음", "3": "구름많음", "4": "흐림" }[value] || value;
+      } else if (category === "PTY") {
+        return {
+          "0": "없음", "1": "비", "2": "비/눈", "3": "눈", "4": "소나기",
+          "5": "빗방울", "6": "빗방울/눈날림", "7": "눈날림"
+        }[value] || value;
+      }
+      return value;
+    }
+
+    function getWeather(lat, lon) {
+      const result = dfs_xy_conv("toXY", lat, lon);
+      const xPoint = result.x;
+      const yPoint = result.y;
+
+      let now = new Date();
+      let y = now.getFullYear();
+      let m = ('0' + (now.getMonth() + 1)).slice(-2);
+      let d = ('0' + now.getDate()).slice(-2);
+      let formattedDate = y + m + d;
+
+      let hour = now.getHours();
+      if (now.getMinutes() < 30) hour--;
+      hour = ('0' + hour).slice(-2);
+      let formattedTime = hour + "30";
+
+      const url = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${SERVICE_KEY}&pageNo=1&numOfRows=1000&dataType=JSON&base_date=${formattedDate}&base_time=${formattedTime}&nx=${xPoint}&ny=${yPoint}`;
+
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          const items = data.response.body.items.item;
+          const nowTime = parseInt(formattedTime);
+          const validTimes = [...new Set(items.map(i => i.fcstTime))].filter(t => parseInt(t) > nowTime).sort();
+          const nextTime = validTimes[0];
+
+          const labels = {
+            T1H: "기온", SKY: "하늘 상태", PTY: "강수 형태", REH: "습도", WSD: "풍속"
+          };
+          const imageMap = {
+            맑음: "맑음.png", 흐림: "흐림.png", 구름많음: "구름많음.png", 비: "비.png",
+            "비/눈": "비눈.png", 눈: "눈.png", 소나기: "소나기.png", 없음: "없음.png",
+            기온: "기온.png", 습도: "습도.png", 풍속: "풍속.png"
+          };
+
+          const displayCategories = ["T1H", "SKY", "PTY", "REH", "WSD"];
+          let html = `<div class="text-sm font-semibold mb-2">예보 시각: ${nextTime} 기준</div><div class="grid grid-cols-2 gap-2">`;
+
+          displayCategories.forEach(cat => {
+            const item = items.find(i => i.category === cat && i.fcstTime === nextTime);
+            if (!item) return;
+            let value = interpretValue(item.category, item.fcstValue);
+            let label = labels[item.category] || item.category;
+            let imageFile = imageMap[value] || imageMap[label] || "기본.png";
+            let imgSrc = `/weatherimg/${imageFile}`;
+            let unit = (cat === "T1H") ? "℃" : (cat === "REH") ? "%" : (cat === "WSD") ? "m/s" : "";
+
+            html += `
+              <div class="weather-item text-center">
+                <img src="${imgSrc}" alt="${label}">
+                <div class="font-medium">${label}</div>
+                <div>${value}${unit}</div>
+              </div>`;
+          });
+
+          html += `</div>`;
+          weatherBox.innerHTML = html;
+        })
+        .catch(err => {
+          console.error(err);
+          weatherBox.innerHTML = "날씨 정보를 가져오지 못했습니다.";
+        });
+    }
+
+    function searchLocation(query) {
+      geocoder.addressSearch(query, function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+          getWeather(result[0].y, result[0].x);
+        } else {
+          weatherBox.innerHTML = "검색 결과가 없습니다.";
+        }
+      });
+    }
+
+    searchButton.addEventListener('click', function () {
+      const query = inputObjSearchText.value.trim();
+      if (query) searchLocation(query);
+    });
+
+    const locationParam = new URLSearchParams(window.location.search).get('location');
+    if (locationParam) {
+      inputObjSearchText.value = locationParam;
+      searchLocation(locationParam);
+    }
+  });
 </script>
 </body>
 </html>
+

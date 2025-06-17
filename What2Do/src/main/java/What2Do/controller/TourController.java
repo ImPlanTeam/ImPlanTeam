@@ -34,7 +34,7 @@ public class TourController {
         StringBuilder result = new StringBuilder();
         String urlStr = "http://apis.data.go.kr/B551011/KorService2/areaBasedList2?" +
                 "serviceKey=HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D" +
-                "&numOfRows=5000&pageNo=9&MobileOS=ETC&MobileApp=TestApp&_type=json";
+                "&numOfRows=1000&pageNo=51&MobileOS=ETC&MobileApp=TestApp&_type=json";
 
         try {
             HttpURLConnection urlConnection = (HttpURLConnection) new URL(urlStr).openConnection();
