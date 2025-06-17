@@ -180,11 +180,9 @@ public class TourController {
                 JsonNode items = objectMapper.readTree(responseBody)
                         .path("response").path("body").path("items").path("item");
 
-
-
                 for (JsonNode item : items) {
                     TourSpot tourSpot = new TourSpot();
-                    tourSpot.setTour(item.path("contentid").asText(""));
+//                    tourSpot.setTour(item.path("contentid").asText(""));
                     tourSpot.setRestdate(item.path("restdate").asText(""));
                     tourSpot.setInfocenter(item.path("infocenter").asText(""));
                     tourSpot.setUsetime(item.path("usetime").asText(""));

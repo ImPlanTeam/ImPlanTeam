@@ -168,7 +168,7 @@
     <p th:text="${errTel}"></p>
 
     <label>생년월일</label>
-    <input type="date" name="birth" th:value="${user.birth}">
+    <input type="date" name="birth" th:value="${user.birth}" max="2020-01-01" min="1920-01-01">
 
     <label>*이메일</label>
     <div class="email-group">

@@ -47,6 +47,13 @@
         .slider__dot .dot.active {
             background: rgba(255,255,255,0.9);
         }
+
+        #wrapper{
+        position : absolute;
+        top: 350px;
+        right: 230px;
+
+        }
     </style>
 </head>
 <body class="bg-white text-gray-800">
@@ -104,6 +111,22 @@
             </li>
             <li th:if="${#lists.isEmpty(blist)}">등록된 공지사항이 없습니다.</li>
         </ul>
+    </div>
+
+    <div id="wrapper">
+        <main>
+            <div class="ct_search">
+                <div class="search_bar">
+                    <img src="/img/돋보기.png">
+                    <input class="searchText" type="text" placeholder="장소 입력 후 검색 버튼 클릭">
+                </div>
+                <div class="btnSearch">검색</div>
+            </div>
+            <div class="ly_content">
+                <div class="ct_map" id="map"></div>
+                <div class="ct_weather">날씨 정보를 불러오는 중...</div>
+            </div>
+        </main>
     </div>
 </section>
 
@@ -164,6 +187,11 @@
      const next = (currentIndex + 1) % sliderCount;
      gotoSlider(next);
  });
+
+    setInterval(function() {
+     const next = (currentIndex + 1) % sliderCount;
+     gotoSlider(next);
+}, 5000);
 </script>
 </body>
 </html>

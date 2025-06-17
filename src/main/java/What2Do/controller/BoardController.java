@@ -275,13 +275,16 @@ public class BoardController {
     }
     //관리자 글 자세히 보기
     @GetMapping("/bview")
-    public String bview(@RequestParam("num") Integer num, Model model) {
+    public String bview(@RequestParam("num") Integer num, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        String id = user.getId();
         boardService.updateCount(num);
         Board board = boardService.view(num);
         List<BoardFile> boardFiles = boardService.viewF(num);
-
+        boolean like = boardService.likeB(num, id);
         model.addAttribute("board", board);
         model.addAttribute("file", boardFiles);
+        model.addAttribute("like",like);
 
         return "admin/b_view";
     }
