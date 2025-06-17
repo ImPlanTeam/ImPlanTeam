@@ -1,10 +1,7 @@
 package What2Do.service;
 
 import What2Do.domain.*;
-import What2Do.repository.CommentRepository;
-import What2Do.repository.LikeRepository;
-import What2Do.repository.TourRepository;
-import What2Do.repository.UserRepository;
+import What2Do.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
@@ -19,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TourService {
 
     private final TourRepository tourRepository;
+    private final TourSpotRepository tourSpotRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;

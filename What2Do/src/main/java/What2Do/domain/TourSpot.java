@@ -19,9 +19,6 @@ public class TourSpot {
     private String parking;
     private String chkbabycarriage;
     private String chkpet;
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    @JoinColumn(name = "contentid")
-    private Tour tour;
+    private String contentid;
 
 }

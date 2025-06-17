@@ -148,18 +148,22 @@ public class MemberController {
     public String save2(@Valid UserDTO userDTO, Errors errors, Model model ){
         model.addAttribute("user", userDTO);
         if (service.checkId(userDTO.getId())){
+            System.out.println("아이디 중복");
             model.addAttribute("errID", "이미 사용중인 아이디입니다.");
             return "member/join";
         }
         if (service.checkTel(userDTO.getTel())){
+            System.out.println("전화번호 중복");
             model.addAttribute("errTel", "이미 사용중인 전화번호입니다.");
             return "member/join";
         }
         if (service.checkMail(userDTO.getMail1()+"@"+userDTO.getMail2())){
+            System.out.println("이메일 중복");
             model.addAttribute("errMail", "이미 사용중인 이메일입니다.");
             return "member/join";
         }
         if (!Objects.equals(userDTO.getPass(), userDTO.getPass2())){
+            System.out.println("비밀번호 불일치");
             model.addAttribute("errPass", "비밀번호가 일치하지 않습니다.");
             return "member/join";
         }
@@ -180,8 +184,8 @@ public class MemberController {
             return "member/join";
         }
         User u = userDTO.toEntity(); // DTO를 Entity로 변환
-        if ("1111".equals(userDTO.getId())) {
-            u.setRole("1111");
+        if ("12341234".equals(userDTO.getId())) {
+            u.setRole("ADMIN");
         } else {
             u.setRole("USER");
         }

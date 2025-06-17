@@ -28,7 +28,6 @@ public class TourController {
     private static final Logger logger = LoggerFactory.getLogger(TourController.class);
 
 
-
     @GetMapping("/contentidFind")
     public String contentidFind() {
         List<String> tList = tourService.findC();
@@ -48,8 +47,8 @@ public class TourController {
 
                 int status = urlConnection.getResponseCode();
                 if (status != 200) {
-                    logger.warn("Tour API 응답 오류 - 상태코드: {}", contentId, status);
-                    continue;
+                    logger.warn("Tour API 응답 오류 - 상태코드: {}", status);
+                    return "API 호출 실패: 상태코드 " + status;
                 }
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
@@ -73,14 +72,7 @@ public class TourController {
 
                 for (JsonNode item : items) {
                     TourSpot tourSpot = new TourSpot();
-
-                    item.findPath("contentid").asText(null); // 값이 없으면 null 반환
-
-                    Tour tour = tourRepository.findById(contentid).orElse(null);
-                    if (tour != null) {
-                        tourspot.setTour(tour);
-                    }
-
+                    tourSpot.setContentid(item.path("contentid").asText(""));
                     tourSpot.setRestdate(item.path("restdate").asText(""));
                     tourSpot.setInfocenter(item.path("infocenter").asText(""));
                     tourSpot.setUsetime(item.path("usetime").asText(""));

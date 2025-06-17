@@ -24,7 +24,7 @@
         .back-link {
           margin-bottom: 1.5rem;
           display: inline-block;
-          color: #0d6efd;
+          color: #1a2e45;
           font-weight: bold;
           text-decoration: none;
         }
@@ -69,7 +69,7 @@
         }
 
         button {
-          background-color: #0d6efd;
+          background-color: #1a2e45;
           color: white;
           border: none;
           padding: 0.6rem 1.2rem;
@@ -93,8 +93,21 @@
         .like-count {
           font-size: 1rem;
           font-weight: bold;
-          color: #0d6efd;
         }
+        .like-count {
+          font-size: 1rem;
+          font-weight: bold;
+          color: #1a2e45;
+        }
+        #heartBtn {
+        cursor: pointer;
+        transition: fill 0.3s, stroke 0.3s;
+      }
+
+      #heartBtn.liked {
+        fill: red;
+        stroke: red;
+      }
     </style>
 
 </head>
@@ -123,7 +136,12 @@
     <div class="content" th:text="${board.content}"></div>
 
     <div class="button-group">
-        <button type="button" th:onclick="|likeIt(${board.num})|">좋아요</button>
+        <svg id="heartBtn" width="24" height="24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+             viewBox="0 0 24 24" th:onclick="|likeIt(${board.num})|" th:classappend="${like} ? 'liked'">
+            <path d="M12 21s-6.4-5.3-9-9c-2-3 0-7 4-7 2.1 0 3.4 1.4 5 3 1.6-1.6 2.9-3 5-3 4 0 6 4 4 7-2.6 3.7-9 9-9 9z"/>
+        </svg>
+
         <span class="like-count" id="CNT" th:text="${board.like_count}">0</span>
 
 
@@ -139,15 +157,21 @@
 </div>
 
 <script>
+    const heart = document.getElementById('heartBtn');
     function likeIt(num) {
       $.ajax({
         type: "post",
         url: "/likeB",
         data:
         { "num" : num },
-        success: function(likeCnt) {
-          $("#CNT").text(likeCnt);
-        },
+        success: function(likeAll) {
+          $("#CNT").text(likeAll.likeCnt);
+           if (likeAll.like ==false) {
+          heart.classList.add('liked');
+        } else {
+          heart.classList.remove('liked');
+        }
+      },
         error: function() {
           alert("좋아요 처리 중 오류가 발생했습니다.");
         }

@@ -128,7 +128,8 @@
 
 <!-- 슬라이드 스크립트 -->
 <script>
-    const sliderInner = document.querySelector(".slider__inner");
+
+ const sliderInner = document.querySelector(".slider__inner");
  const sliders = document.querySelectorAll(".slider");
  const sliderDot = document.querySelector(".slider__dot");
 
@@ -154,6 +155,11 @@
      Array.from(sliderDot.children).forEach(dot => dot.classList.remove("active"));
      sliderDot.children[index]?.classList.add("active");
  }
+
+setInterval(function() {
+     const next = (currentIndex + 1) % sliderCount;
+     gotoSlider(next);
+}, 5000);
 
  // 좌우 버튼 이벤트
  document.querySelector(".prev").addEventListener("click", () => {
