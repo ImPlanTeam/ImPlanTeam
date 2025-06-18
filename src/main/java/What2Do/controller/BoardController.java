@@ -65,19 +65,17 @@ public class BoardController {
     //등록된 자유게시판 글 리스트(페이지 포함)
     @GetMapping("/listView")
     public String listView(Model model,
-                           @PageableDefault(page = 0, size = 10, sort = "num", direction = Sort.Direction.DESC) Pageable pageable,
+                           @PageableDefault(page = 0, size = 2, sort = "num", direction = Sort.Direction.DESC) Pageable pageable,
                            String searchKeyword) {
 
         Page<Board> list = null;
 
-        if (searchKeyword == null) {
-            list = boardService.listV(pageable);
+        if (searchKeyword == null || searchKeyword == "") {
+                System.out.println('a');
+                list = boardService.listV(pageable);
         } else {
-            if (searchKeyword.equals("전체보기")) {
-                return "redirect:/listView";
-            } else {
+                System.out.println(searchKeyword);
                 list = boardService.listSearch(pageable, searchKeyword);
-            }
         }
 
         int nowPage = list.getNumber(); // 현재 페이지 번호 (0부터 시작)
@@ -109,15 +107,12 @@ public class BoardController {
 
         Page<Board> list = null;
 
-        if (search == null) {
-            list = boardService.listV(pageable);
-        } else {
             if (search.equals("전체보기")) {
                 return "redirect:/listView";
             } else {
                 list = boardService.listSearch2(pageable, search);
             }
-        }
+
 
         int nowPage = list.getNumber(); // 현재 페이지 번호 (0부터 시작)
         int totalPages = list.getTotalPages(); // 전체 페이지 수

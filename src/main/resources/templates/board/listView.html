@@ -153,17 +153,18 @@
     <a class="write-link" th:href="@{/board}">➕ 글쓰기</a>
 
     <div class="pagination">
-        <a th:if="${startPage > 0}" th:href="@{/listView(page=${startPage - 1})}">이전</a>
-
+        <a th:if="${startPage > 0}" th:href="@{/listView(page=${startPage - 1},searchKeyword=${param.searchKeyword}}">이전</a>
         <th:block th:each="page : ${#numbers.sequence(startPage,endPage)}">
             <a th:if="${page != nowPage}"
                th:href="@{/listView(page=${page}, searchKeyword=${param.searchKeyword})}"
                th:text="${page+1}"></a>
             <strong th:if="${page == nowPage}" th:text="${page+1}"></strong>
         </th:block>
-
-        <a th:if="${endPage < totalPages - 1}" th:href="@{/listView(page=${endPage + 1})}">다음</a>
+        <a th:if="${endPage < totalPages - 1}" th:href="@{/listView(page=${endPage + 1},searchKeyword=${param.searchKeyword}}">다음</a>
     </div>
+
+
+
 </div>
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
 <script>
