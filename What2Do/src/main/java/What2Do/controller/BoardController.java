@@ -65,12 +65,12 @@ public class BoardController {
     //등록된 자유게시판 글 리스트(페이지 포함)
     @GetMapping("/listView")
     public String listView(Model model,
-                           @PageableDefault(page = 0, size = 10, sort = "num", direction = Sort.Direction.DESC) Pageable pageable,
+                           @PageableDefault(page = 0, size = 1, sort = "num", direction = Sort.Direction.DESC) Pageable pageable,
                            String searchKeyword) {
 
         Page<Board> list = null;
 
-        if (searchKeyword == null) {
+        if (searchKeyword == null || searchKeyword == "") {
             list = boardService.listV(pageable);
         } else {
             if (searchKeyword.equals("전체보기")) {

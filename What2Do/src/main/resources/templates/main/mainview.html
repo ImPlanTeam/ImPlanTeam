@@ -50,44 +50,24 @@
   </style>
   <style>
     #weather-widget{
-position : absolute;
-top: 350px;
-right: 50px;
-
-}
-    .btnSearch {
-            border: 1px solid;
-            width: 60px;
-            height: 30px;
-            font-size: 15px;
-
-            text-align: center;
-            background: #1a2e45;
-            color:#F9F7F7;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-    .weather-list {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-around;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .weather-item {
-            background-color: #F1F1F1;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            width: 180px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-        }
-
-    .weather-item img {
-      width: 32px;
-      height: 32px;
-      margin: 0 auto 6px;
+        position : absolute;
+        top: 350px;
+        right: 50px;
+        display: inilne-block
     }
+
+    .btnSearch {
+        border: 1px solid;
+        width: 60px;
+        height: 35px;
+        font-size: 15px;
+        text-align: center;
+        background: #1a2e45;
+        color:#F9F7F7;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
   </style>
 </head>
 <body class="bg-white text-gray-800">
@@ -147,14 +127,10 @@ right: 50px;
     </ul>
   </div>
   <!-- 날씨조회 -->
-  <div id="weather-widget"
-       class="absolute top-[350px] right-[230px] bg-white border border-gray-300 rounded-lg shadow p-4 w-[360px] text-sm z-50">
-    <div class="flex gap-2 mb-2">
-      <input class="searchText border border-gray-300 px-3 py-1 rounded w-full text-sm" type="text"
-             placeholder="장소 입력"/>
-      <button class="btnSearch bg-blue-800 text-white px-3 rounded text-sm">검색</button>
-    </div>
-    <div class="ct_weather text-gray-700">실시간 날씨 조회서비스</div>
+  <div id="weather-widget" style="margin-top:20px;">
+    <input class="searchText" type="text" placeholder="장소입력" style="padding:5px; width:280px; border: solid 1px; border-radius: 3px;">
+    <button class="btnSearch">검색</button>
+    <div class="ct_weather" style="margin-top:10px;">날씨 정보를 입력해 주세요.</div>
   </div>
 </section>
 
@@ -220,21 +196,40 @@ document.querySelector(".next").addEventListener("click", () => {
      gotoSlider(next);
 }, 5000);
 </script>
+<!--날씨조회 스크립트-->
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fca66437ffd757b4f7019de36217ec4b&libraries=services"></script>
 <script>
-  const SERVICE_KEY = "HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D"; // 기상청 API 키 (URL 인코딩된 상태)
+  const SERVICE_KEY = "HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D"; // 실제 서비스 키로 교체
 
   document.addEventListener('DOMContentLoaded', function () {
-    const inputObjSearchText = document.querySelector('.searchText');
-    const searchButton = document.querySelector('.btnSearch');
+    const input = document.querySelector('.searchText');
+    const button = document.querySelector('.btnSearch');
     const weatherBox = document.querySelector('.ct_weather');
     const geocoder = new kakao.maps.services.Geocoder();
 
+    button.addEventListener('click', function () {
+      const query = input.value.trim();
+      if (!query) return;
+
+      geocoder.addressSearch(query, function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+          const lat = result[0].y;
+          const lon = result[0].x;
+          getWeather(lat, lon);
+        } else {
+          weatherBox.innerHTML = "주소를 찾을 수 없습니다.";
+        }
+      });
+    });
+
     function dfs_xy_conv(code, v1, v2) {
-      const RE = 6371.00877, GRID = 5.0, SLAT1 = 30.0, SLAT2 = 60.0,
-            OLON = 126.0, OLAT = 38.0, XO = 43, YO = 136;
+      const RE = 6371.00877, GRID = 5.0, SLAT1 = 30.0, SLAT2 = 60.0, OLON = 126.0, OLAT = 38.0, XO = 43, YO = 136;
       const DEGRAD = Math.PI / 180.0;
-      const re = RE / GRID, slat1 = SLAT1 * DEGRAD, slat2 = SLAT2 * DEGRAD;
-      const olon = OLON * DEGRAD, olat = OLAT * DEGRAD;
+      const re = RE / GRID;
+      const slat1 = SLAT1 * DEGRAD;
+      const slat2 = SLAT2 * DEGRAD;
+      const olon = OLON * DEGRAD;
+      const olat = OLAT * DEGRAD;
 
       let sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
       sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
@@ -242,18 +237,20 @@ document.querySelector(".next").addEventListener("click", () => {
       sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
       let ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
       ro = re * sf / Math.pow(ro, sn);
-      const rs = {};
+
       if (code === "toXY") {
-        const ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
-        const ra_ = re * sf / Math.pow(ra, sn);
+        let ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
+        ra = re * sf / Math.pow(ra, sn);
         let theta = v2 * DEGRAD - olon;
         if (theta > Math.PI) theta -= 2.0 * Math.PI;
         if (theta < -Math.PI) theta += 2.0 * Math.PI;
         theta *= sn;
-        rs['x'] = Math.floor(ra_ * Math.sin(theta) + XO + 0.5);
-        rs['y'] = Math.floor(ro - ra_ * Math.cos(theta) + YO + 0.5);
+        return {
+          x: Math.floor(ra * Math.sin(theta) + XO + 0.5),
+          y: Math.floor(ro - ra * Math.cos(theta) + YO + 0.5)
+        };
       }
-      return rs;
+      return null;
     }
 
     function interpretValue(category, value) {
@@ -269,88 +266,42 @@ document.querySelector(".next").addEventListener("click", () => {
     }
 
     function getWeather(lat, lon) {
-      const result = dfs_xy_conv("toXY", lat, lon);
-      const xPoint = result.x;
-      const yPoint = result.y;
-
-      let now = new Date();
-      let y = now.getFullYear();
-      let m = ('0' + (now.getMonth() + 1)).slice(-2);
-      let d = ('0' + now.getDate()).slice(-2);
-      let formattedDate = y + m + d;
-
+      const { x, y } = dfs_xy_conv("toXY", lat, lon);
+      const now = new Date();
+      const ymd = now.getFullYear() + ('0' + (now.getMonth() + 1)).slice(-2) + ('0' + now.getDate()).slice(-2);
       let hour = now.getHours();
       if (now.getMinutes() < 30) hour--;
-      hour = ('0' + hour).slice(-2);
-      let formattedTime = hour + "30";
+      const time = ('0' + hour).slice(-2) + "30";
 
-      const url = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${SERVICE_KEY}&pageNo=1&numOfRows=1000&dataType=JSON&base_date=${formattedDate}&base_time=${formattedTime}&nx=${xPoint}&ny=${yPoint}`;
+      const url = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${SERVICE_KEY}&pageNo=1&numOfRows=1000&dataType=JSON&base_date=${ymd}&base_time=${time}&nx=${x}&ny=${y}`;
 
       fetch(url)
         .then(res => res.json())
         .then(data => {
           const items = data.response.body.items.item;
-          const nowTime = parseInt(formattedTime);
-          const validTimes = [...new Set(items.map(i => i.fcstTime))].filter(t => parseInt(t) > nowTime).sort();
-          const nextTime = validTimes[0];
+          const nextTime = items.map(i => i.fcstTime).find(t => parseInt(t) > parseInt(time));
+          const temp = items.find(i => i.category === "T1H" && i.fcstTime === nextTime);
+          const sky = items.find(i => i.category === "SKY" && i.fcstTime === nextTime);
+          const pty = items.find(i => i.category === "PTY" && i.fcstTime === nextTime);
 
-          const labels = {
-            T1H: "기온", SKY: "하늘 상태", PTY: "강수 형태", REH: "습도", WSD: "풍속"
-          };
-          const imageMap = {
-            맑음: "맑음.png", 흐림: "흐림.png", 구름많음: "구름많음.png", 비: "비.png",
-            "비/눈": "비눈.png", 눈: "눈.png", 소나기: "소나기.png", 없음: "없음.png",
-            기온: "기온.png", 습도: "습도.png", 풍속: "풍속.png"
-          };
+          const skyText = interpretValue("SKY", sky?.fcstValue);
+          const ptyText = interpretValue("PTY", pty?.fcstValue);
 
-          const displayCategories = ["T1H", "SKY", "PTY", "REH", "WSD"];
-          let html = `<div class="text-sm font-semibold mb-2">예보 시각: ${nextTime} 기준</div><div class="grid grid-cols-2 gap-2">`;
+          const skyIcon = `/weatherimg/${skyText}.png`;
+          const ptyIcon = `/weatherimg/${ptyText}.png`;
 
-          displayCategories.forEach(cat => {
-            const item = items.find(i => i.category === cat && i.fcstTime === nextTime);
-            if (!item) return;
-            let value = interpretValue(item.category, item.fcstValue);
-            let label = labels[item.category] || item.category;
-            let imageFile = imageMap[value] || imageMap[label] || "기본.png";
-            let imgSrc = `/weatherimg/${imageFile}`;
-            let unit = (cat === "T1H") ? "℃" : (cat === "REH") ? "%" : (cat === "WSD") ? "m/s" : "";
-
-            html += `
-              <div class="weather-item text-center">
-                <img src="${imgSrc}" alt="${label}">
-                <div class="font-medium">${label}</div>
-                <div>${value}${unit}</div>
-              </div>`;
-          });
-
-          html += `</div>`;
-          weatherBox.innerHTML = html;
+          const result = `
+            <div><strong>☁️ 예보 시각:</strong> ${nextTime} 기준</div>
+            <div><strong>기온:</strong> ${temp?.fcstValue}℃</div>
+            <div><strong>하늘:</strong> ${skyText} <img src="${skyIcon}" alt="${skyText}" style="width:70px; vertical-align:middle; display:inline-block"></div>
+            <div><strong>강수:</strong> ${ptyText}</div>
+          `;
+          weatherBox.innerHTML = result;
         })
         .catch(err => {
-          console.error(err);
           weatherBox.innerHTML = "날씨 정보를 가져오지 못했습니다.";
+          console.error(err);
         });
-    }
-
-    function searchLocation(query) {
-      geocoder.addressSearch(query, function (result, status) {
-        if (status === kakao.maps.services.Status.OK) {
-          getWeather(result[0].y, result[0].x);
-        } else {
-          weatherBox.innerHTML = "검색 결과가 없습니다.";
-        }
-      });
-    }
-
-    searchButton.addEventListener('click', function () {
-      const query = inputObjSearchText.value.trim();
-      if (query) searchLocation(query);
-    });
-
-    const locationParam = new URLSearchParams(window.location.search).get('location');
-    if (locationParam) {
-      inputObjSearchText.value = locationParam;
-      searchLocation(locationParam);
     }
   });
 </script>
