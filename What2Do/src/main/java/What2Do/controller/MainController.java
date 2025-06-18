@@ -7,7 +7,6 @@ import What2Do.service.TourService;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,6 +31,45 @@ public class MainController {
         this.boardService = boardService;
     }
 
+
+    @RequestMapping("/tourAdmin")
+    public String tourAdmin(Model model) {
+        List<Tour> tlist = tourService.findAll();
+        //list에 findAll 관광지 정보 대입
+        System.out.println("관리자모드 - 놀러가자");
+        model.addAttribute("tlist", tlist);
+        return "admin/tourList";
+    }
+
+    @GetMapping("/deleteTour/{contentid}")
+    public String deleteTour(@PathVariable String contentid,
+                             @RequestParam("city") String city,
+                             @RequestParam("areacode") String areacode,
+                             @RequestParam("sigungucode") String sigungucode,
+                             Model model) {
+        tourService.delete(contentid);
+        List<Tour> tlist = tourService.findRegion(areacode, sigungucode);
+        model.addAttribute("city", city);
+        model.addAttribute("tlist", tlist);
+        return "tour/city";
+    }
+
+    @GetMapping("/category")
+    public String category2(@RequestParam("city") String city, @RequestParam("areacode") String areacode, @RequestParam("sigungucode") String sigungucode, Model model) {
+        List<Tour> tlist = tourService.findRegion(areacode, sigungucode);
+        model.addAttribute("city", city);
+        model.addAttribute("tlist", tlist);
+        return "tour/city";
+    }
+
+
+    @GetMapping("/searchTour")
+    public String searchTour(@RequestParam("contentid") String contentid, Model model) {
+        System.out.println("관광지 아이디 검색");
+        return "admin/tourList";
+    }
+
+
     @RequestMapping("/lego")
     public String main() {
         return "/main/what2do";
@@ -41,6 +79,7 @@ public class MainController {
     public String mainview() {
         return "/main/mainview";
     }
+
     @RequestMapping("/testDot")
     public String testDot() {
         return "/main/testDot";
@@ -59,7 +98,7 @@ public class MainController {
         List<Board> blist = boardService.findNotices();
         model.addAttribute("blist", blist);
         List<Tour> bestFive = tourService.findBest();
-        model.addAttribute("bestFive",bestFive);
+        model.addAttribute("bestFive", bestFive);
         return "main/mainview";
     }
 
@@ -67,26 +106,32 @@ public class MainController {
     public String incheon() {
         return "tour/incheon";
     }
+
     @GetMapping("ulsan")
     public String ulsan() {
         return "tour/ulsan";
     }
+
     @GetMapping("sejong")
     public String sejong() {
         return "tour/sejong";
     }
+
     @GetMapping("gwangju")
     public String gwangju() {
         return "tour/gwangju";
     }
+
     @GetMapping("daejeon")
     public String daejeon() {
         return "tour/daejeon";
     }
+
     @GetMapping("daegu")
     public String daegu() {
         return "tour/daegu";
     }
+
     @GetMapping("busan")
     public String busan() {
         return "tour/busan";
@@ -150,14 +195,6 @@ public class MainController {
     @GetMapping("jeju")
     public String jeju() {
         return "tour/jeju";
-    }
-
-    @GetMapping("/category")
-    public String category2(@RequestParam("city") String city, @RequestParam("areacode") String areacode, @RequestParam("sigungucode") String sigungucode, Model model) {
-        List<Tour> tlist = tourService.findRegion(areacode, sigungucode);
-        model.addAttribute("city", city);
-        model.addAttribute("tlist", tlist);
-        return "tour/city";
     }
 
     @GetMapping("/detail")
@@ -248,3 +285,4 @@ public class MainController {
 
     }
 }
+

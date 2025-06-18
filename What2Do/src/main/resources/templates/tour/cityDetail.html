@@ -205,6 +205,20 @@
             height: 280px;
           }
         }
+                .action-btn {
+          background-color: #e74c3c;
+          border: none;
+          padding: 0.4rem 0.8rem;
+          border-radius: 6px;
+          color: white;
+          font-size: 13px;
+          margin: 0 2px;
+          cursor: pointer;
+        }
+
+        .edit-btn {
+          background-color: #2ecc71;
+        }
     </style>
 </head>
 <body>
@@ -228,6 +242,18 @@
         <path d="M12 21s-6.4-5.3-9-9c-2-3 0-7 4-7 2.1 0 3.4 1.4 5 3 1.6-1.6 2.9-3 5-3 4 0 6 4 4 7-2.6 3.7-9 9-9 9z"/>
     </svg>
     <span class="like-count" id="CNT" th:text="${tour.like_count}">0</span>
+    <span th:if="${session.user.getRole() == 'ADMIN'}">
+
+        <a th:href="@{'/viewTour/' + ${tour.contentid}}">
+            <button type="button" class="action-btn edit-btn">수정</button>
+        </a>
+
+        <form th:action="@{'/deleteTour/' + ${tour.contentid} + ${tour.areacode} + ${tour.sigungucode}}" method="get" style="display:inline;">
+            <button type="submit" class="action-btn">삭제</button>
+            <input type="hidden" name="contentid">
+        </form>
+
+    </span>
 
     <div class="comment-section">
         <div class="comment-title">댓글</div>
@@ -250,7 +276,9 @@
     </div>
 </div>
 
-<div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+
+    <div th:replace="~{fragments/footer :: footerFragment}"></div>
 
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fca66437ffd757b4f7019de36217ec4b&libraries=services"></script>
 <script>

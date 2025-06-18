@@ -85,12 +85,14 @@ public class BoardController {
 
         Page<Board> list = null;
 
-        if (searchKeyword == null) {
+        if (searchKeyword == null || searchKeyword == "") {
+//            System.out.println('a');
             list = boardService.listV(pageable);
         } else {
             if (searchKeyword.equals("전체보기")) {
                 return "redirect:/listView";
             } else {
+//                System.out.println('b');
                 list = boardService.listSearch(pageable, searchKeyword);
             }
         }
@@ -100,8 +102,8 @@ public class BoardController {
         int blockLimit = 5; // 페이지 블럭 크기
         int currentBlock = nowPage / blockLimit;
 
-        int startPage = currentBlock * blockLimit; // ex) 0, 5, 10
-        int endPage = Math.min(startPage + blockLimit - 1, totalPages - 1);
+        int startPage = currentBlock * blockLimit ; // ex) 0, 5, 10
+        int endPage = Math.min(startPage + blockLimit -1, totalPages-1);
         if(totalPages ==0){
             endPage = 0;
         }
