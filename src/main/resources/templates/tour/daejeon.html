@@ -9,8 +9,7 @@
 </head>
 <body class="bg-gray-100 font-sans">
 
-재훈
-오후 2:18
+
 <div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 <div class="max-w-5xl mx-auto p-6">
   <h1 class="text-3xl font-bold text-center mb-6">마스코트를 선택해주세요</h1>

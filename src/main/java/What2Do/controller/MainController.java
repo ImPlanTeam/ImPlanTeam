@@ -52,6 +52,41 @@ public class MainController {
         return "admin/viewTour";
     }
 
+    @GetMapping("/detail")
+    public String detailV(@RequestParam("id") Long id,
+                          @RequestParam("city") String city,
+                          Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        String num = user.getId();
+
+        Tour tour = tourService.findOne(id);
+        model.addAttribute("tour", tour);
+
+        boolean like = tourService.likeB(id, num);
+        model.addAttribute("like", like);
+        model.addAttribute("city", city);
+        List<Comment> clist = commentService.commentV(id);
+        System.out.println("city: "+city);
+        if (clist != null) {
+            model.addAttribute("clist", clist);
+        }
+        return "tour/cityDetail";
+    }
+
+    //댓글 저장
+    @PostMapping("/commentR")
+    public String commentR(Comment comment, @RequestParam("tour_id") Tour tour_id,
+                           @RequestParam("city") String city, RedirectAttributes re, HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        String user_id = user.getId();
+        comment.setTour(tour_id);
+        comment.setUser(user_id);
+        commentService.commentR(comment);
+        Long tid = tour_id.getId();
+        re.addAttribute("city", city);
+        return "redirect:/detail?id=" + tid;
+    }
+
     @PostMapping("/updateTour/{id}")
     public String updateTour(@PathVariable Long id,
                              @RequestParam("title") String title,
@@ -74,6 +109,64 @@ public class MainController {
         return "redirect:/detail";
     }
 
+    @RequestMapping("addTour")
+    public String addTour(@RequestParam("city")String city,
+                          @RequestParam("sigungucode")String sigungucode,
+                          @RequestParam("areacode")String areacode,
+                          RedirectAttributes re, Model model){
+        re.addAttribute("city", city);
+        re.addAttribute("sigungucode", sigungucode);
+        re.addAttribute("areacode", areacode);
+        model.addAttribute("city", city);
+        model.addAttribute("areacode", areacode);
+        model.addAttribute("sigungucode", sigungucode);
+        System.out.println(city+" 지역코드: "+areacode+" 시군구코드: "+sigungucode);
+        return "admin/addTour";
+    }
+
+    @PostMapping("saveTour")
+    public String saveTour(@RequestParam("contentid")String contentid,
+                           @RequestParam("sigungucode")String sigungucode,
+                           @RequestParam("addr1")String addr1,
+                           @RequestParam("addr1")String addr2,
+                           @RequestParam("overview")String overview,
+                           @RequestParam("firstimage")String firstimage,
+                           @RequestParam("firstimage2")String firstimage2,
+                           @RequestParam("cat1")String cat1,
+                           @RequestParam("cat2")String cat2,
+                           @RequestParam("cat3")String cat3,
+                           @RequestParam("title")String title,
+                           @RequestParam("mapx")Double mapx,
+                           @RequestParam("mapy")Double mapy,
+                           @RequestParam("areacode")String areacode,
+                           @RequestParam("contenttypeid")String contenttypeid,
+                           @RequestParam("city")String city,
+                           RedirectAttributes re){
+        Tour tour = new Tour();
+        tour.setContentid(contentid);
+        tour.setSigungucode(sigungucode);
+        tour.setAddr1(addr1);
+        tour.setAddr2(addr2);
+        tour.setOverview(overview);
+        tour.setFirstimage(firstimage);
+        tour.setFirstimage2(firstimage2);
+        tour.setCat1(cat1);
+        tour.setCat2(cat2);
+        tour.setCat3(cat3);
+        tour.setTitle(title);
+        tour.setMapx(mapx);
+        tour.setMapy(mapy);
+        tour.setContenttypeid(contenttypeid);
+        tour.setAreacode(areacode);
+        tourRepository.save(tour);
+
+        System.out.println(city+areacode+sigungucode);
+        re.addAttribute("city", city);
+        re.addAttribute("areacode", areacode);
+        re.addAttribute("sigungucode", sigungucode);
+        return "redirect:/category";
+    }
+
     @GetMapping("deleteTour/{id}")
     public String deleteTour(@PathVariable("id")Long id,
                              @RequestParam("city") String city,
@@ -85,6 +178,7 @@ public class MainController {
         re.addAttribute("city", city);
         re.addAttribute("areacode", areacode);
         re.addAttribute("sigungucode", sigungucode);
+        System.out.println(city+areacode+"/"+sigungucode);
         return "redirect:/category";
     }
 
@@ -92,30 +186,13 @@ public class MainController {
     public String category2(@RequestParam("city") String city, @RequestParam("areacode") String areacode, @RequestParam("sigungucode") String sigungucode, Model model) {
         List<Tour> tlist = tourService.findRegion(areacode, sigungucode);
         model.addAttribute("city", city);
+        model.addAttribute("areacode", areacode);
+        model.addAttribute("sigungucode", sigungucode);
         model.addAttribute("tlist", tlist);
 
+        System.out.println("/category 컨트롤러 실행됨, areacode: "+areacode+" sugungucode: "+sigungucode);
+
         return "tour/city";
-    }
-
-    @GetMapping("/detail")
-    public String detailV(@RequestParam("id") Long id,
-                          @RequestParam("city") String city,
-                          Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        String num = user.getId();
-
-        Tour tour = tourService.findOne(id);
-        model.addAttribute("tour", tour);
-
-        boolean like = tourService.likeB(id, num);
-        model.addAttribute("like", like);
-        model.addAttribute("city", city);
-        List<Comment> clist = commentService.commentV(id);
-        System.out.println("city: "+city);
-        if (clist != null) {
-            model.addAttribute("clist", clist);
-        }
-        return "tour/cityDetail";
     }
 
     @GetMapping("/searchTour")
@@ -136,7 +213,7 @@ public class MainController {
         model.addAttribute("blist", blist);
         List<Tour> bestFive = tourService.findBest();
         model.addAttribute("bestFive",bestFive);
-        return "/main/mainview";
+        return "main/mainview";
     }
 
     @RequestMapping("/testDot")
@@ -171,19 +248,6 @@ public class MainController {
         return "tour/city::#categoryTable";
     }
 
-    //댓글 저장
-    @PostMapping("/commentR")
-    public String commentR(Comment comment, @RequestParam("tour_id") Tour tour_id,
-                           @RequestParam("city") String city, RedirectAttributes re, HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-        String user_id = user.getId();
-        comment.setTour(tour_id);
-        comment.setUser(user_id);
-        commentService.commentR(comment);
-        Long tid = tour_id.getId();
-        re.addAttribute("city", city);
-        return "redirect:/detail?id=" + tid;
-    }
 
     @ResponseBody
     @PostMapping("/deleteC")
@@ -330,6 +394,5 @@ public class MainController {
     public String jeju() {
         return "tour/jeju";
     }
-
 
 }

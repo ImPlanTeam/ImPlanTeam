@@ -41,4 +41,13 @@ public class ActivityService {
     public void newSave(Activity activity){
         activityRepository.save(activity);
     }
+
+    public void register(Activity activity){
+        activityRepository.save(activity);
+    }
+
+    public boolean count(String name){
+        boolean count = activityRepository.existsByName(name);
+        return count;
+    }
 }

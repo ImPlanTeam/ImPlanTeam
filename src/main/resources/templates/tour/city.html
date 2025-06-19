@@ -113,7 +113,11 @@
             margin-bottom: 40px;
             gap: 12px;
         }
-
+        #add{
+        position: absolute;
+        right: 575px;
+        top: 195px;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
@@ -123,8 +127,11 @@
 <h1 style="text-align: center; margin-top: 40px; font-size: 2rem; font-weight: 700;">
     <div th:text="${city}">도시명</div>
 </h1>
-
-
+<span th:if="${session.user?.getRole() == 'ADMIN'}">
+          <a th:href="@{/addTour(city=${city}, areacode=${areacode}, sigungucode=${sigungucode})}">
+            <button type="button" id="add">+</button>
+        </a>
+</span>
 <!-- 카테고리 라디오 버튼 영역 감싸기 -->
 <div class="category-wrapper">
     <label class="checkbox-label">

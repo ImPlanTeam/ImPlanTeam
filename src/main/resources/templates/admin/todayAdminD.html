@@ -18,7 +18,12 @@
       width: 100%;
       max-width: 400px;
       min-width: 150px;
-}
+    }
+
+    textarea {
+      width: 100%;
+      max-width: 400px;
+    }
 </style>
 <body>
 
@@ -26,8 +31,9 @@
 
 <div class="container" style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', sans-serif;">
     <h1 style="text-align: center; margin-top: 40px; font-size: 2rem; font-weight: 700;">
-        <div th:text="${name}">도시명</div>
+        <div th:text="${name}"></div>
     </h1>
+
     <div th:each="list : ${list}" >
         <div th:id="'view-' + ${list.id}" style="border:1px solid #ddd; padding:16px; background:#f9f9f9; margin-bottom:10px;">
             <div style="margin-bottom: 8px;"><strong>기분:</strong> <span th:text="${list.mood}" class="info"></span></div>
@@ -44,11 +50,12 @@
         <div th:id="'edit-' + ${list.id}" style="display:none; border:1px solid #ddd; padding:16px; margin-bottom:10px;">
             <form action="todayUpdateC" method="post">
                 <input type="hidden" th:id="'edit-id-' + ${list.id}">
-                <div><strong>기분:</strong> <input type="text" id="edit-mood" style="border:none; outline:none; background:transparent;" name="mood"></div>
-                <div><strong>활동 유형:</strong> <input type="text" id="edit-tags" style="border:none; outline:none; background:transparent;" name="tags"></div>
-                <div><strong>동행인:</strong> <input type="text" id="edit-companions" style="border:none; outline:none; background:transparent;" name="companions"></div>
-                <div><strong>날씨:</strong> <input type="text" id="edit-weather" style="border:none; outline:none; background:transparent;" name="weather"></div>
-                <div><strong>설명:</strong> <input type="text" id="edit-description" style="border:none; outline:none; background:transparent;" name="description"></div>
+                <div><strong>기분:</strong> <input type="text" th:id="'edit-mood-' + ${list.id}" style="border:none; outline:none; background:transparent;" name="mood"></div>
+                <div><strong>활동 유형:</strong> <input type="text" th:id="'edit-tags-' + ${list.id}" style="border:none; outline:none; background:transparent;" name="tags"></div>
+                <div><strong>동행인:</strong> <input type="text" th:id="'edit-companions-' + ${list.id}" style="border:none; outline:none; background:transparent;" name="companions"></div>
+                <div><strong>날씨:</strong> <input type="text" th:id="'edit-weather-' + ${list.id}" style="border:none; outline:none; background:transparent;" name="weather"></div>
+                <div><strong>설명:</strong><br>
+                    <textarea rows="3"  th:id="'edit-description-' + ${list.id}" style="border:none; outline:none; background:transparent;" name="description"></textarea></div>
                 <input type="hidden" name="id" th:value="${list.id}">
                 <input type="hidden" name="name" th:value="${list.name}">
                 <div style="text-align: right;">
@@ -74,8 +81,8 @@
             url: '/deleteToday',
             type: 'POST',
             data: { id: id, name: name },
-            success: function() {
-                location.reload();
+            success: function(response) {
+                 window.location.href = response.redirect;
             },
             error: function() {
                 alert('삭제에 실패했습니다.');
@@ -95,11 +102,11 @@
                 $('#edit-' + id).show();
 
                 // 값 채워넣기
-                $('#edit-mood').val(data.mood);
-                $('#edit-tags').val(data.tags);
-                $('#edit-companions').val(data.companions);
-                $('#edit-weather').val(data.weather);
-                $('#edit-description').val(data.description);
+                $('#edit-mood-' + id).val(data.mood);
+                $('#edit-tags-' + id).val(data.tags);
+                $('#edit-companions-' + id).val(data.companions);
+                $('#edit-weather-' + id).val(data.weather);
+                $('#edit-description-' + id).val(data.description);
             },
             error: function() {
                 alert('데이터 불러오기에 실패했습니다.');

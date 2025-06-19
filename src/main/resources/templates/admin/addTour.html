@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>관광지 추가</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+          background-color: #fefefe;
+          font-family: 'Noto Sans KR', sans-serif;
+          margin: 0;
+          padding: 0;
+          color: #1f2937;
+        }
+
+        .container {
+          max-width: 800px;
+          margin: 40px auto;
+          padding: 30px;
+          background-color: white;
+          border-radius: 16px;
+          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+
+        h2 {
+          font-size: 1.8rem;
+          font-weight: 700;
+          margin-bottom: 20px;
+          border-left: 6px solid #3b82f6;
+          padding-left: 12px;
+        }
+
+        label {
+          display: block;
+          margin-top: 14px;
+          font-weight: 600;
+        }
+
+        input[type="text"] {
+          width: 100%;
+          padding: 10px;
+          margin-top: 6px;
+          border: 1px solid #d1d5db;
+          border-radius: 8px;
+          font-size: 1rem;
+        }
+
+        .form-actions {
+          margin-top: 30px;
+          text-align: right;
+        }
+
+        .form-actions button {
+          background-color: #1a2e45;
+          color: white;
+          padding: 10px 24px;
+          border: none;
+          border-radius: 10px;
+          font-size: 16px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+
+        .form-actions button:hover {
+          background-color: #243d5a;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>관광지 추가</h2>
+    <form action="saveTour" method="post" onsubmit="return validateForm(this);">
+        <input type="hidden" name="city" th:value="${city}">
+
+        <label>상호명</label>
+        <input type="text" name="title" placeholder="상호명을 입력하세요.">
+
+        <label>설명</label>
+        <input type="text" name="overview" placeholder="설명을 입력하세요.">
+
+        <label>주소</label>
+        <input type="text" name="addr1" placeholder="주소를 입력하세요.">
+
+        <label>상세주소</label>
+        <input type="text" name="addr2" placeholder="상세주소를 입력하세요.">
+
+        <label>시군구</label>
+        <input type="text" name="sigungucode" th:value="${sigungucode}">
+
+        <label>컨텐츠 아이디</label>
+        <input type="text" name="contentid" placeholder="컨텐츠 아이디를 입력하세요.">
+
+        <label>컨텐츠타입 아이디</label>
+        <input type="text" name="contenttypeid" placeholder="컨텐츠타입 아이디를 입력하세요.">
+
+        <label>썸네일 URL</label>
+        <input type="text" name="firstimage2" placeholder="썸네일 URL을 입력하세요.">
+
+        <label>이미지 URL</label>
+        <input type="text" name="firstimage" placeholder="이미지 URL을 입력하세요.">
+
+        <label>카테고리 1</label>
+        <input type="text" name="cat1" placeholder="카테고리1을 입력하세요.">
+
+        <label>카테고리 2</label>
+        <input type="text" name="cat2" placeholder="카테고리2를 입력하세요.">
+
+        <label>카테고리 3</label>
+        <input type="text" name="cat3" placeholder="카테고리3을 입력하세요.">
+
+        <label>지역 코드</label>
+        <input type="text" name="areacode" th:value="${areacode}" placeholder="areacode를 입력하세요.">
+
+        <label>지도 좌표</label>
+        <input type="text" name="mapx" placeholder="mapx (경도)">
+        <input type="text" name="mapy" placeholder="mapy (위도)">
+
+        <div class="form-actions">
+            <button type="submit" id="my-form" onclick="handleSubmit()">저장하기</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
