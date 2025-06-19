@@ -57,11 +57,7 @@ public class MainController {
         return "/member/join";
     }
 
-//    @RequestMapping(value = "/what2do", method = RequestMethod.GET)
-//    public String home() {
-//
-//        return "main/mainview";
-//    }
+
 
     @RequestMapping(value = "/main/adminmain", method = RequestMethod.GET)
     public String adminmain() {
@@ -258,10 +254,4 @@ public class MainController {
         model.addAttribute("bestFive",bestFive);
         return "main/mainview";
     }
-//    @GetMapping("/best")
-//    public String best(Model model){
-//        List<Tour> bestFive = tourService.findBest();
-//        model.addAttribute("bestFive",bestFive);
-//        return "main/";
-//    }
 }

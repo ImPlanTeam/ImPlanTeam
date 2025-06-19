@@ -50,9 +50,6 @@
   </style>
   <style>
     #weather-widget{
-        position : absolute;
-        top: 350px;
-        right: 50px;
         display: inilne-block
     }
 
@@ -127,7 +124,7 @@
     </ul>
   </div>
   <!-- 날씨조회 -->
-  <div id="weather-widget" style="margin-top:20px;">
+  <div class="rounded-lg shadow" id="weather-widget" style="margin-top:20px; position: absolute; top: 350px; right: 50px;;">
     <input class="searchText" type="text" placeholder="장소입력" style="padding:5px; width:280px; border: solid 1px; border-radius: 3px;">
     <button class="btnSearch">검색</button>
     <div class="ct_weather" style="margin-top:10px;">날씨 정보를 입력해 주세요.</div>
