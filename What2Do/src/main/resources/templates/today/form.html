@@ -33,7 +33,7 @@
        background-color: white;
        border: 1px solid #ccc;
        padding-left: 5px;
-       padding-top: 21px;
+       padding-top: 23px;
        border-radius : 10px;
        text-align:center
    }
@@ -83,16 +83,6 @@
                 <option value="가족">가족</option>
             </select>
         </div>
-        <div class="mb-4">
-            <label class="block mb-1 font-medium">날씨</label>
-            <select  class="w-full border p-2 rounded" name="weather">
-                <option value="맑음">맑음</option>
-                <option value="약간흐림">약간 흐림</option>
-                <option value="흐림">흐림</option>
-                <option value="비">비</option>
-                <option value="눈">눈</option>
-            </select>
-        </div>
         <div class="mb-6">
             <label class="block mb-1 font-medium">현재 위치 (도/시)</label>
             <span>
@@ -116,10 +106,15 @@
             <option value="울산광역시">울산광역시</option>
             <option value="제주도">제주도</option>
       </select>
-      <select  class="sgg2 border p-2 rounded" name="city" id="cityL">
+      <select  class="sgg2 border p-2 rounded" name="city" id="cityL" required>
+
 <!--        <option value=""></option>-->
       </select>
       </span>
+        </div>
+        <div class="mb-4">
+            <label class="block mb-1 font-medium">날씨</label>
+            <input name="weather"  id="weather" type="text" value="날씨 자동 입력" readonly class="w-full border p-2" style="color: #808080;">
         </div>
 
         <div class="text-center">
@@ -135,6 +130,13 @@
     function cityList(area3){
     var clistL=document.getElementById('cityL');
     clistL.innerHTML="";
+
+    // 안내 옵션 추가
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  defaultOption.textContent = "지역을 선택하세요.";
+  defaultOption.selected = true;
+  clistL.appendChild(defaultOption);
     $.ajax({
       type: "get",
       url: "/cityListV",
@@ -161,6 +163,109 @@
        } else {
            infoBox.style.display = "none";
        }
-<!--       alert("오늘 뭐하지?는 고객 정보기반 랜덤 활동 추천 시스템 입니다.");-->
     }
+</script>
+
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fca66437ffd757b4f7019de36217ec4b&libraries=services"></script>
+<script>
+    const SERVICE_KEY = "HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D"; // 실제 키로 교체
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const citySelect = document.getElementById('cityL');
+      const weatherInput = document.getElementById('weather');
+      const geocoder = new kakao.maps.services.Geocoder();
+
+      // 도시 선택 시 자동 날씨 조회
+      citySelect.addEventListener('change', function () {
+        const area = document.querySelector('.sgg').value;
+        const city = this.value;
+        const query = area + ' ' + city;
+
+        geocoder.addressSearch(query, function (result, status) {
+          if (status === kakao.maps.services.Status.OK) {
+            const lat = result[0].y;
+            const lon = result[0].x;
+            getWeather(lat, lon);
+          } else {
+            weatherInput.value = "주소 확인 불가";
+          }
+        });
+      });
+
+      function dfs_xy_conv(code, v1, v2) {
+        const RE = 6371.00877, GRID = 5.0, SLAT1 = 30.0, SLAT2 = 60.0, OLON = 126.0, OLAT = 38.0, XO = 43, YO = 136;
+        const DEGRAD = Math.PI / 180.0;
+        const re = RE / GRID;
+        const slat1 = SLAT1 * DEGRAD;
+        const slat2 = SLAT2 * DEGRAD;
+        const olon = OLON * DEGRAD;
+        const olat = OLAT * DEGRAD;
+
+        let sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+        sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
+        let sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+        sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
+        let ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
+        ro = re * sf / Math.pow(ro, sn);
+
+        if (code === "toXY") {
+          let ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
+          ra = re * sf / Math.pow(ra, sn);
+          let theta = v2 * DEGRAD - olon;
+          if (theta > Math.PI) theta -= 2.0 * Math.PI;
+          if (theta < -Math.PI) theta += 2.0 * Math.PI;
+          theta *= sn;
+          return {
+            x: Math.floor(ra * Math.sin(theta) + XO + 0.5),
+            y: Math.floor(ro - ra * Math.cos(theta) + YO + 0.5)
+          };
+        }
+        return null;
+      }
+
+      function interpretValue(category, value) {
+        if (category === "SKY") {
+          return { "1": "맑음", "3": "구름많음", "4": "흐림" }[value] || value;
+        } else if (category === "PTY") {
+          return {
+            "1": "비", "2": "비/눈", "3": "눈", "4": "소나기",
+            "5": "빗방울", "6": "빗방울/눈날림", "7": "눈날림"
+          }[value] || null;
+        }
+        return null;
+      }
+
+      function getWeather(lat, lon) {
+        const { x, y } = dfs_xy_conv("toXY", lat, lon);
+        const now = new Date();
+        const ymd = now.getFullYear() + ('0' + (now.getMonth() + 1)).slice(-2) + ('0' + now.getDate()).slice(-2);
+        let hour = now.getHours();
+        if (now.getMinutes() < 30) hour--;
+        const time = ('0' + hour).slice(-2) + "30";
+
+        const url = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${SERVICE_KEY}&pageNo=1&numOfRows=1000&dataType=JSON&base_date=${ymd}&base_time=${time}&nx=${x}&ny=${y}`;
+
+        fetch(url)
+          .then(res => res.json())
+          .then(data => {
+            const items = data.response.body.items.item;
+            const nextTime = items.map(i => i.fcstTime).find(t => parseInt(t) > parseInt(time));
+            const sky = items.find(i => i.category === "SKY" && i.fcstTime === nextTime);
+            const pty = items.find(i => i.category === "PTY" && i.fcstTime === nextTime);
+
+            const skyText = interpretValue("SKY", sky?.fcstValue);
+            const ptyText = interpretValue("PTY", pty?.fcstValue);
+
+            // 비 또는 눈이 예보되어 있으면 그것을, 아니면 하늘 상태로
+            const finalWeather = (ptyText && ptyText !== "없음") ? ptyText : skyText;
+
+            weatherInput.value = finalWeather || "정보없음";
+            weatherInput.style.color = "#000"; // 글씨 색 되돌리기
+          })
+          .catch(err => {
+            console.error(err);
+            weatherInput.value = "날씨 오류";
+          });
+      }
+    });
 </script>

@@ -22,8 +22,6 @@
           margin: 40px auto;
           padding: 20px;
           background-color: white;
-<!--          border-radius: 16px;-->
-<!--          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);-->
         }
 
         .thumbnail {
@@ -34,23 +32,14 @@
           margin-bottom: 24px;
         }
 
-
-
         .page-title {
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: #111827;
-  margin-bottom: 20px;
-  border-left: 6px solid #3b82f6;
-  padding-left: 12px;
-}
-
-/* 지도 인포윈도우용 */
-.map-title {
-  font-size: 1rem;
-  font-weight: bold;
-  color: #111827;
-}
+          font-size: 2.2rem;
+          font-weight: 800;
+          color: #111827;
+          margin-bottom: 20px;
+          border-left: 6px solid #3b82f6;
+          padding-left: 12px;
+        }
 
         .overview {
           font-size: 1.1rem;
@@ -81,15 +70,14 @@
           padding: 5px;
           z-index: 1;
           border-radius: 4px;
-<!--          height: 150px;-->
         }
 
         .bAddr {
-         padding:5px;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        white-space: nowrap;
-        font-size: 15px;
+          padding: 5px;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          font-size: 15px;
         }
 
         #heartBtn {
@@ -147,7 +135,6 @@
 
         .comment-user {
           font-weight: 600;
-<!--          color: #2563eb;-->
         }
 
         .comment-date {
@@ -205,28 +192,59 @@
             height: 280px;
           }
         }
-                .action-btn {
-          background-color: #e74c3c;
+
+        .action-btn {
+          background: none;
+          color: inherit;
+          padding: 0;
+          font: inherit;
           border: none;
-          padding: 0.4rem 0.8rem;
-          border-radius: 6px;
-          color: white;
-          font-size: 13px;
-          margin: 0 2px;
           cursor: pointer;
+          text-decoration: none;
         }
 
         .edit-btn {
-          background-color: #2ecc71;
+        }
+
+        #btn {
+            position: absolute;
+            right: 160px;
+            top: 160px;
+            display: flex;
+            gap: 10px;
         }
     </style>
 </head>
 <body>
+<!-- 나머지 HTML 동일 -->
 
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:if="${session.user.getRole() == 'ADMIN'}">
+    <div th:replace="~{fragments/admintop :: headerFragment}"></div>
+</div>
+
+<div th:if="${session.user.getRole() == 'USER'}">
+    <div th:replace="~{fragments/top :: headerFragment}"></div>
+</div>
 
 <div class="container">
     <div class="page-title" th:text="${tour.title}"></div>
+
+    <div th:if="${session.user.getRole() == 'ADMIN'}">
+        <div id="btn">
+        <a th:href="@{'/viewTour/' + ${tour.id}}">
+            <button type="button" class="action-btn edit-btn">수정</button>
+        </a>
+
+        <form th:action="@{/deleteTour/{id}(id=${tour.id})}" method="get" style="display:inline;">
+            <input type="hidden" th:value="${city}" name="city">
+            <input type="hidden" th:value="${tour.areacode}" name="areacode">
+            <input type="hidden" th:value="${tour.sigungucode}" name="sigungucode">
+
+            <button type="submit" class="action-btn">삭제</button>
+        </form>
+        </div>
+    </div>
+
     <img th:if="${tour.firstimage != null}" th:src="${tour.firstimage}" alt="사진" class="thumbnail"/>
     <div class="overview" th:text="${tour.overview}"></div>
     <div class="address" th:text="${tour.addr1}"></div>
@@ -242,32 +260,21 @@
         <path d="M12 21s-6.4-5.3-9-9c-2-3 0-7 4-7 2.1 0 3.4 1.4 5 3 1.6-1.6 2.9-3 5-3 4 0 6 4 4 7-2.6 3.7-9 9-9 9z"/>
     </svg>
     <span class="like-count" id="CNT" th:text="${tour.like_count}">0</span>
-    <span th:if="${session.user.getRole() == 'ADMIN'}">
 
-        <a th:href="@{'/viewTour/' + ${tour.contentid}}">
-            <button type="button" class="action-btn edit-btn">수정</button>
-        </a>
-
-        <form th:action="@{'/deleteTour/' + ${tour.contentid} + ${tour.areacode} + ${tour.sigungucode}}" method="get" style="display:inline;">
-            <button type="submit" class="action-btn">삭제</button>
-            <input type="hidden" name="contentid">
-        </form>
-
-    </span>
 
     <div class="comment-section">
         <div class="comment-title">댓글</div>
         <div th:each="clist : ${clist}" class="comment-box">
             <div class="comment-header">
                 <span class="comment-user" th:text="${clist?.user}"></span>
-                <span class="comment-date" th:text="${#strings.substring(clist?.indate,0,16)}"></span>
+                <span class="comment-date" th:extt="${#strings.substring(clist?.indate,0,16)}"></span>
                 <button th:if="${session.user.id} == ${clist.user}" th:onclick="deleteComment([[${clist.no}]])">✖</button>
                 <button th:if="${session.user.id} == ${clist.user}" th:onclick="modifyComment([[${clist.no}]])">수정</button>
             </div>
             <div class="comment-content" th:text="${clist?.content}" th:id="'content-' + ${clist.no}"></div>
         </div>
 
-        <form th:action="@{/commentR(tour_id=${tour.id})}" onsubmit="return inpValidateFn();" method="post" class="comment-form">
+        <form th:action="@{/commentR(tour_id=${tour.id}, city=${city})}" onsubmit="return inpValidateFn();" method="post" class="comment-form">
             <textarea name="content" rows="5" placeholder="내용을 입력해주세요." id="contentB"></textarea>
             <input type="hidden" th:value="${tour.id}" name="tour_id">
             <input type="hidden" th:value="${session.user.id}" name="user_id">

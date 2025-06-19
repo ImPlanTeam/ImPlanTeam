@@ -113,18 +113,25 @@
             margin-bottom: 40px;
             gap: 12px;
         }
-
+        #add{
+        position: absolute;
+        right: 575px;
+        top: 195px;
+        }
     </style>
 </head>
 <body class="bg-gray-100">
 
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <h1 style="text-align: center; margin-top: 40px; font-size: 2rem; font-weight: 700;">
     <div th:text="${city}">도시명</div>
 </h1>
-
-
+<span th:if="${session.user.getRole() == 'ADMIN'}">
+          <a th:href="@{/addTour(city=${city}, areacode=${areacode}, sigungucode=${sigungucode})}">
+            <button type="button" id="add">+</button>
+        </a>
+</span>
 <!-- 카테고리 라디오 버튼 영역 감싸기 -->
 <div class="category-wrapper">
     <label class="checkbox-label">
@@ -185,10 +192,9 @@
 
 <div class="card-container" id="categoryTable">
     <tr th:each="tlist : ${tlist}">
-        <a th:href="@{/detail(id=${tlist.id})}" class="card"  >
+        <a th:href="@{/detail(id=${tlist.id}, city=${city})}" class="card"  >
             <img th:src="${tlist.firstimage2}" alt="" class="pic" />
             <p th:text="${tlist.title}"></p>
-
         </a>
     </tr>
 

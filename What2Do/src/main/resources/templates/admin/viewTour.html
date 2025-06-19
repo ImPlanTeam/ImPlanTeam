@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>가게 정보 수정</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <style>
+    body {
+      background-color: #fefefe;
+      font-family: 'Noto Sans KR', sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #1f2937;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      border-left: 6px solid #3b82f6;
+      padding-left: 12px;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      font-weight: 600;
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .form-actions {
+      margin-top: 20px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .form-actions button {
+      background-color: #1a2e45;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/admintop :: headerFragment}"></div>
+
+<div class="container">
+  <h2>가게 정보 수정</h2>
+  <form th:action="@{/updateTour/{id}(id=${tour.id})}" method="post">
+
+    <input type="hidden" id="id" name="id" th:value="${tour.id}">
+    <input type="hidden" name="city" th:value="${city}">
+
+    <label for="title">제목</label>
+    <input type="text" id="title" name="title" th:value="${tour.title}" required />
+
+    <label for="overview">설명</label>
+    <textarea id="overview" name="overview" rows="6" th:text="${tour.overview}"></textarea>
+
+    <label for="addr1">주소</label>
+    <input type="text" id="addr1" name="addr1" th:value="${tour.addr1}" />
+
+    <label for="firstimage">이미지 URL</label>
+    <input type="text" id="firstimage" name="firstimage" th:value="${tour.firstimage}" />
+
+    <label for="firstimage2">썸네일 URL</label>
+    <input type="text" id="firstimage2" name="firstimage2" th:value="${tour.firstimage2}" />
+
+    <div class="form-actions">
+      <button type="submit">수정 완료</button>
+    </div>
+  </form>
+</div>
+
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+</body>
+</html>

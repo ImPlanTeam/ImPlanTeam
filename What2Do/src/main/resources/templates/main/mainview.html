@@ -48,6 +48,24 @@
             background: rgba(255,255,255,0.9);
         }
     </style>
+    <style>
+        #weather-widget{
+            display: inilne-block
+        }
+
+        .btnSearch {
+            border: 1px solid;
+            width: 60px;
+            height: 35px;
+            font-size: 15px;
+            text-align: center;
+            background: #1a2e45;
+            color:#F9F7F7;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+    </style>
 </head>
 <body class="bg-white text-gray-800">
 
@@ -63,16 +81,16 @@
             <div class="slider__wrap relative">
                 <div class="slider__img relative overflow-hidden rounded-xl shadow-lg">
                     <div class="slider__inner flex transition-all duration-500">
-                        <div class="slider" role="group" aria-label="1/4"><img src="/img/배너4.PNG" alt="이미지1" class="w-full h-auto"></div>
+                        <div class="slider" role="group" aria-label="1/4"><img src="/img/배너1.PNG" alt="이미지1" class="w-full h-auto"></div>
 
                         <div class="slider" role="group" aria-label="2/4">
                             <a href="/lego" class="block w-full h-full relative z-10">
-                                <img src="/img/배너5.PNG" alt="배너 이미지" class="w-full h-full object-cover rounded-xl">
+                                <img src="/img/배너2.PNG" alt="배너 이미지" class="w-full h-full object-cover rounded-xl">
                             </a>
                         </div>
 
-                        <div class="slider" role="group" aria-label="3/4"><img src="/img/배너6.PNG" alt="이미지3" class="w-full h-auto"></div>
-                        <div class="slider" role="group" aria-label="4/4"><img src="/img/배너7.PNG" alt="이미지4" class="w-full h-auto"></div>
+                        <div class="slider" role="group" aria-label="3/4"><img src="/img/배너3.PNG" alt="이미지3" class="w-full h-auto"></div>
+                        <div class="slider" role="group" aria-label="4/4"><img src="/img/배너4.PNG" alt="이미지4" class="w-full h-auto"></div>
                     </div>
 
                     <!-- 좌우 버튼 -->
@@ -105,6 +123,12 @@
             <li th:if="${#lists.isEmpty(blist)}">등록된 공지사항이 없습니다.</li>
         </ul>
     </div>
+    <!-- 날씨조회 -->
+    <div class="rounded-lg shadow" id="weather-widget" style="margin-top:20px; position: absolute; top: 350px; right: 50px;;">
+        <input class="searchText" type="text" placeholder="장소입력" style="padding:5px; width:280px; border: solid 1px; border-radius: 3px;">
+        <button class="btnSearch">검색</button>
+        <div class="ct_weather" style="margin-top:10px;">날씨 정보를 입력해 주세요.</div>
+    </div>
 </section>
 
 
@@ -114,7 +138,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <div class="bg-white rounded-xl shadow hover:shadow-md transition duration-300 overflow-hidden"
              th:each="bestFive : ${bestFive}"
-             th:onclick="|location.href='@{detail(id=${bestFive.id})}'|">
+             th:onclick="|location.href='@{detail(id=${bestFive.id},city=${city})}'|">
             <img alt="" class="w-full h-48 object-cover" th:src="${bestFive.firstimage2}"/>
             <div class="p-3 text-center">
                 <p class="text-base font-semibold text-gray-800 truncate" th:text="${bestFive.title}"></p>
@@ -128,48 +152,155 @@
 
 <!-- 슬라이드 스크립트 -->
 <script>
+    const sliderInner = document.querySelector(".slider__inner");
+  const sliders = document.querySelectorAll(".slider");
+  const sliderDot = document.querySelector(".slider__dot");
 
- const sliderInner = document.querySelector(".slider__inner");
- const sliders = document.querySelectorAll(".slider");
- const sliderDot = document.querySelector(".slider__dot");
+  let currentIndex = 0;
+  const sliderCount = sliders.length;
+  const sliderWidth = document.querySelector(".slider__img").offsetWidth;
 
- let currentIndex = 0;
- const sliderCount = sliders.length;
- const sliderWidth = document.querySelector(".slider__img").offsetWidth;
-
- // 닷 메뉴 생성
- sliderDot.innerHTML = "";
- sliders.forEach((_, idx) => {
+  // 닷 메뉴 생성
+  sliderDot.innerHTML = "";
+  sliders.forEach((_, idx) => {
      const dot = document.createElement("span");
      dot.className = "dot";
      dot.title = `이미지 ${idx + 1}`;
      dot.addEventListener("click", () => gotoSlider(idx));
      sliderDot.appendChild(dot);
- });
- sliderDot.children[0]?.classList.add("active");
+  });
+  sliderDot.children[0]?.classList.add("active");
 
- // 슬라이드 이동
- function gotoSlider(index) {
+  // 슬라이드 이동
+  function gotoSlider(index) {
      sliderInner.style.transform = `translateX(-${sliderWidth * index}px)`;
      currentIndex = index;
      Array.from(sliderDot.children).forEach(dot => dot.classList.remove("active"));
      sliderDot.children[index]?.classList.add("active");
- }
+  }
 
-setInterval(function() {
-     const next = (currentIndex + 1) % sliderCount;
-     gotoSlider(next);
-}, 5000);
-
- // 좌우 버튼 이벤트
- document.querySelector(".prev").addEventListener("click", () => {
+  // 좌우 버튼 이벤트
+  document.querySelector(".prev").addEventListener("click", () => {
      const prev = (currentIndex - 1 + sliderCount) % sliderCount;
      gotoSlider(prev);
- });
- document.querySelector(".next").addEventListener("click", () => {
+  });
+  document.querySelector(".next").addEventListener("click", () => {
      const next = (currentIndex + 1) % sliderCount;
      gotoSlider(next);
- });
+  });
+    setInterval(function() {
+       const next = (currentIndex + 1) % sliderCount;
+       gotoSlider(next);
+  }, 5000);
+</script>
+<!--날씨조회 스크립트-->
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=fca66437ffd757b4f7019de36217ec4b&libraries=services"></script>
+<script>
+    const SERVICE_KEY = "HI4uJdHAz5JRb2JVDzardd1U0%2FYqhiVizmMqkHND%2FsE19hTvA3QhWCCbHs0FbiMc%2Bscyz1zQxWkuoreAo6ywRQ%3D%3D"; // 실제 서비스 키로 교체
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const input = document.querySelector('.searchText');
+      const button = document.querySelector('.btnSearch');
+      const weatherBox = document.querySelector('.ct_weather');
+      const geocoder = new kakao.maps.services.Geocoder();
+
+      button.addEventListener('click', function () {
+        const query = input.value.trim();
+        if (!query) return;
+
+        geocoder.addressSearch(query, function (result, status) {
+          if (status === kakao.maps.services.Status.OK) {
+            const lat = result[0].y;
+            const lon = result[0].x;
+            getWeather(lat, lon);
+          } else {
+            weatherBox.innerHTML = "주소를 찾을 수 없습니다.";
+          }
+        });
+      });
+
+      function dfs_xy_conv(code, v1, v2) {
+        const RE = 6371.00877, GRID = 5.0, SLAT1 = 30.0, SLAT2 = 60.0, OLON = 126.0, OLAT = 38.0, XO = 43, YO = 136;
+        const DEGRAD = Math.PI / 180.0;
+        const re = RE / GRID;
+        const slat1 = SLAT1 * DEGRAD;
+        const slat2 = SLAT2 * DEGRAD;
+        const olon = OLON * DEGRAD;
+        const olat = OLAT * DEGRAD;
+
+        let sn = Math.tan(Math.PI * 0.25 + slat2 * 0.5) / Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+        sn = Math.log(Math.cos(slat1) / Math.cos(slat2)) / Math.log(sn);
+        let sf = Math.tan(Math.PI * 0.25 + slat1 * 0.5);
+        sf = Math.pow(sf, sn) * Math.cos(slat1) / sn;
+        let ro = Math.tan(Math.PI * 0.25 + olat * 0.5);
+        ro = re * sf / Math.pow(ro, sn);
+
+        if (code === "toXY") {
+          let ra = Math.tan(Math.PI * 0.25 + (v1) * DEGRAD * 0.5);
+          ra = re * sf / Math.pow(ra, sn);
+          let theta = v2 * DEGRAD - olon;
+          if (theta > Math.PI) theta -= 2.0 * Math.PI;
+          if (theta < -Math.PI) theta += 2.0 * Math.PI;
+          theta *= sn;
+          return {
+            x: Math.floor(ra * Math.sin(theta) + XO + 0.5),
+            y: Math.floor(ro - ra * Math.cos(theta) + YO + 0.5)
+          };
+        }
+        return null;
+      }
+
+      function interpretValue(category, value) {
+        if (category === "SKY") {
+          return { "1": "맑음", "3": "구름많음", "4": "흐림" }[value] || value;
+        } else if (category === "PTY") {
+          return {
+            "0": "없음", "1": "비", "2": "비/눈", "3": "눈", "4": "소나기",
+            "5": "빗방울", "6": "빗방울/눈날림", "7": "눈날림"
+          }[value] || value;
+        }
+        return value;
+      }
+
+      function getWeather(lat, lon) {
+        const { x, y } = dfs_xy_conv("toXY", lat, lon);
+        const now = new Date();
+        const ymd = now.getFullYear() + ('0' + (now.getMonth() + 1)).slice(-2) + ('0' + now.getDate()).slice(-2);
+        let hour = now.getHours();
+        if (now.getMinutes() < 30) hour--;
+        const time = ('0' + hour).slice(-2) + "30";
+
+        const url = `https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst?serviceKey=${SERVICE_KEY}&pageNo=1&numOfRows=1000&dataType=JSON&base_date=${ymd}&base_time=${time}&nx=${x}&ny=${y}`;
+
+        fetch(url)
+          .then(res => res.json())
+          .then(data => {
+            const items = data.response.body.items.item;
+            const nextTime = items.map(i => i.fcstTime).find(t => parseInt(t) > parseInt(time));
+            const temp = items.find(i => i.category === "T1H" && i.fcstTime === nextTime);
+            const sky = items.find(i => i.category === "SKY" && i.fcstTime === nextTime);
+            const pty = items.find(i => i.category === "PTY" && i.fcstTime === nextTime);
+
+            const skyText = interpretValue("SKY", sky?.fcstValue);
+            const ptyText = interpretValue("PTY", pty?.fcstValue);
+
+            const skyIcon = `/weatherimg/${skyText}.png`;
+            const ptyIcon = `/weatherimg/${ptyText}.png`;
+
+            const result = `
+              <div><strong>☁️ 예보 시각:</strong> ${nextTime} 기준</div>
+              <div><strong>기온:</strong> ${temp?.fcstValue}℃</div>
+              <div><strong>하늘:</strong> ${skyText} <img src="${skyIcon}" alt="${skyText}" style="width:70px; vertical-align:middle; display:inline-block"></div>
+              <div><strong>강수:</strong> ${ptyText}</div>
+            `;
+            weatherBox.innerHTML = result;
+          })
+          .catch(err => {
+            weatherBox.innerHTML = "날씨 정보를 가져오지 못했습니다.";
+            console.error(err);
+          });
+      }
+    });
 </script>
 </body>
 </html>

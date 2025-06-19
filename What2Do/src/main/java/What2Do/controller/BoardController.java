@@ -272,5 +272,38 @@ public class BoardController {
         model.addAttribute("mine", mine);
         return "member/myPage";
     }
+    //셀렉으로 지역 검색한 자유게시판 글 리스트(페이지 포함)
+    @GetMapping("/listView2")
+    public String listView2(Model model,
+                            @PageableDefault(page = 0, size = 2, sort = "num", direction = Sort.Direction.DESC) Pageable pageable,
+                            String search) {
 
+        Page<Board> list = null;
+
+        if (search.equals("전체보기")) {
+            return "redirect:/listView";
+        } else {
+            list = boardService.listSearch2(pageable, search);
+        }
+
+
+        int nowPage = list.getNumber(); // 현재 페이지 번호 (0부터 시작)
+        int totalPages = list.getTotalPages(); // 전체 페이지 수
+        int blockLimit = 5; // 페이지 블럭 크기
+        int currentBlock = nowPage / blockLimit;
+
+        int startPage = currentBlock * blockLimit; // ex) 0, 5, 10
+        int endPage = Math.min(startPage + blockLimit - 1, totalPages-1);
+        if(totalPages ==0){
+            endPage = 0;
+        }
+
+        model.addAttribute("list", list);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages);
+
+        return "board/listView";
+    }
 }

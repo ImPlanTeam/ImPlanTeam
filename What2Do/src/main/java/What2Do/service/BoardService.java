@@ -48,14 +48,12 @@ public class BoardService {
 
 
 
-    public void register(String title, String content, String writer,
-                         String area, List<MultipartFile> files)throws IOException {
+    public void register(String title, String content, String writer, String area, List<MultipartFile> files)throws IOException {
         Board board = new Board();
         board.setTitle(title);
         board.setContent(content);
         board.setWriter(writer);
         board.setArea(area);
-
         for(MultipartFile file:files){
             if(!file.isEmpty()){
                 String originalName = file.getOriginalFilename();
@@ -75,21 +73,19 @@ public class BoardService {
         }
         boardRepository.save(board);
     }
-
     //게시글 리스트
     public Page<Board> listV(Pageable pageable){
-        return boardRepository.findAllOrderByNoticeFirst(pageable);
-    }
-
-    //공지사항조회
-    public List<Board> findNotices() {
-        List<Board> blist=boardRepository.findTop3ByAreaOrderByIndateDesc("공지사항");
-        return blist;
+        Page<Board> list=boardRepository.findAllOrderByNoticeFirst(pageable);
+        return list;
     }
 
     //검색된 게시글 리스트
     public Page<Board> listSearch(Pageable pageable,String searchKeyword){
         Page<Board> list=boardRepository.findByTitleContaining(searchKeyword,pageable);
+        return list;
+    }
+    public Page<Board> listSearch2(Pageable pageable,String search){
+        Page<Board> list=boardRepository.findByAreaContaining(search,pageable);
         return list;
     }
 
@@ -142,19 +138,6 @@ public class BoardService {
         likeRepository.deleteAll();
         boardRepository.deleteById(num);
     }
-
-
-    @Transactional
-    public void del2(String id) {
-        if (likeRepository.existsByUser_id(id)) {
-            likeRepository.deleteByUser_id(id);
-        }
-        if (boardRepository.existsByWriter(id)) {
-            boardRepository.deleteByWriter(id);
-        }
-    }
-
-
     //수정할 게시글 불러오기
     public Board update(Integer num) {
         Board board = boardRepository.findById(num).orElseThrow();
@@ -176,5 +159,18 @@ public class BoardService {
     public List<Board> searchwriting(String userId) {
         return boardRepository.findByWriter(userId);
     }
+    @Transactional
+    public void del2(String id) {
+        if (likeRepository.existsByUser_id(id)) {
+            likeRepository.deleteByUser_id(id);
+        }
+        if (boardRepository.existsByWriter(id)) {
+            boardRepository.deleteByWriter(id);
+        }
+    }
+    //공지사항조회
+    public List<Board> findNotices() {
+        List<Board> blist=boardRepository.findTop3ByAreaOrderByIndateDesc("공지사항");
+        return blist;
+    }
 }
-

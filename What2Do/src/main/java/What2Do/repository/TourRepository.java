@@ -42,10 +42,7 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     public interface TourSpotRepository extends JpaRepository<TourSpot, Long> {
     }
 
-    long deleteBycontentid(String contentid); // 삭제된 개수 반환
+    void deleteById(Long id); // 삭제된 개수 반환
 
-    boolean existsBycontentid(String contentid);
-
-    Tour findBycontentid(String contentid);
 
 }

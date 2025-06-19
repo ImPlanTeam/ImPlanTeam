@@ -17,6 +17,7 @@
             margin: auto;
             background: #ffffff;
             padding: 30px;
+            border-radius: 16px;
         }
 
         .filter-section {
@@ -39,9 +40,6 @@
             cursor: pointer;
         }
 
-        button:hover {
-            background-color: #0b5ed7;
-        }
 
         table {
             width: 100%;
@@ -86,6 +84,10 @@
             text-align: right;
             margin-top: 15px;
         }
+        .notice-row {
+            background-color: #fff7e6 !important;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -103,7 +105,7 @@
             <option value="강원도">강원도</option>
             <option value="충청북도">충청북도</option>
             <option value="충청남도">충청남도</option>
-            <option value="세종특별자치시">세종특별자치시</option>
+            <option value="세종특별시">세종특별자치시</option>
             <option value="대전광역시">대전광역시</option>
             <option value="경상북도">경상북도</option>
             <option value="경상남도">경상남도</option>
@@ -117,7 +119,7 @@
         </select>
 
         <form th:action="@{/listView}" method="get" style="display: flex; gap: 10px;">
-            <input type="text" name="searchKeyword" placeholder="검색어를 입력하세요.">
+            <input type="text" name="searchKeyword" placeholder="검색어(제목)를 입력하세요.">
             <button type="submit">검색</button>
         </form>
     </div>
@@ -134,7 +136,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="list : ${list}">
+        <tr th:each="list : ${list}"
+            th:class="${list.area == '공지사항'} ? 'notice-row' : ''">
             <td th:text="${list.num}"></td>
             <td th:text="${list.area}"></td>
             <td>
@@ -149,20 +152,32 @@
 
     <a class="write-link" th:href="@{/board}">➕ 글쓰기</a>
 
-    <div class="pagination">
-        <a th:if="${startPage > 0}" th:href="@{/listView(page=${startPage - 1})}">이전</a>
-
+    <div th:unless="${param.search}" class="pagination">
+        <a th:if="${startPage > 0}" th:href="@{/listView(page=${startPage - 1},searchKeyword=${param.searchKeyword})}">이전</a>
         <th:block th:each="page : ${#numbers.sequence(startPage,endPage)}">
             <a th:if="${page != nowPage}"
                th:href="@{/listView(page=${page}, searchKeyword=${param.searchKeyword})}"
                th:text="${page+1}"></a>
             <strong th:if="${page == nowPage}" th:text="${page+1}"></strong>
         </th:block>
-
-        <a th:if="${endPage < totalPages - 1}" th:href="@{/listView(page=${endPage + 1})}">다음</a>
+        <a th:if="${endPage < totalPages - 1}" th:href="@{/listView(page=${endPage + 1},searchKeyword=${param.searchKeyword})}">다음</a>
     </div>
-</div>
 
+    <div th:if="${param.search}" class="pagination">
+        <a th:if="${startPage > 0}" th:href="@{/listView2(page=${startPage - 1},search=${param.search})}">이전</a>
+        <th:block th:each="page : ${#numbers.sequence(startPage,endPage)}">
+            <a th:if="${page != nowPage}"
+               th:href="@{/listView2(page=${page}, search=${param.search})}"
+               th:text="${page+1}"></a>
+            <strong th:if="${page == nowPage}" th:text="${page+1}"></strong>
+        </th:block>
+        <a th:if="${endPage < totalPages - 1}" th:href="@{/listView2(page=${endPage + 1},search=${param.search})}">다음</a>
+    </div>
+
+
+
+</div>
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
 <script>
     function changeBoard(value) {
         location.href = '/listView2?search=' + value;

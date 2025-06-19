@@ -98,19 +98,14 @@ public class TourService {
         return likeRepository.findLikedTourByUserId(userId);
     }
 
-    public Tour findByContentid(String contentid){
-        Tour tour = tourRepository.findBycontentid(contentid);
-        return tour; //리턴값으로 찾아낸 contentid를 주겠다.
-    }
-
     public List<Tour> findAll(){
         List<Tour> list = tourRepository.findAll(); //관광지 정보를 모두 넘겨주자.
         return  list;
     }
 
     @Transactional
-    public void delete(String contentid){
-            tourRepository.deleteBycontentid(contentid);
+    public void delete(Long id){
+            tourRepository.deleteById(id);
     }
 
 
