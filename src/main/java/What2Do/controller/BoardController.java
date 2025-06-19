@@ -65,13 +65,13 @@ public class BoardController {
     //등록된 자유게시판 글 리스트(페이지 포함)
     @GetMapping("/listView")
     public String listView(Model model,
-                           @PageableDefault(page = 0, size = 2, sort = "num", direction = Sort.Direction.DESC) Pageable pageable,
+                           @PageableDefault(page = 0, size = 10, sort = "num", direction = Sort.Direction.DESC) Pageable pageable,
                            String searchKeyword) {
 
         Page<Board> list = null;
 
         if (searchKeyword == null || searchKeyword == "") {
-                System.out.println('a');
+//                System.out.println('a');
                 list = boardService.listV(pageable);
         } else {
                 System.out.println(searchKeyword);
@@ -120,7 +120,7 @@ public class BoardController {
         int currentBlock = nowPage / blockLimit;
 
         int startPage = currentBlock * blockLimit; // ex) 0, 5, 10
-        int endPage = Math.min(startPage + blockLimit - 1, totalPages);
+        int endPage = Math.min(startPage + blockLimit - 1, totalPages-1);
         if(totalPages ==0){
             endPage = 0;
         }

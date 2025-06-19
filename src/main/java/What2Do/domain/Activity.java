@@ -16,9 +16,9 @@ public class Activity {
     @Column(columnDefinition = "TEXT")
     private String description;
     private String weather;      // ex) "맑음;흐림"
-    private String mood;         // ex) "우울;지침"
+    private String mood;         // ex) "우울"
     private String companions;   // ex) "혼자;친구"
-    private String tags;         // ex) "실내;휴식"
+    private String tags;         // ex) "실내"
 
 
 }

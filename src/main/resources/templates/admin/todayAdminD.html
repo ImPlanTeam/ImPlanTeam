@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>오늘뭐하지?관리(리스트 자세히보기)</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+</head>
+<style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+    }
+    input, textarea {
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 1rem;
+    }
+    input[type="text"] {
+      width: 100%;
+      max-width: 400px;
+      min-width: 150px;
+}
+</style>
+<body>
+
+<div th:replace="~{fragments/admintop :: headerFragment}"></div>
+
+<div class="container" style="max-width: 600px; margin: 0 auto; font-family: 'Segoe UI', sans-serif;">
+    <h1 style="text-align: center; margin-top: 40px; font-size: 2rem; font-weight: 700;">
+        <div th:text="${name}">도시명</div>
+    </h1>
+    <div th:each="list : ${list}" >
+        <div th:id="'view-' + ${list.id}" style="border:1px solid #ddd; padding:16px; background:#f9f9f9; margin-bottom:10px;">
+            <div style="margin-bottom: 8px;"><strong>기분:</strong> <span th:text="${list.mood}" class="info"></span></div>
+            <div style="margin-bottom: 8px;"><strong>활동 유형:</strong> <span th:text="${list.tags}" class="info"></span></div>
+            <div style="margin-bottom: 8px;"><strong>동행인:</strong> <span th:text="${list.companions}" class="info"></span></div>
+            <div style="margin-bottom: 8px;"><strong>날씨:</strong> <span th:text="${list.weather}" class="info"></span></div>
+            <div style="margin-bottom: 12px;"><strong>설명:</strong> <span th:text="${list.description}" class="info"></span></div>
+            <div style="text-align: right;">
+                <span style="cursor: pointer; " th:onclick="|updateT(${list.id})|">수정</span>
+                <span> | </span>
+                <span class="delete-btn" th:data-id="${list.id}" th:data-name="${list.name}" style="cursor:pointer;">삭제</span>
+            </div>
+        </div>
+        <div th:id="'edit-' + ${list.id}" style="display:none; border:1px solid #ddd; padding:16px; margin-bottom:10px;">
+            <form action="todayUpdateC" method="post">
+                <input type="hidden" th:id="'edit-id-' + ${list.id}">
+                <div><strong>기분:</strong> <input type="text" id="edit-mood" style="border:none; outline:none; background:transparent;" name="mood"></div>
+                <div><strong>활동 유형:</strong> <input type="text" id="edit-tags" style="border:none; outline:none; background:transparent;" name="tags"></div>
+                <div><strong>동행인:</strong> <input type="text" id="edit-companions" style="border:none; outline:none; background:transparent;" name="companions"></div>
+                <div><strong>날씨:</strong> <input type="text" id="edit-weather" style="border:none; outline:none; background:transparent;" name="weather"></div>
+                <div><strong>설명:</strong> <input type="text" id="edit-description" style="border:none; outline:none; background:transparent;" name="description"></div>
+                <input type="hidden" name="id" th:value="${list.id}">
+                <input type="hidden" name="name" th:value="${list.name}">
+                <div style="text-align: right;">
+                    <input type="submit" value="수정완료">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+</body>
+</html>
+<script>
+    $(document).on('click', '.delete-btn', function () {
+    const id = $(this).data('id');
+    const name = $(this).data('name');
+
+    if(confirm("삭제하시겠습니까?")){
+        $.ajax({
+            url: '/deleteToday',
+            type: 'POST',
+            data: { id: id, name: name },
+            success: function() {
+                location.reload();
+            },
+            error: function() {
+                alert('삭제에 실패했습니다.');
+            }
+        });
+    }
+});
+
+   function updateT(id) {
+        $.ajax({
+            url: '/updateToday',
+            type: 'GET',
+            data: { id: id },
+            success: function(data) {
+                // 보기 숨기기, 수정 보이기
+                $('#view-' + id).hide();
+                $('#edit-' + id).show();
+
+                // 값 채워넣기
+                $('#edit-mood').val(data.mood);
+                $('#edit-tags').val(data.tags);
+                $('#edit-companions').val(data.companions);
+                $('#edit-weather').val(data.weather);
+                $('#edit-description').val(data.description);
+            },
+            error: function() {
+                alert('데이터 불러오기에 실패했습니다.');
+            }
+        });
+   }
+
+
+
+    function submitE(a){
+    $.ajax({
+            url: '/updateToday',
+            type: 'GET',
+            data: { id: id },
+            success: function() {
+                $('#edit-' + id).hide();
+                $('#view-' + id).show();
+            },
+            error: function() {
+                alert('데이터 불러오기에 실패했습니다.');
+            }
+        });
+
+    }
+
+</script>

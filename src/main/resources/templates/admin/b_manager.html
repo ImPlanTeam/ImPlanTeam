@@ -141,8 +141,7 @@
             <td th:text="${#strings.substring(list.indate, 0, 10)}"></td>
             <td th:text="${list.view_count}"></td>
             <td>
-                <a th:href="@{/deleteM(num=${list.num})}" class="delete-btn">삭제</a>
-
+                <a th:href="@{/deleteM(num=${list.num})}">삭제</a>
             </td>
         </tr>
         </tbody>

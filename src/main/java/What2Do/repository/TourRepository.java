@@ -39,4 +39,6 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     @Query("select t.contentid from Tour t where t.contenttypeid='12' order by t.id Limit 5")
     List<String> findAllByContenttypeid();
 
+    void deleteById(Long id); // 삭제된 개수 반환
+
 }

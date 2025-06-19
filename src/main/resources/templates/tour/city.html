@@ -9,7 +9,6 @@
     <style>
         /* 기본 바디 스타일 */
         body {
-          background-color: #f3f4f6; /* 연한 그레이 */
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           margin: 0;
           padding: 0;
@@ -39,11 +38,11 @@
         .checkbox-label span {
           display: inline-block;
           padding: 10px 26px;
-          border: 2px solid #1a2e45; /* 파란색 */
+          border: 2px solid #3b82f6; /* 파란색 */
           border-radius: 24px;
           font-weight: 600;
           font-size: 16px;
-          color: #1a2e45;
+          color: #3b82f6;
           transition: all 0.3s ease;
           background-color: white;
           box-shadow: 0 2px 6px rgb(59 130 246 / 0.2);
@@ -51,15 +50,15 @@
 
         /* 선택된 경우 */
         .checkbox-label input[type="radio"]:checked + span {
-          background-color: #1a2e45; /* 파란색 배경 */
+          background-color: #3b82f6; /* 파란색 배경 */
           color: white;
-          border-color: #1a2e45;
+          border-color: #3b82f6;
           box-shadow: 0 4px 12px rgb(59 130 246 / 0.5);
         }
 
         /* 마우스 오버 */
         .checkbox-label span:hover {
-<!--          background-color: #dbeafe; /* 연한 파랑 */-->
+          background-color: #dbeafe; /* 연한 파랑 */
           color: #1e40af; /* 진한 파랑 */
         }
 
@@ -119,7 +118,7 @@
 </head>
 <body class="bg-gray-100">
 
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <h1 style="text-align: center; margin-top: 40px; font-size: 2rem; font-weight: 700;">
     <div th:text="${city}">도시명</div>
@@ -186,10 +185,9 @@
 
 <div class="card-container" id="categoryTable">
     <tr th:each="tlist : ${tlist}">
-        <a th:href="@{/detail(id=${tlist.id})}" class="card"  >
+        <a th:href="@{/detail(id=${tlist.id}, city=${city})}" class="card"  >
             <img th:src="${tlist.firstimage2}" alt="" class="pic" />
             <p th:text="${tlist.title}"></p>
-
         </a>
     </tr>
 

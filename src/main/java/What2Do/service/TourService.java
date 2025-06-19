@@ -100,6 +100,16 @@ public class TourService {
         return tourRepository.findAllByContenttypeid();
     }
 
+    public List<Tour> findAll(){
+        List<Tour> list = tourRepository.findAll(); //관광지 정보를 모두 넘겨주자.
+        return  list;
+    }
+
+    @Transactional
+    public void delete(Long id){
+        tourRepository.deleteById(id);
+    }
+
 
 
 
