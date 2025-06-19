@@ -41,7 +41,8 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     List<String> findAllByContenttypeid();
     public interface TourSpotRepository extends JpaRepository<TourSpot, Long> {
 
-
     }
+
+    void deleteById(Long id); // 삭제된 개수 반환
 
 }

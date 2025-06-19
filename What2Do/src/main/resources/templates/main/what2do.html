@@ -50,7 +50,10 @@
     </style>
 </head>
 <body>
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
+
+
+
 
 <h2 style="text-align: center; margin-top: 50px;">가고싶은 지역을 선택하세요</h2>
 

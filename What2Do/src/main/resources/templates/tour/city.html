@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8" />
     <title>오늘 뭐하지?</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
         /* 기본 바디 스타일 */
         body {
-          background-color: #f3f4f6; /* 연한 그레이 */
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           margin: 0;
           padding: 0;
@@ -115,11 +115,10 @@
         }
 
     </style>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body class="bg-gray-100">
 
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <h1 style="text-align: center; margin-top: 40px; font-size: 2rem; font-weight: 700;">
     <div th:text="${city}">도시명</div>
@@ -127,7 +126,7 @@
 
 
 <!-- 카테고리 라디오 버튼 영역 감싸기 -->
-<div class="category-wrapper" th:if="${not #lists.isEmpty(tlist)}">
+<div class="category-wrapper">
     <label class="checkbox-label">
         <input type="radio" name="category" value="전체"
                th:onclick="|location.href='@{/category(city=${city},areacode=${tlist[0].areacode},sigungucode=${tlist[0].sigungucode})}'|"/>
@@ -185,18 +184,15 @@
 </div>
 
 <div class="card-container" id="categoryTable">
-    <div th:each="item : ${tlist}">
-        <a th:href="@{/detail(id=${item.id})}" class="card">
-            <img th:src="${item.firstimage2}" alt="" class="pic" />
-            <p th:text="${item.title}"></p>
+    <tr th:each="tlist : ${tlist}">
+        <a th:href="@{/detail(id=${tlist.id}, city=${city})}" class="card"  >
+            <img th:src="${tlist.firstimage2}" alt="" class="pic" />
+            <p th:text="${tlist.title}"></p>
         </a>
-    </div>
-</div>
-<div th:if="${#lists.isEmpty(tlist)}" style="text-align:center; font-size:1.2rem; margin: 40px;">
-    선택한 지역에 대한 정보가 없습니다.
-</div>
+    </tr>
 
 
+</div>
 
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
 

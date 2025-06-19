@@ -45,8 +45,6 @@
       transition: color 0.3s;
     }
 
-    .menu1 a:hover {
-    }
 
     .login-btn {
       background-color: #1a2e45;
@@ -60,8 +58,6 @@
       transition: background-color 0.3s;
     }
 
-    .login-btn:hover {
-    }
     .auth-section {
      display: flex;
      align-items: center;

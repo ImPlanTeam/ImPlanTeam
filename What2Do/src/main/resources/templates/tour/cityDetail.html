@@ -33,6 +33,8 @@
           margin-bottom: 24px;
         }
 
+
+
         .page-title {
   font-size: 2.2rem;
   font-weight: 800;
@@ -202,6 +204,25 @@
             height: 280px;
           }
         }
+                .action-btn {
+          background-color: #e74c3c;
+          border: none;
+          padding: 0.4rem 0.8rem;
+          border-radius: 6px;
+          color: white;
+          font-size: 13px;
+          margin: 0 2px;
+          cursor: pointer;
+        }
+
+        .edit-btn {
+          background-color: #2ecc71;
+        }
+        #btn {
+            position: absolute;
+            left: 1000px;
+            top: 220px
+        }
     </style>
 </head>
 <body>
@@ -210,6 +231,21 @@
 
 <div class="container">
     <div class="page-title" th:text="${tour.title}"></div>
+    <div th:if="${session.user.getRole() == 'ADMIN'}">
+        <div id="btn">
+            <a th:href="@{'/viewTour/' + ${tour.id}}">
+                <button type="button" class="action-btn edit-btn">수정</button>
+            </a>
+
+            <form th:action="@{/deleteTour/{id}(id=${tour.id})}" method="get" style="display:inline;">
+                <input type="hidden" th:value="${city}" name="city">
+                <input type="hidden" th:value="${tour.areacode}" name="areacode">
+                <input type="hidden" th:value="${tour.sigungucode}" name="sigungucode">
+
+                <button type="submit" class="action-btn">삭제</button>
+            </form>
+        </div>
+    </div>
     <img th:if="${tour.firstimage != null}" th:src="${tour.firstimage}" alt="사진" class="thumbnail"/>
     <div class="overview" th:text="${tour.overview}"></div>
     <div class="address" th:text="${tour.addr1}"></div>
@@ -226,19 +262,20 @@
     </svg>
     <span class="like-count" id="CNT" th:text="${tour.like_count}">0</span>
 
+
     <div class="comment-section">
         <div class="comment-title">댓글</div>
         <div th:each="clist : ${clist}" class="comment-box">
             <div class="comment-header">
                 <span class="comment-user" th:text="${clist?.user}"></span>
-                <span class="comment-date" th:text="${#strings.substring(clist?.indate,0,16)}"></span>
+                <span class="comment-date" th:extt="${#strings.substring(clist?.indate,0,16)}"></span>
                 <button th:if="${session.user.id} == ${clist.user}" th:onclick="deleteComment([[${clist.no}]])">✖</button>
                 <button th:if="${session.user.id} == ${clist.user}" th:onclick="modifyComment([[${clist.no}]])">수정</button>
             </div>
             <div class="comment-content" th:text="${clist?.content}" th:id="'content-' + ${clist.no}"></div>
         </div>
 
-        <form th:action="@{/commentR(tour_id=${tour.id})}" onsubmit="return inpValidateFn();" method="post" class="comment-form">
+        <form th:action="@{/commentR(tour_id=${tour.id}, city=${city})}" onsubmit="return inpValidateFn();" method="post" class="comment-form">
             <textarea name="content" rows="5" placeholder="내용을 입력해주세요." id="contentB"></textarea>
             <input type="hidden" th:value="${tour.id}" name="tour_id">
             <input type="hidden" th:value="${session.user.id}" name="user_id">
@@ -246,6 +283,8 @@
         </form>
     </div>
 </div>
+
+
 
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
 
