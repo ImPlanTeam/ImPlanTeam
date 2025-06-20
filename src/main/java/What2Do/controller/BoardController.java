@@ -218,10 +218,16 @@ public class BoardController {
     }
 
     @PostMapping("/modify")
-    public String mod(Board board) {
+    public String mod(Board board,HttpSession session) {
         System.out.println(board.getNum());
         boardService.modify(board);
-        return "redirect:/view?num=" + board.getNum();
+        User user = (User) session.getAttribute("user");
+        String name = user.getName();
+        if(name.equals("관리자")){
+            return "redirect:/bview?num="+board.getNum();
+        }else {
+            return "redirect:/view?num=" + board.getNum();
+        }
     }
 
     //관리자모드

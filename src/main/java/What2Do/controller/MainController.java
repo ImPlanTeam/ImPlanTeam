@@ -8,7 +8,10 @@ import What2Do.service.TourService;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -114,6 +117,8 @@ public class MainController {
                           @RequestParam("sigungucode")String sigungucode,
                           @RequestParam("areacode")String areacode,
                           RedirectAttributes re, Model model){
+        Tour tour = new Tour();
+        model.addAttribute("tour", tour);
         re.addAttribute("city", city);
         re.addAttribute("sigungucode", sigungucode);
         re.addAttribute("areacode", areacode);
@@ -125,7 +130,8 @@ public class MainController {
     }
 
     @PostMapping("saveTour")
-    public String saveTour(@RequestParam("contentid")String contentid,
+    public String saveTour(@Valid TourDTO tourDTO,
+                           @RequestParam("contentid")String contentid,
                            @RequestParam("sigungucode")String sigungucode,
                            @RequestParam("addr1")String addr1,
                            @RequestParam("addr1")String addr2,
@@ -141,24 +147,16 @@ public class MainController {
                            @RequestParam("areacode")String areacode,
                            @RequestParam("contenttypeid")String contenttypeid,
                            @RequestParam("city")String city,
-                           RedirectAttributes re){
-        Tour tour = new Tour();
-        tour.setContentid(contentid);
-        tour.setSigungucode(sigungucode);
-        tour.setAddr1(addr1);
-        tour.setAddr2(addr2);
-        tour.setOverview(overview);
-        tour.setFirstimage(firstimage);
-        tour.setFirstimage2(firstimage2);
-        tour.setCat1(cat1);
-        tour.setCat2(cat2);
-        tour.setCat3(cat3);
-        tour.setTitle(title);
-        tour.setMapx(mapx);
-        tour.setMapy(mapy);
-        tour.setContenttypeid(contenttypeid);
-        tour.setAreacode(areacode);
-        tourRepository.save(tour);
+                           RedirectAttributes re, Model model){
+        model.addAttribute("tour", tourDTO);
+        System.out.println("상호명: "+tourDTO.getTitle());
+        if (tourService.checkContentid(tourDTO.getContentid())){
+            System.out.println("아이디 중복");
+            model.addAttribute("errContentid", "이미 사용중인 컨텐츠아이디입니다.");
+            return "admin/addTour";
+        }
+        Tour t = tourDTO.toTourEntity(); // DTO를 Entity로 변환
+        tourRepository.save(t);
 
         System.out.println(city+areacode+sigungucode);
         re.addAttribute("city", city);
@@ -201,6 +199,15 @@ public class MainController {
         return "admin/tourList";
     }
 
+    @GetMapping("checkContentid")
+    public ResponseEntity<?> checkId(@RequestParam(value = "contentid", required = false)String contentid)throws BadRequestException {
+        System.out.println(contentid);
+        if (tourService.checkContentid(contentid)){
+            throw new BadRequestException("이미 사용중인 컨텐츠아이디 입니다.");
+        }else {
+            return ResponseEntity.ok("사용 가능한 컨텐츠아이디 입니다.");
+        }
+    }
 
     @RequestMapping("/lego")
     public String main() {
@@ -396,3 +403,4 @@ public class MainController {
     }
 
 }
+

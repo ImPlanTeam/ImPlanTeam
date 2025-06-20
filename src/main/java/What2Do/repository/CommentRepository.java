@@ -20,4 +20,6 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
     @Transactional
     @Query("update Comment c set c.content= :content where c.no=:no")
     void updateContent(@Param("no") Long no,@Param("content") String content);
+
+    void deleteByTourId(Long id); // 삭제된 개수 반환
 }

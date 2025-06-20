@@ -5,7 +5,6 @@ import What2Do.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TourService {
 
     private final TourRepository tourRepository;
+    private final TourSpotRepository tourSpotRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
-    private final TourSpotRepository tourSpotRepository;
     private final CommentRepository commentRepository;
     private static final Logger logger = LoggerFactory.getLogger(TourService.class);
 
@@ -29,12 +28,14 @@ public class TourService {
         tourRepository.saveAll(tourList);
         logger.info("관광지 정보 {}건 저장됨", tourList.size());
     }
+    public List<String> findC(){
+        return tourRepository.findAllByContenttypeid();
+    }
     @Transactional
     public void saveAllTour2(List<TourSpot> tourList) {
         tourSpotRepository.saveAll(tourList);
         logger.info("관광지 정보 {}건 저장됨", tourList.size());
     }
-
     private void validateTour(Tour tour) {
         // 필수 필드 체크
         if (tour.getAddr1() == null || tour.getAddr1().isEmpty()) {
@@ -81,6 +82,10 @@ public class TourService {
         likeIt.setTour(tour);
         likeRepository.save(likeIt);
     }
+    public List<Tour> findBest(){
+        return tourRepository.findAllOrderByLikecountDesc();
+    }
+
 
     public void likeD(Long num,String id){
         likeRepository.deleteByTourIdAndUserId(num,id);
@@ -92,13 +97,6 @@ public class TourService {
     public List<Tour> myPage(@RequestParam("userId")String userId){
         return likeRepository.findLikedTourByUserId(userId);
     }
-    public List<Tour> findBest(){
-        return tourRepository.findAllOrderByLikecountDesc();
-    }
-
-    public List<String> findC(){
-        return tourRepository.findAllByContenttypeid();
-    }
 
     public List<Tour> findAll(){
         List<Tour> list = tourRepository.findAll(); //관광지 정보를 모두 넘겨주자.
@@ -107,13 +105,14 @@ public class TourService {
 
     @Transactional
     public void delete(Long id){
+        likeRepository.deleteByTourId(id);
+        commentRepository.deleteByTourId(id);
         tourRepository.deleteById(id);
     }
 
-
-
-
-
-
+    @Transactional
+    public boolean checkContentid(String contentid){
+        return tourRepository.existsBycontentid(contentid);
+    }
 
 }

@@ -135,7 +135,7 @@ public class BoardService {
     }
     //게시글 삭제
     public void del(Integer num){
-        likeRepository.deleteAll();
+        likeRepository.deleteByBoardId(num);
         boardRepository.deleteById(num);
     }
     //수정할 게시글 불러오기

@@ -50,4 +50,7 @@ public class ActivityService {
         boolean count = activityRepository.existsByName(name);
         return count;
     }
+    public List<Activity> searchToday(String name){
+        return activityRepository.findByNameContaining(name);
+    }
 }

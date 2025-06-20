@@ -127,6 +127,12 @@ public class TodayController {
         activityService.register(activity);
         return "redirect:/admin/today";
     }
+    @GetMapping("/searchWhat2do")
+    public String todaySearch(@RequestParam("search")String name,Model model){
+        List<Activity> list= activityService.searchToday(name);
+        model.addAttribute("list",list);
+        return "admin/todayAdmin";
+    }
 
 
 

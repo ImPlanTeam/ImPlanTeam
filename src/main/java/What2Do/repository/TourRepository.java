@@ -3,6 +3,7 @@ package What2Do.repository;
 import What2Do.domain.Comment;
 import What2Do.domain.LikeIt;
 import What2Do.domain.Tour;
+import What2Do.domain.TourSpot;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -36,9 +37,12 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
 
     @Modifying
     @Transactional
-    @Query("select t.contentid from Tour t where t.contenttypeid='12' order by t.id Limit 5")
+    @Query("select t.contentid from Tour t where t.contenttypeid='12'")
     List<String> findAllByContenttypeid();
+    public interface TourSpotRepository extends JpaRepository<TourSpot, Long> {
+    }
 
     void deleteById(Long id); // 삭제된 개수 반환
 
+    boolean existsBycontentid(String contentid);
 }
