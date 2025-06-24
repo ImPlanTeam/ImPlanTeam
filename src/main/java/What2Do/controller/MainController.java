@@ -1,7 +1,9 @@
 package What2Do.controller;
 
 import What2Do.domain.*;
+import What2Do.repository.AnswerRepository;
 import What2Do.repository.TourRepository;
+import What2Do.service.AskService;
 import What2Do.service.BoardService;
 import What2Do.service.CommentService;
 import What2Do.service.TourService;
@@ -29,13 +31,15 @@ public class MainController {
     private final CommentService commentService;
     private final EntityManager entityManager;
     private final BoardService boardService;
+    private final AskService askService;
 
-    public MainController(TourService tourService, CommentService commentService, EntityManager entityManager, BoardService boardService, TourRepository tourRepository) {
+    public MainController(TourService tourService, CommentService commentService, EntityManager entityManager, BoardService boardService, TourRepository tourRepository, AskService askService) {
         this.tourService = tourService;
         this.commentService = commentService;
         this.entityManager = entityManager;
         this.boardService = boardService;
         this.tourRepository = tourRepository;
+        this.askService = askService;
     }
 
 
@@ -54,6 +58,7 @@ public class MainController {
         model.addAttribute("tour", tour);
         return "admin/viewTour";
     }
+
 
     @GetMapping("/detail")
     public String detailV(@RequestParam("id") Long id,
@@ -89,6 +94,44 @@ public class MainController {
         re.addAttribute("city", city);
         return "redirect:/detail?id=" + tid;
     }
+
+    @ResponseBody
+    @PostMapping("/deleteC")
+    public void deleteC(@RequestParam("no") Long no) {
+        commentService.commentD(no);
+    }
+
+    @ResponseBody
+    @PostMapping("/updateC")
+    public void updateC(@RequestParam("no") Long no, @RequestParam("newComment") String content) {
+        commentService.commentU(no, content);
+    }
+
+    @ResponseBody
+    @PostMapping("/updateA")
+    public void updateA(@RequestParam("no")Integer no, @RequestParam("newComment") String content) {
+        askService.answerU(no, content);
+    }
+
+    @ResponseBody
+    @PostMapping("/modifyA")
+    public String updateA(@RequestParam("no") Integer no){
+        System.out.println("답변수정 / "+no);
+        Answer answerV = askService.answerM(no);
+        String answer = answerV.getContent();
+        return answer;
+    }
+
+    @ResponseBody
+    @PostMapping("/modifyC")
+    public String modifyC(@RequestParam("no") Long no) {
+        System.out.println("댓글수정 / "+no);
+        Comment commentV = commentService.commentM(no);
+        String comment = commentV.getContent();
+        return comment;
+    }
+
+
 
     @PostMapping("/updateTour/{id}")
     public String updateTour(@PathVariable Long id,
@@ -149,6 +192,9 @@ public class MainController {
                            @RequestParam("city")String city,
                            RedirectAttributes re, Model model){
         model.addAttribute("tour", tourDTO);
+        model.addAttribute("city", city);
+        model.addAttribute("areacode",areacode);
+        model.addAttribute("sigungucode", sigungucode);
         System.out.println("상호명: "+tourDTO.getTitle());
         if (tourService.checkContentid(tourDTO.getContentid())){
             System.out.println("아이디 중복");
@@ -256,25 +302,6 @@ public class MainController {
     }
 
 
-    @ResponseBody
-    @PostMapping("/deleteC")
-    public void deleteC(@RequestParam("no") Long no) {
-        commentService.commentD(no);
-    }
-
-    @ResponseBody
-    @PostMapping("/modifyC")
-    public String modifyC(@RequestParam("no") Long no) {
-        Comment commentV = commentService.commentM(no);
-        String comment = commentV.getContent();
-        return comment;
-    }
-
-    @ResponseBody
-    @PostMapping("/updateC")
-    public void updateC(@RequestParam("no") Long no, @RequestParam("newComment") String content) {
-        commentService.commentU(no, content);
-    }
 
     @ResponseBody
     @PostMapping("/likeT")

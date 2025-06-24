@@ -154,15 +154,10 @@
           padding: 12px 16px;
           font-size: 16px;
           resize: vertical;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-          transition: border 0.3s ease;
+<!--          box-shadow: 0 2px 6px rgba(0,0,0,0.05);-->
+<!--          transition: border 0.3s ease;-->
         }
 
-        .comment-form textarea:focus {
-          outline: none;
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
 
         .comment-form button {
           margin-top: 12px;
@@ -174,13 +169,10 @@
           border: none;
           border-radius: 10px;
           cursor: pointer;
-          transition: background-color 0.3s ease;
-          box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+<!--          transition: background-color 0.3s ease;-->
+<!--          box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);-->
         }
 
-        .comment-form button:hover {
-          background-color: #1a2e45;
-        }
 
         @media screen and (max-width: 768px) {
           .container {
@@ -260,12 +252,18 @@
         <div th:each="clist : ${clist}" class="comment-box">
             <div class="comment-header">
                 <span class="comment-user" th:text="${clist?.user}"></span>
-                <span class="comment-date" th:extt="${#strings.substring(clist?.indate,0,16)}"></span>
-                <button th:if="${session.user.id} == ${clist.user}" th:onclick="deleteComment([[${clist.no}]])">✖</button>
-                <button th:if="${session.user.id} == ${clist.user}" th:onclick="modifyComment([[${clist.no}]])">수정</button>
+                <span class="comment-date" th:text="${#strings.substring(clist?.indate,0,16)}"></span>
+                <div th:id="'btnBefore-' + ${clist.no}">
+                    <button type="button" th:if="${session.user.id} == ${clist.user}" th:onclick="modifyComment([[${clist.no}]])" class="action-btn edit-btn">수정</button>
+                    <span> | </span>
+                    <button type="button" th:if="${session.user.id} == ${clist.user}" th:onclick="deleteComment([[${clist.no}]])" class="action-btn edit-btn">삭제</button>
+                </div>
             </div>
             <div class="comment-content" th:text="${clist?.content}" th:id="'content-' + ${clist.no}"></div>
+
         </div>
+    </div>
+
 
         <form th:action="@{/commentR(tour_id=${tour.id}, city=${city})}" onsubmit="return inpValidateFn();" method="post" class="comment-form">
             <textarea name="content" rows="5" placeholder="내용을 입력해주세요." id="contentB"></textarea>
@@ -274,7 +272,7 @@
             <button type="submit">댓글 저장</button>
         </form>
     </div>
-</div>
+
 
 
 
@@ -328,21 +326,22 @@
 
     function modifyComment(no){
       $.post("/modifyC", { no: no }, function (comment) {
-        $("#content-"+no).html("<input type='text' value='"+comment+"'><button id='btnUpdate'>수정하기</button>")
+        $("#content-" + no).html("<input type='text' id='modInput-" + no + "' value='" + comment + "'>");
+        $("#btnBefore-" + no).html("<span class='btnUpdate' data-no='" + no + "'>수정완료</span>");
       }).fail(function () {
         alert("오류가 발생했습니다.");
       });
     }
 
-    $(document).on('click','#btnUpdate',function(){
-      const no = $(this).closest('.comment-box').find('.comment-content').attr('id').split('-')[1];
-      const newComment = $(this).prev('input').val();
-      $.post("/updateC", { no: no, newComment: newComment }, function () {
+    $(document).on('click', '.btnUpdate', function () {
+    const no = $(this).data("no");
+    const newComment = $("#modInput-" + no).val();
+    $.post("/updateC", { no: no, newComment: newComment }, function () {
         window.location.reload();
-      }).fail(function () {
+    }).fail(function () {
         alert("오류가 발생했습니다.");
-      });
     });
+});
 
     function likeT(num) {
       const heart = document.getElementById('heartBtn');
