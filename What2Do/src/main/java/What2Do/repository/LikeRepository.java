@@ -35,6 +35,13 @@ public interface LikeRepository extends JpaRepository<LikeIt, Integer> {
     @Query(value="delete from LikeIt l where l.tour.id= :num and l.user.id= :id")
     void deleteByTourIdAndUserId(@Param("num") Long num, @Param("id") String id);
 
+    void deleteByTourId(Long id); // 삭제된 개수 반환
+
+    @Modifying
+    @Transactional
+    @Query(value="delete from LikeIt l where l.board.num= :num")
+    void deleteByBoardId(Integer num);
+
     boolean existsByUserIdAndTourId(String id, Long num);
 
     @Modifying
@@ -48,11 +55,6 @@ public interface LikeRepository extends JpaRepository<LikeIt, Integer> {
     long deleteByUser_id(String id); // 삭제된 개수 반환
 
     boolean existsByUser_id(String id);
-
-
-
-
-
 
 
 

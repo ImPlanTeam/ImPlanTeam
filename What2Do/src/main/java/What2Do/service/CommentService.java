@@ -26,6 +26,7 @@ public class CommentService {
     public void commentD(Long no){
         commentRepository.deleteById(no);
     }
+
     public Comment commentM(Long no){
         Comment comment = commentRepository.findByNo(no);
         return comment;

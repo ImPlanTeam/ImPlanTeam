@@ -1,14 +1,19 @@
 package What2Do.controller;
 
 import What2Do.domain.*;
+import What2Do.repository.AnswerRepository;
 import What2Do.repository.TourRepository;
+import What2Do.service.AskService;
 import What2Do.service.BoardService;
 import What2Do.service.CommentService;
 import What2Do.service.TourService;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,13 +31,15 @@ public class MainController {
     private final CommentService commentService;
     private final EntityManager entityManager;
     private final BoardService boardService;
+    private final AskService askService;
 
-    public MainController(TourService tourService, CommentService commentService, EntityManager entityManager, BoardService boardService, TourRepository tourRepository) {
+    public MainController(TourService tourService, CommentService commentService, EntityManager entityManager, BoardService boardService, TourRepository tourRepository, AskService askService) {
         this.tourService = tourService;
         this.commentService = commentService;
         this.entityManager = entityManager;
         this.boardService = boardService;
         this.tourRepository = tourRepository;
+        this.askService = askService;
     }
 
 
@@ -51,6 +58,7 @@ public class MainController {
         model.addAttribute("tour", tour);
         return "admin/viewTour";
     }
+
 
     @GetMapping("/detail")
     public String detailV(@RequestParam("id") Long id,
@@ -87,6 +95,44 @@ public class MainController {
         return "redirect:/detail?id=" + tid;
     }
 
+    @ResponseBody
+    @PostMapping("/deleteC")
+    public void deleteC(@RequestParam("no") Long no) {
+        commentService.commentD(no);
+    }
+
+    @ResponseBody
+    @PostMapping("/updateC")
+    public void updateC(@RequestParam("no") Long no, @RequestParam("newComment") String content) {
+        commentService.commentU(no, content);
+    }
+
+    @ResponseBody
+    @PostMapping("/updateA")
+    public void updateA(@RequestParam("no")Integer no, @RequestParam("newComment") String content) {
+        askService.answerU(no, content);
+    }
+
+    @ResponseBody
+    @PostMapping("/modifyA")
+    public String updateA(@RequestParam("no") Integer no){
+        System.out.println("답변수정 / "+no);
+        Answer answerV = askService.answerM(no);
+        String answer = answerV.getContent();
+        return answer;
+    }
+
+    @ResponseBody
+    @PostMapping("/modifyC")
+    public String modifyC(@RequestParam("no") Long no) {
+        System.out.println("댓글수정 / "+no);
+        Comment commentV = commentService.commentM(no);
+        String comment = commentV.getContent();
+        return comment;
+    }
+
+
+
     @PostMapping("/updateTour/{id}")
     public String updateTour(@PathVariable Long id,
                              @RequestParam("title") String title,
@@ -114,6 +160,8 @@ public class MainController {
                           @RequestParam("sigungucode")String sigungucode,
                           @RequestParam("areacode")String areacode,
                           RedirectAttributes re, Model model){
+        Tour tour = new Tour();
+        model.addAttribute("tour", tour);
         re.addAttribute("city", city);
         re.addAttribute("sigungucode", sigungucode);
         re.addAttribute("areacode", areacode);
@@ -125,7 +173,8 @@ public class MainController {
     }
 
     @PostMapping("saveTour")
-    public String saveTour(@RequestParam("contentid")String contentid,
+    public String saveTour(@Valid TourDTO tourDTO,
+                           @RequestParam("contentid")String contentid,
                            @RequestParam("sigungucode")String sigungucode,
                            @RequestParam("addr1")String addr1,
                            @RequestParam("addr1")String addr2,
@@ -141,24 +190,19 @@ public class MainController {
                            @RequestParam("areacode")String areacode,
                            @RequestParam("contenttypeid")String contenttypeid,
                            @RequestParam("city")String city,
-                           RedirectAttributes re){
-        Tour tour = new Tour();
-        tour.setContentid(contentid);
-        tour.setSigungucode(sigungucode);
-        tour.setAddr1(addr1);
-        tour.setAddr2(addr2);
-        tour.setOverview(overview);
-        tour.setFirstimage(firstimage);
-        tour.setFirstimage2(firstimage2);
-        tour.setCat1(cat1);
-        tour.setCat2(cat2);
-        tour.setCat3(cat3);
-        tour.setTitle(title);
-        tour.setMapx(mapx);
-        tour.setMapy(mapy);
-        tour.setContenttypeid(contenttypeid);
-        tour.setAreacode(areacode);
-        tourRepository.save(tour);
+                           RedirectAttributes re, Model model){
+        model.addAttribute("tour", tourDTO);
+        model.addAttribute("city", city);
+        model.addAttribute("areacode",areacode);
+        model.addAttribute("sigungucode", sigungucode);
+        System.out.println("상호명: "+tourDTO.getTitle());
+        if (tourService.checkContentid(tourDTO.getContentid())){
+            System.out.println("아이디 중복");
+            model.addAttribute("errContentid", "이미 사용중인 컨텐츠아이디입니다.");
+            return "admin/addTour";
+        }
+        Tour t = tourDTO.toTourEntity(); // DTO를 Entity로 변환
+        tourRepository.save(t);
 
         System.out.println(city+areacode+sigungucode);
         re.addAttribute("city", city);
@@ -201,6 +245,15 @@ public class MainController {
         return "admin/tourList";
     }
 
+    @GetMapping("checkContentid")
+    public ResponseEntity<?> checkId(@RequestParam(value = "contentid", required = false)String contentid)throws BadRequestException {
+        System.out.println(contentid);
+        if (tourService.checkContentid(contentid)){
+            throw new BadRequestException("이미 사용중인 컨텐츠아이디 입니다.");
+        }else {
+            return ResponseEntity.ok("사용 가능한 컨텐츠아이디 입니다.");
+        }
+    }
 
     @RequestMapping("/lego")
     public String main() {
@@ -249,25 +302,6 @@ public class MainController {
     }
 
 
-    @ResponseBody
-    @PostMapping("/deleteC")
-    public void deleteC(@RequestParam("no") Long no) {
-        commentService.commentD(no);
-    }
-
-    @ResponseBody
-    @PostMapping("/modifyC")
-    public String modifyC(@RequestParam("no") Long no) {
-        Comment commentV = commentService.commentM(no);
-        String comment = commentV.getContent();
-        return comment;
-    }
-
-    @ResponseBody
-    @PostMapping("/updateC")
-    public void updateC(@RequestParam("no") Long no, @RequestParam("newComment") String content) {
-        commentService.commentU(no, content);
-    }
 
     @ResponseBody
     @PostMapping("/likeT")

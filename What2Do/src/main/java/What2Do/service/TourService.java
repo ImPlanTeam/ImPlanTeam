@@ -105,8 +105,14 @@ public class TourService {
 
     @Transactional
     public void delete(Long id){
-            tourRepository.deleteById(id);
+        likeRepository.deleteByTourId(id);
+        commentRepository.deleteByTourId(id);
+        tourRepository.deleteById(id);
     }
 
+    @Transactional
+    public boolean checkContentid(String contentid){
+        return tourRepository.existsBycontentid(contentid);
+    }
 
 }

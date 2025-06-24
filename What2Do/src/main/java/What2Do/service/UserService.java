@@ -92,11 +92,11 @@ UserService {
     //회원관리 삭제기능
     @Transactional
     public void deleteUser(String id) {
-
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
         }
     }
+
     //회원관리 수정기능
     @Transactional
     public void updateUser(String id, User updatedUser) {

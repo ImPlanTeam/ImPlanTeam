@@ -20,4 +20,15 @@ public interface ActivityRepository extends JpaRepository<Activity, Integer> {
             @Param("companions") String companions,
             @Param("tags") String tags
     );
+
+
+    @Query("SELECT a FROM Activity a WHERE a.id IN (SELECT MIN(a2.id) FROM Activity a2 GROUP BY a2.name)")
+    List<Activity> findAll();
+
+    List<Activity> findByName(String name);
+
+    boolean existsByName(String name);
+
+    @Query("SELECT a FROM Activity a WHERE a.id IN (SELECT MIN(a2.id) FROM Activity a2 GROUP BY a2.name having a2.name like %:name%)")
+    List<Activity> findByNameContaining(String name);
 }

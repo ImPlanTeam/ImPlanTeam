@@ -135,7 +135,7 @@ public class BoardService {
     }
     //게시글 삭제
     public void del(Integer num){
-        likeRepository.deleteAll();
+        likeRepository.deleteByBoardId(num);
         boardRepository.deleteById(num);
     }
     //수정할 게시글 불러오기
@@ -143,6 +143,7 @@ public class BoardService {
         Board board = boardRepository.findById(num).orElseThrow();
         return board;
     }
+
     //수정한 게시글 저장
     public void modify(Board board) {
         Board b = boardRepository.findById(board.getNum()).orElseThrow();

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -155,15 +154,10 @@
           padding: 12px 16px;
           font-size: 16px;
           resize: vertical;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-          transition: border 0.3s ease;
+<!--          box-shadow: 0 2px 6px rgba(0,0,0,0.05);-->
+<!--          transition: border 0.3s ease;-->
         }
 
-        .comment-form textarea:focus {
-          outline: none;
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
 
         .comment-form button {
           margin-top: 12px;
@@ -175,13 +169,10 @@
           border: none;
           border-radius: 10px;
           cursor: pointer;
-          transition: background-color 0.3s ease;
-          box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+<!--          transition: background-color 0.3s ease;-->
+<!--          box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);-->
         }
 
-        .comment-form button:hover {
-          background-color: #1a2e45;
-        }
 
         @media screen and (max-width: 768px) {
           .container {
@@ -218,30 +209,24 @@
 <body>
 <!-- 나머지 HTML 동일 -->
 
-<div th:if="${session.user.getRole() == 'ADMIN'}">
-    <div th:replace="~{fragments/admintop :: headerFragment}"></div>
-</div>
-
-<div th:if="${session.user.getRole() == 'USER'}">
-    <div th:replace="~{fragments/top :: headerFragment}"></div>
-</div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <div class="container">
     <div class="page-title" th:text="${tour.title}"></div>
 
     <div th:if="${session.user.getRole() == 'ADMIN'}">
         <div id="btn">
-        <a th:href="@{'/viewTour/' + ${tour.id}}">
-            <button type="button" class="action-btn edit-btn">수정</button>
-        </a>
+            <a th:href="@{'/viewTour/' + ${tour.id}}">
+                <button type="button" class="action-btn edit-btn">수정</button>
+            </a>
 
-        <form th:action="@{/deleteTour/{id}(id=${tour.id})}" method="get" style="display:inline;">
-            <input type="hidden" th:value="${city}" name="city">
-            <input type="hidden" th:value="${tour.areacode}" name="areacode">
-            <input type="hidden" th:value="${tour.sigungucode}" name="sigungucode">
+            <form th:action="@{/deleteTour/{id}(id=${tour.id})}" method="get" style="display:inline;">
+                <input type="hidden" th:value="${city}" name="city">
+                <input type="hidden" th:value="${tour.areacode}" name="areacode">
+                <input type="hidden" th:value="${tour.sigungucode}" name="sigungucode">
 
-            <button type="submit" class="action-btn">삭제</button>
-        </form>
+                <button type="submit" class="action-btn">삭제</button>
+            </form>
         </div>
     </div>
 
@@ -267,12 +252,18 @@
         <div th:each="clist : ${clist}" class="comment-box">
             <div class="comment-header">
                 <span class="comment-user" th:text="${clist?.user}"></span>
-                <span class="comment-date" th:extt="${#strings.substring(clist?.indate,0,16)}"></span>
-                <button th:if="${session.user.id} == ${clist.user}" th:onclick="deleteComment([[${clist.no}]])">✖</button>
-                <button th:if="${session.user.id} == ${clist.user}" th:onclick="modifyComment([[${clist.no}]])">수정</button>
+                <span class="comment-date" th:text="${#strings.substring(clist?.indate,0,16)}"></span>
+                <div th:id="'btnBefore-' + ${clist.no}">
+                    <button type="button" th:if="${session.user.id} == ${clist.user}" th:onclick="modifyComment([[${clist.no}]])" class="action-btn edit-btn">수정</button>
+                    <span> | </span>
+                    <button type="button" th:if="${session.user.id} == ${clist.user}" th:onclick="deleteComment([[${clist.no}]])" class="action-btn edit-btn">삭제</button>
+                </div>
             </div>
             <div class="comment-content" th:text="${clist?.content}" th:id="'content-' + ${clist.no}"></div>
+
         </div>
+    </div>
+
 
         <form th:action="@{/commentR(tour_id=${tour.id}, city=${city})}" onsubmit="return inpValidateFn();" method="post" class="comment-form">
             <textarea name="content" rows="5" placeholder="내용을 입력해주세요." id="contentB"></textarea>
@@ -281,89 +272,90 @@
             <button type="submit">댓글 저장</button>
         </form>
     </div>
-</div>
+
 
 
 
     <div th:replace="~{fragments/footer :: footerFragment}"></div>
 
-<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fca66437ffd757b4f7019de36217ec4b&libraries=services"></script>
-<script>
-    window.onload = function () {
-      var mapContainer = document.getElementById('map'),
-          mapOption = {
-            center: new kakao.maps.LatLng([[${tour.mapy}]], [[${tour.mapx}]]),
-            level: 1
-          };
-      var map = new kakao.maps.Map(mapContainer, mapOption);
-      var geocoder = new kakao.maps.services.Geocoder();
-      var marker = new kakao.maps.Marker();
-      var infowindow = new kakao.maps.InfoWindow({ zindex: 1 });
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fca66437ffd757b4f7019de36217ec4b&libraries=services"></script>
+    <script>
+        window.onload = function () {
+          var mapContainer = document.getElementById('map'),
+              mapOption = {
+                center: new kakao.maps.LatLng([[${tour.mapy}]], [[${tour.mapx}]]),
+                level: 1
+              };
+          var map = new kakao.maps.Map(mapContainer, mapOption);
+          var geocoder = new kakao.maps.services.Geocoder();
+          var marker = new kakao.maps.Marker();
+          var infowindow = new kakao.maps.InfoWindow({ zindex: 1 });
 
-      function searchDetailAddrFromCoords(coords, callback) {
-        geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
-      }
+          function searchDetailAddrFromCoords(coords, callback) {
+            geocoder.coord2Address(coords.getLng(), coords.getLat(), callback);
+          }
 
-      searchDetailAddrFromCoords(map.getCenter(), function(result, status) {
-        if (status === kakao.maps.services.Status.OK) {
-          var detailAddr = !!result[0].road_address
-              ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>'
-              : '';
-          detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
+          searchDetailAddrFromCoords(map.getCenter(), function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+              var detailAddr = !!result[0].road_address
+                  ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>'
+                  : '';
+              detailAddr += '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
 
-          var content = '<div class="bAddr">' +
-              '<span class="title">[[${tour.title}]]</span>' +
-              detailAddr + '</div>';
+              var content = '<div class="bAddr">' +
+                  '<span class="title">[[${tour.title}]]</span>' +
+                  detailAddr + '</div>';
 
-          marker.setPosition(map.getCenter());
-          marker.setMap(map);
-          infowindow.setContent(content);
-          infowindow.open(map, marker);
+              marker.setPosition(map.getCenter());
+              marker.setMap(map);
+              infowindow.setContent(content);
+              infowindow.open(map, marker);
+            }
+          });
+        };
+
+        function deleteComment(no){
+          if(confirm("댓글을 삭제하시겠습니까?")){
+            $.post("/deleteC", { no: no }, function () {
+              window.location.reload();
+            }).fail(function () {
+              alert("오류가 발생했습니다.");
+            });
+          }
         }
-      });
-    };
 
-    function deleteComment(no){
-      if(confirm("댓글을 삭제하시겠습니까?")){
-        $.post("/deleteC", { no: no }, function () {
-          window.location.reload();
+        function modifyComment(no){
+          $.post("/modifyC", { no: no }, function (comment) {
+            $("#content-" + no).html("<input type='text' id='modInput-" + no + "' value='" + comment + "'>");
+            $("#btnBefore-" + no).html("<span class='btnUpdate' data-no='" + no + "'>수정완료</span>");
+          }).fail(function () {
+            alert("오류가 발생했습니다.");
+          });
+        }
+
+        $(document).on('click', '.btnUpdate', function () {
+        const no = $(this).data("no");
+        const newComment = $("#modInput-" + no).val();
+        $.post("/updateC", { no: no, newComment: newComment }, function () {
+            window.location.reload();
         }).fail(function () {
-          alert("오류가 발생했습니다.");
+            alert("오류가 발생했습니다.");
         });
-      }
-    }
-
-    function modifyComment(no){
-      $.post("/modifyC", { no: no }, function (comment) {
-        $("#content-"+no).html("<input type='text' value='"+comment+"'><button id='btnUpdate'>수정하기</button>")
-      }).fail(function () {
-        alert("오류가 발생했습니다.");
-      });
-    }
-
-    $(document).on('click','#btnUpdate',function(){
-      const no = $(this).closest('.comment-box').find('.comment-content').attr('id').split('-')[1];
-      const newComment = $(this).prev('input').val();
-      $.post("/updateC", { no: no, newComment: newComment }, function () {
-        window.location.reload();
-      }).fail(function () {
-        alert("오류가 발생했습니다.");
-      });
     });
 
-    function likeT(num) {
-      const heart = document.getElementById('heartBtn');
-      $.post("/likeT", { num: num }, function (likeAll) {
-        $("#CNT").text(likeAll.likeCnt);
-        heart.classList.toggle('liked', !likeAll.like);
-      }).fail(function () {
-        alert("좋아요 처리 중 오류가 발생했습니다.");
-      });
-    }
+        function likeT(num) {
+          const heart = document.getElementById('heartBtn');
+          $.post("/likeT", { num: num }, function (likeAll) {
+            $("#CNT").text(likeAll.likeCnt);
+            heart.classList.toggle('liked', !likeAll.like);
+          }).fail(function () {
+            alert("좋아요 처리 중 오류가 발생했습니다.");
+          });
+        }
 
-    function inpValidateFn(){
-      return $('#contentB').val().trim().length > 0;
-    }
-</script>
+        function inpValidateFn(){
+          return $('#contentB').val().trim().length > 0;
+        }
+    </script>
 </body>
 </html>

@@ -34,6 +34,8 @@ public class AskController {
     private final AskRepository askRepository;
     private final AnswerRepository answerRepository;
 
+
+
     @GetMapping("/askjoin")
     public String askjoind(){
 
@@ -221,23 +223,22 @@ public class AskController {
         Answer answer = answerRepository.findByAsk(ask);
         model.addAttribute("answer", answer);
 
-        return "admin/askanswer"; // 관리자용 답변 작성 페이지
+        return "admin/askanswer";
     }
 
     //관리자답변저장
     @PostMapping("/admin/answer/{askNo}")
     public String adminAnswer(@PathVariable Integer askNo,
                               @RequestParam String content,
-                              HttpSession session) {
+                              HttpSession session, Model model) {
         User loginUser = (User) session.getAttribute("user");
         if (!isAdmin(loginUser)) {
             return "redirect:/admin?error=noPermission";
         }
-
         askService.saveAnswer(askNo, content);
+        Answer answer = new Answer();
+        model.addAttribute("answer", answer);
         return "redirect:/admin/answer/" + askNo;
     }
-
-
 
 }

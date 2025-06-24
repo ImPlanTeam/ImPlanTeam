@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <title>게시글 보기</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
     <style>
         body {
           font-family: 'Segoe UI', sans-serif;
           background-color: #f7f9fc;
-          margin: 0;
-          padding: 2rem;
         }
 
         .container {
@@ -61,34 +60,7 @@
           line-height: 1.6;
         }
 
-        .button-group {
-          display: flex;
-          gap: 1rem;
-          align-items: center;
-          flex-wrap: wrap;
-        }
 
-        button {
-          background-color: #1a2e45;
-          color: white;
-          border: none;
-          padding: 0.6rem 1.2rem;
-          border-radius: 8px;
-          font-size: 0.95rem;
-          cursor: pointer;
-        }
-
-        .delete-btn {
-          background-color: #dc3545;
-        }
-
-        .edit-btn {
-          background-color: #198754;
-        }
-
-        button:hover {
-          opacity: 0.9;
-        }
 
         .like-count {
           font-size: 1rem;
@@ -108,6 +80,13 @@
         fill: red;
         stroke: red;
       }
+
+    .action-text {
+      cursor: pointer;
+      color: #6b7280;
+      display: flex;
+      justify-content: flex-end;
+    }
     </style>
 
 </head>
@@ -144,15 +123,12 @@
 
         <span class="like-count" id="CNT" th:text="${board.like_count}">0</span>
 
-
-        <th:block th:if="${board.writer == session.user.id}">
+        <div class="edit" th:if="${board.writer == session.user.name}">
             <a th:href="@{/update(num=${board.num})}">
-                <button type="button" class="edit-btn">수정</button>
+                <span class="action-text">수정 </span>
             </a>
-            <a th:href="@{/delete(num=${board.num})}">
-                <button type="button" class="delete-btn">삭제</button>
-            </a>
-        </th:block>
+        </div>
+
     </div>
 </div>
 

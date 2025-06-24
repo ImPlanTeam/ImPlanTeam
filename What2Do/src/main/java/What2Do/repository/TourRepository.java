@@ -44,5 +44,5 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
 
     void deleteById(Long id); // 삭제된 개수 반환
 
-
+    boolean existsBycontentid(String contentid);
 }
