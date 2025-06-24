@@ -71,7 +71,7 @@
 </head>
 <body>
 
-<div th:replace="~{fragments/admintop :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <div class="container">
   <h2>가게 정보 수정</h2>

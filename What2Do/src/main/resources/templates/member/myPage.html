@@ -145,7 +145,7 @@
   </style>
 </head>
 <body>
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <div class="container" >
   <!-- 왼쪽: 사이드바 -->

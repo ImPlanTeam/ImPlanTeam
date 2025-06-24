@@ -3,8 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <title>게시글 보기</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f7f9fc;
+
+    }
 
     .container {
       max-width: 900px;
@@ -18,6 +24,7 @@
     .back-link {
       margin-bottom: 1.5rem;
       display: inline-block;
+      color: #1a2e45;
       font-weight: bold;
       text-decoration: none;
     }
@@ -54,39 +61,10 @@
       line-height: 1.6;
     }
 
-    .button-group {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    button {
-      background-color: #0d6efd;
-      color: white;
-      border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 8px;
-      font-size: 0.95rem;
-      cursor: pointer;
-    }
-
-    .delete-btn {
-      background-color: #dc3545;
-    }
-
-    .edit-btn {
-      background-color: #198754;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
     .like-count {
       font-size: 1rem;
       font-weight: bold;
-      color: #0d6efd;
+      color: #1a2e45;
     }
     #heartBtn {
     cursor: pointer;
@@ -97,13 +75,42 @@
     fill: red;
     stroke: red;
   }
+
+    .container {
+  position: relative; /* 자식 요소 위치 기준 */
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 2rem 2.5rem 4rem; /* 아래쪽 패딩 추가 */
+  border-radius: 1rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.action-buttons {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 2rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.action-text {
+  cursor: pointer;
+  color: #6b7280;
+
+}
+
+
+.divider {
+  margin: 0 5px;
+  color: #d1d5db;
+}
   </style>
 
 </head>
-<link rel="stylesheet" th:href="@{/css/common.css}">
 <body>
 
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <div class="container">
   <a th:href="@{/listView}" class="back-link">← 목록으로 돌아가기</a>
@@ -137,16 +144,16 @@
     <span class="like-count" id="CNT" th:text="${board.like_count}">0</span>
 
 
-    <th:block th:if="${board.writer == session.user.id}">
+    <div class="action-buttons"th:if="${board.writer == session.user.id}">
       <a th:href="@{/update(num=${board.num})}">
-        <button type="button" class="edit-btn">수정</button>
+        <span class="action-text">수정 </span>
       </a>
-      <a th:href="@{/delete(num=${board.num})}">
-        <button type="button" class="delete-btn">삭제</button>
-      </a>
-    </th:block>
+      <span class="divider"> | </span>
+      <span class="action-text" th:onclick="|deleteB(${board.num})|"> 삭제</span>
+    </div>
   </div>
 </div>
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
 
 <script>
   const heart = document.getElementById('heartBtn');
@@ -169,7 +176,13 @@
       }
     });
   }
+
+  function deleteB(num){
+   if(confirm("게시물을 삭제하시겠습니까?")){
+       location.href= '/delete?num='+num;
+      }
+  }
 </script>
-<div th:replace="~{fragments/footer :: footerFragment}"></div>
+
 </body>
 </html>

@@ -6,7 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body>
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 <h2> <고객 정보기반 랜덤 활동 추천기능> 준비중인 기능입니다.</h2>
 <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-indigo-100">
     <h1 class="text-4xl font-bold mb-4">오늘 뭐하지?</h1>

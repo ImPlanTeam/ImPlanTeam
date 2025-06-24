@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,10 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class TourService {
 
     private final TourRepository tourRepository;
+    private final TourSpotRepository tourSpotRepository;
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
-    private final TourSpotRepository tourSpotRepository;
+    private final PythonService pythonService;
     private static final Logger logger = LoggerFactory.getLogger(TourService.class);
 
     @Transactional
@@ -105,11 +107,33 @@ public class TourService {
 
     @Transactional
     public void delete(Long id){
+        likeRepository.deleteByTourId(id);
+        commentRepository.deleteByTourId(id);
         tourRepository.deleteById(id);
     }
 
+    @Transactional
+    public boolean checkContentid(String contentid){
+        return tourRepository.existsBycontentid(contentid);
+    }
 
+//    파이썬 서비스 연결
+    public List<Tour> recommendToursForActivity(String activityDesc) {
+    // 관광지 전체 목록 (overview가 있는 것만)
+    List<Tour> allTours = tourRepository.findAllWithValidOverview();
 
+    // Python에 보낼 텍스트 목록: 활동 + overview 리스트
+    List<String> texts = new ArrayList<>();
+    texts.add(activityDesc);
+    texts.addAll(allTours.stream().map(Tour::getOverview).toList());
 
+    // Python 서버에 요청 → top3 인덱스 받아옴
+    List<Integer> topIndexes = pythonService.getTopTourIndexes(texts);
+
+    // 인덱스로 관광지 3개 추출
+    return topIndexes.stream()
+            .map(i -> allTours.get(i))
+            .toList();
+}
 
 }

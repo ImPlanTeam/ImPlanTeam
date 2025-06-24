@@ -78,7 +78,7 @@
     <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body>
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 <div class="container">
     <h3>1:1 문의 리스트</h3>
     <a th:href="@{/askjoin}" class="btn-write">문의 등록하기</a>

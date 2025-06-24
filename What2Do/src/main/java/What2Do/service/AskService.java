@@ -1,17 +1,14 @@
 package What2Do.service;
 
 
-import What2Do.domain.Answer;
-import What2Do.domain.Ask;
-import What2Do.domain.AskFile;
-import What2Do.domain.User;
+import What2Do.domain.*;
 import What2Do.repository.AnswerRepository;
 import What2Do.repository.AskFileRepository;
 import What2Do.repository.AskRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -95,6 +92,17 @@ public class AskService {
 
     public Page<Ask> findAskByUser(User user, Pageable pageable) {
         return askRepository.findByUser(user, pageable);
+    }
+
+    public Answer answerM(Integer no){
+        Answer answer = answerRepository.findByNo(no);
+        return answer;
+    }
+
+    @Transactional
+    public void answerU(Integer no,String content){
+        answerRepository.updateAnswer(no,content);
+
     }
 
 

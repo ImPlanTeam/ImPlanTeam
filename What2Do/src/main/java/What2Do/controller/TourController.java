@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.BufferedReader;
@@ -254,6 +256,14 @@ public class TourController {
 
 
 
+    }
+
+    @GetMapping("/recommend-result")
+    public String showRecommendation(@RequestParam String activityDesc, Model model) {
+        List<Tour> tourList = tourService.recommendToursForActivity(activityDesc);
+
+        model.addAttribute("tourList", tourList);
+        return "recommend/result";
     }
 
 }

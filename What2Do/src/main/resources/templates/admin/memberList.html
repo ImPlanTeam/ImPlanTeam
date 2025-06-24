@@ -125,7 +125,7 @@
 <body>
 
 <!-- 관리자 상단 메뉴 -->
-<div th:replace="~{fragments/admintop :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <!-- 메인 콘텐츠 -->
 <div class="main-container">

@@ -43,7 +43,7 @@
     }
 
     input[type="submit"] {
-      background-color: #0d6efd;
+      background-color: #1a2e45;
       color: white;
       border: none;
       padding: 0.8rem 1.5rem;
@@ -53,9 +53,6 @@
       cursor: pointer;
     }
 
-    input[type="submit"]:hover {
-      background-color: #0b5ed7;
-    }
 
     .info-bar {
       font-size: 0.9rem;
@@ -81,7 +78,7 @@
 </head>
 
 <body>
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <div class="container">
   <h2> 자유게시판 글 수정</h2>
@@ -95,8 +92,7 @@
     <div class="info-bar">
       지역: <span th:text="${board.area}"></span> |
       작성일: <span th:text="${#strings.substring(board.indate,0,10)}"></span> |
-      작성자: <span th:text="${board.writer}"></span> |
-      조회수: <span th:text="${board.view_count}"></span>
+      작성자: <span th:text="${board.writer}"></span>
     </div>
 
     <label>첨부된 이미지</label>

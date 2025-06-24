@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>오늘 뭐하지 추가</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9fafb;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 480px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 2rem 2.5rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    h2 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #333;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 0.4rem;
+    }
+    input[type="text"], select, textarea {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      box-sizing: border-box;
+      margin-bottom: 1rem;
+      transition: border-color 0.3s ease;
+      font-family: inherit;
+      resize: vertical;
+    }
+    input[type="text"]:focus, select:focus, textarea:focus {
+      border-color: #2563eb;
+      outline: none;
+      box-shadow: 0 0 6px rgba(37, 99, 235, 0.5);
+    }
+    input[readonly] {
+      background-color: #f0f0f0;
+      color: #808080;
+      cursor: not-allowed;
+    }
+    .form-actions {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    button[type="submit"] {
+      background-color: #1a2e45;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.25s ease;
+      font-family: inherit;
+    }
+
+    /* 선택박스 주변 마진 통일 */
+    .mb-4 {
+      margin-bottom: 1.25rem;
+    }
+    .block {
+      display: block;
+    }
+    .font-medium {
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
+
+<div class="container">
+  <h2>오늘 뭐하지 추가</h2>
+  <form action="/what2doR" method="post">
+
+    <label for="name">활동명</label>
+    <input type="text" name="name" id="name" required>
+
+    <div class="mb-4">
+      <label for="mood" class="block font-medium">현재 기분</label>
+      <select name="mood" id="mood" class="" required>
+        <option value="기분좋아요">기분 좋아요</option>
+        <option value="그냥그래요">그냥 그래요</option>
+        <option value="피곤해요">피곤해요</option>
+        <option value="스트레스">스트레스</option>
+        <option value="우울해요">우울 해요</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label for="tags" class="block font-medium">선호하는 활동 유형</label>
+      <select name="tags" id="tags" required>
+        <option value="실내">실내</option>
+        <option value="실외">실외</option>
+        <option value="문화/예술">문화/예술</option>
+        <option value="운동">운동</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label for="companions" class="block font-medium">동행인</label>
+      <select name="companions" id="companions" required>
+        <option value="혼자">혼자</option>
+        <option value="친구">친구</option>
+        <option value="연인">연인</option>
+        <option value="가족">가족</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label for="weather" class="block font-medium">날씨</label>
+      <select name="weather" id="weather" required>
+        <option value="맑음">맑음</option>
+        <option value="구름 많음">구름 많음</option>
+        <option value="흐림">흐림</option>
+        <option value="비">비</option>
+        <option value="눈">눈</option>
+      </select>
+    </div>
+
+    <label for="description">설명</label>
+    <textarea name="description" id="description" rows="4" required></textarea>
+
+    <div class="form-actions">
+      <button type="submit">등록하기</button>
+    </div>
+  </form>
+</div>
+
+<div th:replace="~{fragments/footer :: footerFragment}"></div>
+</body>
+</html>

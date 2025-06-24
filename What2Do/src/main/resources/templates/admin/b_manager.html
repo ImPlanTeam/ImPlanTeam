@@ -68,20 +68,6 @@
           background-color: #f1f8ff;
         }
 
-        .delete-btn {
-          background-color: #e74c3c;
-          color: #fff;
-          border: none;
-          padding: 0.5rem 1rem;
-          border-radius: 0.5rem;
-          cursor: pointer;
-          font-size: 0.85rem;
-        }
-
-        .delete-btn:hover {
-          opacity: 0.9;
-        }
-
         .pagination {
           margin-top: 2rem;
           text-align: center;
@@ -111,7 +97,7 @@
 <body>
 
 <!-- 상단 관리자 메뉴 -->
-<div th:replace="~{fragments/admintop :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <!-- 메인 콘텐츠 -->
 <div class="main-container">

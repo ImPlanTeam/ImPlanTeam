@@ -37,9 +37,12 @@ public interface BoardRepository extends JpaRepository<Board,Integer> {
 
     Page<Board> findByAreaContaining(String search,Pageable pageable);
 
+
     @Query("SELECT b FROM Board b ORDER BY CASE WHEN b.area = '공지사항' THEN 0 ELSE 1 END, b.num DESC")
     Page<Board> findAllOrderByNoticeFirst(Pageable pageable);
 
     // 자유게시판의 공지사항 최신3개만 조회
     List<Board> findTop3ByAreaOrderByIndateDesc(String area);
+
+
 }

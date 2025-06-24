@@ -172,7 +172,7 @@
 </head>
 <body>
 
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <div class="main-container">
     <h2>👤 회원 정보 수정</h2>

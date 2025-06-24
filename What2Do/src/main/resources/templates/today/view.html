@@ -96,7 +96,7 @@
 <body>
 
 <!-- 헤더 -->
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <!-- 로딩 화면 -->
 <div id="loading">

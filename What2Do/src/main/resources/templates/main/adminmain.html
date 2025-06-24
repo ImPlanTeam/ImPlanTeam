@@ -78,7 +78,7 @@
 <body class="bg-white text-gray-800">
 
 <!-- 상단 네비게이션 -->
-<div th:replace="~{fragments/admintop :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <!-- 슬라이드 + 공지사항 -->
 <section class="flex flex-col md:flex-row p-4 gap-4 items-start">

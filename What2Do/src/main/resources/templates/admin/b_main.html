@@ -68,7 +68,7 @@
 <body>
 
 <!-- 사용자 상단 메뉴 -->
-<div th:replace="~{fragments/admintop :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <div class="main-container">
     <h2>✍ 자유게시판 글쓰기</h2>

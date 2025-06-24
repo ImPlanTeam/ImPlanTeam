@@ -20,14 +20,10 @@
             background-color: #1a2e45;
     }
     #detail{
-        position: absolute;
-        top: 203px;
-        right: 473px;
+
     }
     #infoBox {
-       position: absolute;
-       top: 210px;
-       left: 790px;
+
        width: 300px;
        height: 120px;
        background-color: white;
@@ -37,22 +33,31 @@
        border-radius : 10px;
        text-align:center
    }
+    #all{
+            display: flex;
+            justify-content: center;
+        }
 
 </style>
 <body>
 
-<div th:replace="~{fragments/top :: headerFragment}"></div>
-<div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow">
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
+<div id="all">
+    <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow">
+        <div class="flex items-center justify-center mb-6 gap-2 relative">
+            <h2 class="text-2xl font-semibold" id="detail2">오늘의 상태를 알려주세요</h2>
+            <img src="img/정보버튼.png" onclick="detail()" width="16" height="16" id="detail" class="cursor-pointer">
 
-    <div style="flex; align-items: center;">
-        <h2 class="text-2xl font-semibold mb-6 text-center style=flex-grow: 1;" id="detail2">오늘의 상태를 알려주세요</h2>
-        <img src="img/정보버튼.png" onclick="detail()" width="15px" height="15px" id="detail">
-        <div id="infoBox" style="display: none;">
-            <p>오늘 뭐하지?기능은<br>
-                고객 정보기반 랜덤 활동 추천 <br>
-                시스템 입니다.</p>
+
+            <div id="infoBox" class="absolute top-8 right-0 bg-white border border-gray-300 rounded-lg shadow p-4 text-sm w-72 z-50 hidden">
+                <p>
+                    <strong>오늘 뭐하지?</strong> 기능은<br>
+                    고객 정보 기반 랜덤 활동 추천<br>
+                    시스템입니다.
+                </p>
+            </div>
         </div>
-    </div>
+
 
     <form action="/recommend" method="get">
         <div class="mb-4">
@@ -122,6 +127,7 @@
         </div>
 
     </form>
+</div>
 </div>
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
 </body>
@@ -228,8 +234,8 @@
           return { "1": "맑음", "3": "구름많음", "4": "흐림" }[value] || value;
         } else if (category === "PTY") {
           return {
-            "1": "비", "2": "비/눈", "3": "눈", "4": "소나기",
-            "5": "빗방울", "6": "빗방울/눈날림", "7": "눈날림"
+            "1": "비", "2": "비/눈", "3": "눈", "4": "비",
+            "5": "비", "6": "비", "7": "눈"
           }[value] || null;
         }
         return null;

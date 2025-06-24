@@ -1,25 +1,36 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:display="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
 </head>
 <body>
 <div class="footer" th:fragment="footerFragment">
     <div>
-        <strong>오늘 뭐하지?</strong> | 오늘의 추천을 만나는 작은 플랫폼
+        <strong>오늘 뭐하지?</strong> | 오늘의 활동을 추천해주는 플랫폼
     </div>
     <div style="margin: 10px 0;">
         <a th:href="@{/}">홈</a>
-        <a th:href="@{/ask}">1:1 문의</a>
+        <a th:href="@{/todo}">오늘 뭐하지?</a>
+        <a th:href="@{/lego}">놀러가자!</a>
         <a th:href="@{/listView}">자유게시판</a>
-        <a th:href="@{/login2}">로그인</a>
+        <a th:href="@{/ask}">1:1 문의</a>
     </div>
     <div>
         ImPlanTeam(지영, 재훈, 도윤)
     </div>
-    <div style="margin-top: 10px;">
+    <div style="margin-top: 10px; ">
         © 2025 오늘 뭐하지? 팀 프로젝트 | All rights reserved.
     </div>
+    <div style="margin-top: 30px; width:100%; display: flex; align-items: center; gap: 15px; justify-content: center;">
+        <span>출처 | </span>
+        <img src="https://korean.visitkorea.or.kr/resources/images/common/logo_foot_api.png?v=20230601001" alt="투어api">
+        <img src="https://www.data.go.kr/images/biz/use-info/img_opencode1_m.jpg" alt="기상청api">
+        <img src="https://cdn.visitkorea.or.kr/resources/images/common/logo_foot_gg.png" alt="한국관광공사">
+<!--        <img src="" alt="공공데이터포털">-->
+    </div>
+    <footer style="font-size: 10px; text-align: center; color: gray;">
+        지도/주소 서비스 제공: Kakao Developers
+    </footer>
     <style>
         .footer {
             background-color: #f1f3f5;
@@ -37,9 +48,6 @@
             font-weight: 500;
         }
 
-        .footer a:hover {
-            color: #0d6efd;
-        }
 
         @media screen and (max-width: 600px) {
             .footer {

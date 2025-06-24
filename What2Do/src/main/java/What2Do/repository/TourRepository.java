@@ -1,7 +1,5 @@
 package What2Do.repository;
 
-import What2Do.domain.Comment;
-import What2Do.domain.LikeIt;
 import What2Do.domain.Tour;
 import What2Do.domain.TourSpot;
 import jakarta.transaction.Transactional;
@@ -40,9 +38,14 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     @Query("select t.contentid from Tour t where t.contenttypeid='12'")
     List<String> findAllByContenttypeid();
     public interface TourSpotRepository extends JpaRepository<TourSpot, Long> {
-
     }
 
     void deleteById(Long id); // 삭제된 개수 반환
 
+    boolean existsBycontentid(String contentid);
+
+    //    파이썬
+    // overview가 null이 아니고 "-"가 아닌 관광지만 조회
+    @Query("SELECT t FROM Tour t WHERE t.overview IS NOT NULL AND t.overview <> '-'")
+    List<Tour> findAllWithValidOverview();
 }

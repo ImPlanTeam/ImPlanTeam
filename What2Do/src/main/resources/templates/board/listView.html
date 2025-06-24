@@ -91,7 +91,7 @@
     </style>
 </head>
 <body>
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 <div class="board-container">
     <h3>자유게시판</h3>
 

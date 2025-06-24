@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>1:1 문의 상세</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #f5f7fa;
       margin: 0;
-      padding: 20px;
     }
 
     .main-container {
@@ -61,17 +61,7 @@
       border: 1px solid #ccc;
       resize: vertical;
       font-size: 1rem;
-    }
-
-    button {
-      margin-top: 1rem;
-      padding: 0.8rem 1.5rem;
-      background-color: #0d6efd;
-      color: white;
-      border: none;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-size: 1rem;
+      margin-top: 10px;
     }
 
     .answered {
@@ -85,6 +75,18 @@
       margin-top: 0.5rem;
       color: #777;
     }
+
+    .comment-content {
+      white-space: pre-wrap;
+    }
+
+    .text-link {
+      display: inline-block;
+      margin-top: 8px;
+      color: #0d6efd;
+      cursor: pointer;
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -94,7 +96,7 @@
 
 <!-- 본문 -->
 <div class="main-container">
-  <h3>문의 상세 보기</h3>
+  <h3>📩 문의 상세 보기</h3>
 
   <div class="section">
     <span class="label">글번호</span>
@@ -118,15 +120,21 @@
   </div>
 
   <div class="section" th:if="${answer != null}">
-    <h3>답변 내용</h3>
+    <h3>✅ 답변 내용</h3>
     <div class="answered">
-      <div th:text="${answer.content}"></div>
+      <div class="comment-box">
+        <div class="comment-content" th:text="${answer.content}" th:id="'content-' + ${answer.no}"></div>
+      </div>
+      <div th:if="${session.user?.role == 'ADMIN'}">
+        <a href="javascript:void(0);" th:onclick="|modifyA(${answer.no})|" class="text-link" id="modify-link-${answer.no}">[수정]</a>
+      </div>
       <small th:text="${#temporals.format(answer.answeredAt, 'yyyy-MM-dd HH:mm')}">작성일</small>
     </div>
   </div>
 
+
   <div class="section" th:if="${answer == null and session.user?.role == 'ADMIN'}">
-    <h3>답변 작성</h3>
+    <h3>📝 답변 작성</h3>
     <form th:action="@{|/admin/answer/${askview.no}|}" method="post">
       <textarea name="content" rows="5" placeholder="답변 내용을 입력해주세요."></textarea>
       <button type="submit">저장</button>
@@ -137,5 +145,33 @@
 <!-- 하단 푸터 -->
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  function modifyA(no) {
+  const button = document.getElementById("modify-link-${answer.no}");
+  button.style.display = "none";
+  $.post("/modifyA", { no: no }, function (comment) {
+    const html = `
+      <div style="display: flex; gap: 8px; align-items: flex-start; flex-wrap: wrap;">
+        <textarea id="edit-${no}" rows="4" style="flex: 1; min-width: 300px;">${comment}</textarea>
+        <a href="javascript:void(0);" onclick="updateComment(${no})" class="text-link" style="margin-top: 6px;">[저장]</a>
+      </div>
+    `;
+    const $target = $("#content-" + no);
+    $target.html(html);
+  }).fail(function () {
+    alert("오류가 발생했습니다.");
+  });
+}
+
+      function updateComment(no) {
+        const newComment = $("#edit-" + no).val();
+        $.post("/updateA", { no: no, newComment: newComment }, function () {
+          window.location.reload();
+        }).fail(function () {
+          alert("오류가 발생했습니다.");
+        });
+      }
+</script>
 </body>
 </html>

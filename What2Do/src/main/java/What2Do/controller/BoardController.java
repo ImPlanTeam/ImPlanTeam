@@ -65,19 +65,17 @@ public class BoardController {
     //등록된 자유게시판 글 리스트(페이지 포함)
     @GetMapping("/listView")
     public String listView(Model model,
-                           @PageableDefault(page = 0, size = 1, sort = "num", direction = Sort.Direction.DESC) Pageable pageable,
+                           @PageableDefault(page = 0, size = 10, sort = "num", direction = Sort.Direction.DESC) Pageable pageable,
                            String searchKeyword) {
 
         Page<Board> list = null;
 
         if (searchKeyword == null || searchKeyword == "") {
+//                System.out.println('a');
             list = boardService.listV(pageable);
         } else {
-            if (searchKeyword.equals("전체보기")) {
-                return "redirect:/listView";
-            } else {
-                list = boardService.listSearch(pageable, searchKeyword);
-            }
+            System.out.println(searchKeyword);
+            list = boardService.listSearch(pageable, searchKeyword);
         }
 
         int nowPage = list.getNumber(); // 현재 페이지 번호 (0부터 시작)
@@ -85,8 +83,8 @@ public class BoardController {
         int blockLimit = 5; // 페이지 블럭 크기
         int currentBlock = nowPage / blockLimit;
 
-        int startPage = currentBlock * blockLimit; // ex) 0, 5, 10
-        int endPage = Math.min(startPage + blockLimit - 1, totalPages - 1);
+        int startPage = currentBlock * blockLimit ; // ex) 0, 5, 10
+        int endPage = Math.min(startPage + blockLimit -1, totalPages-1);
         if(totalPages ==0){
             endPage = 0;
         }
@@ -97,6 +95,41 @@ public class BoardController {
         model.addAttribute("endPage", endPage);
         model.addAttribute("totalPages", totalPages);
 
+
+        return "board/listView";
+    }
+
+    //셀렉으로 지역 검색한 자유게시판 글 리스트(페이지 포함)
+    @GetMapping("/listView2")
+    public String listView2(Model model,
+                            @PageableDefault(page = 0, size = 10, sort = "num", direction = Sort.Direction.DESC) Pageable pageable,
+                            String search) {
+
+        Page<Board> list = null;
+
+        if (search.equals("전체보기")) {
+            return "redirect:/listView";
+        } else {
+            list = boardService.listSearch2(pageable, search);
+        }
+
+
+        int nowPage = list.getNumber(); // 현재 페이지 번호 (0부터 시작)
+        int totalPages = list.getTotalPages(); // 전체 페이지 수
+        int blockLimit = 5; // 페이지 블럭 크기
+        int currentBlock = nowPage / blockLimit;
+
+        int startPage = currentBlock * blockLimit; // ex) 0, 5, 10
+        int endPage = Math.min(startPage + blockLimit - 1, totalPages-1);
+        if(totalPages ==0){
+            endPage = 0;
+        }
+
+        model.addAttribute("list", list);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages);
 
         return "board/listView";
     }
@@ -185,10 +218,16 @@ public class BoardController {
     }
 
     @PostMapping("/modify")
-    public String mod(Board board) {
+    public String mod(Board board,HttpSession session) {
         System.out.println(board.getNum());
         boardService.modify(board);
-        return "redirect:/view?num=" + board.getNum();
+        User user = (User) session.getAttribute("user");
+        String name = user.getName();
+        if(name.equals("관리자")){
+            return "redirect:/bview?num="+board.getNum();
+        }else {
+            return "redirect:/view?num=" + board.getNum();
+        }
     }
 
     //관리자모드
@@ -218,7 +257,8 @@ public class BoardController {
         return "admin/b_manager";
     }
     @GetMapping("/deleteM")
-    public String delM(@RequestParam("num") Integer num) {
+    public String delM(@RequestParam("num")Integer num) {
+        System.out.println(num);
         boardService.del(num);
         return "redirect:/manager";
     }
@@ -234,74 +274,37 @@ public class BoardController {
         model.addAttribute("mine", mine);
         return "member/myPage";
     }
-
-    //관리자 자유게시판글 자세히 보기
+    //관리자 글 자세히 보기
     @GetMapping("/bview")
-    public String bview(@RequestParam("num") Integer num, Model model) {
+    public String bview(@RequestParam("num") Integer num, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        String id = user.getId();
         boardService.updateCount(num);
         Board board = boardService.view(num);
         List<BoardFile> boardFiles = boardService.viewF(num);
-
+        boolean like = boardService.likeB(num, id);
         model.addAttribute("board", board);
         model.addAttribute("file", boardFiles);
+        model.addAttribute("like",like);
 
         return "admin/b_view";
     }
-
-    //등록된 자유게시판 글 리스트(페이지 포함)
-    @GetMapping("/listView2")
-    public String listView2(Model model,
-                            @PageableDefault(page = 0, size = 10, sort = "num", direction = Sort.Direction.DESC) Pageable pageable,
-                            String search) {
-
-        Page<Board> list = null;
-
-        if (search == null) {
-            list = boardService.listV(pageable);
-        } else {
-            if (search.equals("전체보기")) {
-                return "redirect:/listView";
-            } else {
-                list = boardService.listSearch2(pageable, search);
-            }
-        }
-
-        int nowPage = list.getNumber(); // 현재 페이지 번호 (0부터 시작)
-        int totalPages = list.getTotalPages(); // 전체 페이지 수
-        int blockLimit = 5; // 페이지 블럭 크기
-        int currentBlock = nowPage / blockLimit;
-
-        int startPage = currentBlock * blockLimit; // ex) 0, 5, 10
-        int endPage = Math.min(startPage + blockLimit - 1, totalPages - 1);
-        if(totalPages ==0){
-            endPage = 0;
-        }
-
-        model.addAttribute("list", list);
-        model.addAttribute("nowPage", nowPage);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("totalPages", totalPages);
-
-        return "board/listView";
+    //관리자 자유게시판 글 등록 기능
+    @PostMapping("/adminregister")
+    public String adminregister(@RequestParam String title,
+                                @RequestParam String content,
+                                HttpSession session,
+                                @RequestParam String area,
+                                @RequestParam List<MultipartFile> files) throws IOException {
+        User user = (User) session.getAttribute("user"); // 올바른 캐스팅
+        String writer = user.getName(); // 또는 필요한 속성으로 변경
+        boardService.register(title, content, writer, area, files);
+        return "redirect:/manager";
     }
     //관리자 글쓰기
     @GetMapping("/board2")
     public String writing2() {
         return "admin/b_main";
-    }
-
-    //관리자 자유게시판 글 등록 기능
-    @PostMapping("/adminregister")
-    public String adminregister(@RequestParam String title,
-                           @RequestParam String content,
-                           HttpSession session,
-                           @RequestParam String area,
-                           @RequestParam List<MultipartFile> files) throws IOException {
-        User user = (User) session.getAttribute("user"); // 올바른 캐스팅
-        String writer = user.getName(); // 또는 필요한 속성으로 변경
-        boardService.register(title, content, writer, area, files);
-        return "redirect:/manager";
     }
 
 
