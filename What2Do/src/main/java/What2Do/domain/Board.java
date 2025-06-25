@@ -24,6 +24,7 @@ public class Board {
                     generator = "num_seq")
     private Integer num;
     private String title;
+    @Column(length = 5000)
     private String content;
     private String writer;
     @ColumnDefault("'0'")

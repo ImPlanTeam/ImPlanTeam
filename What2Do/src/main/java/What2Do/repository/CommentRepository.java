@@ -22,4 +22,7 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
     void updateContent(@Param("no") Long no,@Param("content") String content);
 
     void deleteByTourId(Long id); // 삭제된 개수 반환
+
+    @Query("select count(c) from Comment c where c.tour.id=:id")
+    Integer countByTour_id(Long id);
 }

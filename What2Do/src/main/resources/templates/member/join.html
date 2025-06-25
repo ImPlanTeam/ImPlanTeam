@@ -134,8 +134,9 @@
   <form action="save2" method="post" onsubmit="return validateForm(this);">
     <label>*아이디</label>
     <input type="text" name="id" id="id" oninput="onlyAlphaNum(this)" minlength="8" maxlength="16"
-           placeholder="아이디는 8~16자 영문과 숫자만 사용가능합니다." th:value="${user.id}" required>
-    <button type="button" class="btn-check" id="duplenxid" value="1">중복확인</button>
+           placeholder="아이디는 8~16자 영문과 숫자만 사용가능합니다." th:value="${user.id}" onchange="changeId()" required>
+
+    <button type="button" class="btn-check" id="duplenxid" value="1" onclick="checkId()">중복확인</button>
 
     <p th:text="${errID}"></p>
 
@@ -143,7 +144,7 @@
 
     <div class="input-group mb-4 password">
       <input type="password" class="form-control login" name="pass" id="pass" minlength="8" maxlength="16"
-             placeholder="비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요." th:value="${user.pass}" required>
+             placeholder="비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요." th:value="${user.pass}" onchange="changePass()" required>
       <div class="eyes">
         <i class="fa fa-eye fa-lg"></i>
       </div>
@@ -168,7 +169,7 @@
     <p th:text="${errTel}"></p>
 
     <label>생년월일</label>
-    <input type="date" name="birth" th:value="${user.birth}">
+    <input type="date" name="birth" th:value="${user.birth}" max="2020-01-01" min="1920-01-01">
 
     <label>*이메일</label>
     <div class="email-group">
@@ -207,28 +208,29 @@
   const button = document.getElementById("duplenxid");
   const button2 = document.getElementById("checkP");
 
-
-
   button.addEventListener('click', function() {
     button.value = "2";
   });
 
-
-
 function validateForm(form) {
-
       if (button.value === "1") {
+
       alert("아이디 중복확인은 필수입니다.");
       return false;
   }
-
       if (button2.value === "1") {
       alert("비밀번호 확인은 필수입니다.");
       return false;
   }
   }
 
+  function changeId() {
+    button.value = "1"
+  }
 
+  function changePass() {
+    button2.value = "1"
+  }
 
     function onlyAlphaNum(input) {
       const regex = /^[A-Za-z0-9]*$/;
@@ -275,6 +277,11 @@ function validateForm(form) {
   return;
   }
 
+  if (userId.length < 8) {
+  alert("아이디는 8~16자 사이입니다.");
+  return;
+  }
+
   $.ajax({
     url: '/checkId',  // 실제 API URL로 변경
     type: 'GET',
@@ -291,22 +298,22 @@ function validateForm(form) {
       alert("이미 사용중인 아이디 입니다.");
    }
   });
-  });
+ });
 
 
   function checkPass() {
     var p1 = document.getElementById('pass').value;
     var p2 = document.getElementById('pass2').value;
-    if( p1 != p2 ) {
-      alert("비밀번호가 일치 하지 않습니다");
-      document.getElementById('pass2').value="";
-      return false;
-    } else{
-      alert("비밀번호가 일치합니다");
-      button2.value = "2";
-      return true;
+      if( p1 != p2 ) {
+        alert("비밀번호가 일치 하지 않습니다");
+        document.getElementById('pass2').value="";
+        return false;
+      } else{
+        alert("비밀번호가 일치합니다");
+        button2.value = "2";
+        return true;
+      }
     }
-  }
 
 </script>
 </body>

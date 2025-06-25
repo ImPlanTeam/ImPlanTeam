@@ -24,11 +24,15 @@
         }
 
         .thumbnail {
-          width: 100%;
-          height: 580px;
-          object-fit: cover;
-          border-radius: 12px;
-          margin-bottom: 24px;
+            width: 100%;
+            height: 580px;
+            object-fit: contain;
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .btnUpdate{
+            cursor: pointer;
         }
 
         .page-title {
@@ -36,7 +40,7 @@
           font-weight: 800;
           color: #111827;
           margin-bottom: 20px;
-          border-left: 6px solid #3b82f6;
+          border-left: 6px solid #1a2e45;
           padding-left: 12px;
         }
 
@@ -101,7 +105,7 @@
         }
 
         .comment-section {
-          max-width: 800px;
+          max-width: 100%;
           margin: 40px auto;
           background-color: #ffffff;
           padding: 24px;
@@ -154,8 +158,7 @@
           padding: 12px 16px;
           font-size: 16px;
           resize: vertical;
-<!--          box-shadow: 0 2px 6px rgba(0,0,0,0.05);-->
-<!--          transition: border 0.3s ease;-->
+
         }
 
 
@@ -169,8 +172,7 @@
           border: none;
           border-radius: 10px;
           cursor: pointer;
-<!--          transition: background-color 0.3s ease;-->
-<!--          box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);-->
+
         }
 
 
@@ -248,32 +250,29 @@
 
 
     <div class="comment-section">
-        <div class="comment-title">댓글</div>
+        <div class="comment-title">댓글(<span th:text="${count}"></span>)</div>
         <div th:each="clist : ${clist}" class="comment-box">
             <div class="comment-header">
                 <span class="comment-user" th:text="${clist?.user}"></span>
-                <span class="comment-date" th:text="${#strings.substring(clist?.indate,0,16)}"></span>
                 <div th:id="'btnBefore-' + ${clist.no}">
-                    <button type="button" th:if="${session.user.id} == ${clist.user}" th:onclick="modifyComment([[${clist.no}]])" class="action-btn edit-btn">수정</button>
-                    <span> | </span>
-                    <button type="button" th:if="${session.user.id} == ${clist.user}" th:onclick="deleteComment([[${clist.no}]])" class="action-btn edit-btn">삭제</button>
+                    <button type="button" th:onclick="modifyComment([[${clist.no}]])" class="action-btn edit-btn" th:if="${session.user.id} == ${clist.user} or ${clist.user} == 관리자 ">수정</button>
+                    <span th:if="${session.user.id} == ${clist.user} or ${clist.user} == 관리자"> | </span>
+                    <button type="button" th:if="${session.user.id} == ${clist.user} or ${session.user.name} == 관리자 "  th:onclick="deleteComment([[${clist.no}]])" class="action-btn edit-btn">삭제</button>
                 </div>
             </div>
             <div class="comment-content" th:text="${clist?.content}" th:id="'content-' + ${clist.no}"></div>
+            <span class="comment-date" th:text="${#strings.substring(clist?.indate,0,16)}"></span>
 
         </div>
-
-
-        <form th:action="@{/commentR(tour_id=${tour.id}, city=${city})}" onsubmit="return inpValidateFn();" method="post" class="comment-form">
-            <textarea name="content" rows="5" placeholder="내용을 입력해주세요." id="contentB"></textarea>
-            <input type="hidden" th:value="${tour.id}" name="tour_id">
-            <input type="hidden" th:value="${session.user.id}" name="user_id">
-            <button type="submit">댓글 저장</button>
-        </form>
     </div>
 
 
-
+    <form th:action="@{/commentR(tour_id=${tour.id}, city=${city})}" onsubmit="return inpValidateFn();" method="post" class="comment-form">
+        <textarea name="content" rows="5" placeholder="내용을 입력해주세요." id="contentB"></textarea>
+        <input type="hidden" th:value="${tour.id}" name="tour_id">
+        <button type="submit">댓글 저장</button>
+    </form>
+</div>
 </div>
     <div th:replace="~{fragments/footer :: footerFragment}"></div>
 

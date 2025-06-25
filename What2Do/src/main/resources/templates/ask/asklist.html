@@ -74,6 +74,10 @@
         .pagination a:hover {
             background-color: #e9f2ff;
         }
+
+        .status-pending {
+            color: #808080;
+        }
     </style>
     <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
@@ -103,7 +107,10 @@
             <td th:text="${#strings.substring(ask.indate,0,10)}"></td>
             <td th:text="${ask.vicibility}"></td>
             <td th:text="${ask.user.id}"></td>
-            <td th:text="${statusMap[ask.no]}">검토중</td>
+            <td>
+                <span th:if="${statusMap[ask.no]} == '검토중'" class="status-badge status-pending">검토중</span>
+                <span th:if="${statusMap[ask.no]} == '답변완료'" class="status-badge status-done">답변완료</span>
+            </td>
         </tr>
         </tbody>
     </table>

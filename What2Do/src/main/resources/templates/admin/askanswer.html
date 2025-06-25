@@ -120,7 +120,7 @@
   </div>
 
   <div class="section" th:if="${answer != null}">
-    <h3>✅ 답변 내용</h3>
+    <h3> 답변 내용</h3>
     <div class="answered">
       <div class="comment-box">
         <div class="comment-content" th:text="${answer.content}" th:id="'content-' + ${answer.no}"></div>
@@ -134,7 +134,7 @@
 
 
   <div class="section" th:if="${answer == null and session.user?.role == 'ADMIN'}">
-    <h3>📝 답변 작성</h3>
+    <h3> 답변 작성</h3>
     <form th:action="@{|/admin/answer/${askview.no}|}" method="post">
       <textarea name="content" rows="5" placeholder="답변 내용을 입력해주세요."></textarea>
       <button type="submit">저장</button>

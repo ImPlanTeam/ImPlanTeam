@@ -18,6 +18,7 @@ public class Ask {
     @Column(name = "ask_no")
     private Integer no;
     private String title;
+    @Column(length = 5000)
     private String contents;
     private String vicibility;
     private LocalDateTime indate;

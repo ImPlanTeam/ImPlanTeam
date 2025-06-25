@@ -72,6 +72,11 @@ public class MainController {
 
         boolean like = tourService.likeB(id, num);
         model.addAttribute("like", like);
+
+        Integer count=commentService.counting(id);
+        System.out.println(count);
+        model.addAttribute("count",count);
+
         model.addAttribute("city", city);
         List<Comment> clist = commentService.commentV(id);
         System.out.println("city: "+city);
@@ -86,9 +91,14 @@ public class MainController {
     public String commentR(Comment comment, @RequestParam("tour_id") Tour tour_id,
                            @RequestParam("city") String city, RedirectAttributes re, HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        String user_id = user.getId();
+        if(user.getName().equals("관리자")) {
+            String user_id = user.getName();
+            comment.setUser(user_id);
+        }else {
+            String user_id = user.getId();
+            comment.setUser(user_id);
+        }
         comment.setTour(tour_id);
-        comment.setUser(user_id);
         commentService.commentR(comment);
         Long tid = tour_id.getId();
         re.addAttribute("city", city);

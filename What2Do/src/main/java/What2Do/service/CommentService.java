@@ -35,5 +35,9 @@ public class CommentService {
         commentRepository.updateContent(no,content);
 
     }
+    public Integer counting(Long id){
+        return commentRepository.countByTour_id(id);
+
+    }
 
 }

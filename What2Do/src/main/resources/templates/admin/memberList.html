@@ -39,7 +39,7 @@
         }
 
         form#searchForm button {
-          background-color: #0d6efd;
+          background-color: #1a2e45;
           color: white;
           border: none;
           padding: 0.5rem 1rem;
@@ -49,9 +49,6 @@
           margin-left: 8px;
         }
 
-        form#searchForm button:hover {
-          background-color: #0b5ed7;
-        }
 
         .error-msg {
           color: red;
@@ -74,7 +71,6 @@
           padding: 1rem;
           text-align: center;
           border-bottom: 1px solid #eee;
-          font-size: 0.95rem;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -103,18 +99,12 @@
         }
 
         .action-btn {
-          background-color: #e74c3c;
           border: none;
           padding: 0.4rem 0.8rem;
           border-radius: 6px;
-          color: white;
           font-size: 13px;
           margin: 0 2px;
           cursor: pointer;
-        }
-
-        .edit-btn {
-          background-color: #2ecc71;
         }
 
         .action-btn:hover {
@@ -129,7 +119,7 @@
 
 <!-- 메인 콘텐츠 -->
 <div class="main-container">
-    <h2>👥 회원 목록 관리</h2>
+    <h2> 회원 목록 관리</h2>
 
     <!-- 검색 -->
     <form id="searchForm">
@@ -155,13 +145,13 @@
             <td th:text="${list.name}"></td>
             <td th:text="${#strings.substring(list.indate,0,10)}"></td>
             <td>
-                <form th:action="@{'/delete/' + ${list.id}}" method="get" style="display:inline;">
-                    <button type="submit" class="action-btn">삭제</button>
-                </form>
+                <a th:href="@{'/delete/' + ${list.id}}" style="display:inline;">
+                    <span class="action-btn" style="font-size: 15px">삭제</span>
+                </a>
             </td>
             <td>
                 <a th:href="@{'/viewUser/' + ${list.id}}">
-                    <button type="button" class="action-btn edit-btn">수정</button>
+                    <span class="action-btn edit-btn " style="font-size: 15px">수정</span>
                 </a>
             </td>
         </tr>

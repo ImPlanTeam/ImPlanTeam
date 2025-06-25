@@ -20,7 +20,7 @@ public class Comment {
     private Tour tour;//놀러가자 게시물 id
 
     private String user; //유저 id
-
+    @Column(length = 500)
     private String content; //댓글 내용
 
     @CreationTimestamp

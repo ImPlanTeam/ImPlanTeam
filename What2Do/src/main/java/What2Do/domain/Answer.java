@@ -16,6 +16,7 @@ public class Answer {
     @JoinColumn(name = "ask_no", nullable = false)
     private Ask ask;
 
+    @Column(length = 5000)
     private String content;
 
     private LocalDateTime answeredAt;

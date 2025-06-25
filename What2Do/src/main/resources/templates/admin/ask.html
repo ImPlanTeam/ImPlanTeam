@@ -126,7 +126,7 @@
 
 <!-- 메인 콘텐츠 -->
 <div class="main-container">
-    <h3>1:1 문의 리스트</h3>
+    <h2>1:1 문의 리스트</h2>
 
     <table>
         <thead>
@@ -150,7 +150,7 @@
             <td th:text="${ask.user.id}">작성자</td>
             <td>
                 <span th:if="${statusMap[ask.no]} == '검토중'" class="status-badge status-pending">검토중</span>
-                <span th:if="${statusMap[ask.no]} == '완료'" class="status-badge status-done">완료</span>
+                <span th:if="${statusMap[ask.no]} == '답변완료'" class="status-badge status-done">완료</span>
             </td>
         </tr>
         </tbody>
