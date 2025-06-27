@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>1:1 문의 리스트</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -19,7 +20,7 @@
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
         }
 
-        h3 {
+        h2 {
             text-align: center;
             color: #333;
             margin-bottom: 1.5rem;
@@ -123,7 +124,7 @@
 
 <!-- 메인 콘텐츠 -->
 <div class="main-container">
-    <h3>📨 1:1 문의 리스트</h3>
+    <h2>1:1 문의 리스트</h2>
 
     <table>
         <thead>
@@ -131,7 +132,6 @@
             <th>번호</th>
             <th>제목</th>
             <th>날짜</th>
-            <th>공개 여부</th>
             <th>작성자</th>
             <th>상태</th>
         </tr>
@@ -143,11 +143,10 @@
                 <a th:href="@{'/admin/answer/' + ${ask.no}}" th:text="${ask.title}"></a>
             </td>
             <td th:text="${#strings.substring(ask.indate,0,10)}"></td>
-            <td th:text="${ask.vicibility}"></td>
             <td th:text="${ask.user.id}">작성자</td>
             <td>
                 <span th:if="${statusMap[ask.no]} == '검토중'" class="status-badge status-pending">검토중</span>
-                <span th:if="${statusMap[ask.no]} == '완료'" class="status-badge status-done">완료</span>
+                <span th:if="${statusMap[ask.no]} == '답변완료'" class="status-badge status-done">답변완료</span>
             </td>
         </tr>
         </tbody>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>회원 목록 관리</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
           font-family: 'Segoe UI', sans-serif;
@@ -102,23 +103,16 @@
         }
 
         .action-btn {
-          background-color: #e74c3c;
+          background-color: transparent;
           border: none;
           padding: 0.4rem 0.8rem;
           border-radius: 6px;
-          color: white;
-          font-size: 13px;
+          font-size: 15px;
           margin: 0 2px;
           cursor: pointer;
         }
 
-        .edit-btn {
-          background-color: #2ecc71;
-        }
 
-        .action-btn:hover {
-          opacity: 0.9;
-        }
     </style>
 </head>
 <body>
@@ -128,7 +122,7 @@
 
 <!-- 메인 콘텐츠 -->
 <div class="main-container">
-    <h2>👥 회원 목록 관리</h2>
+    <h2>회원 목록 관리</h2>
 
     <!-- 검색 -->
     <form id="searchForm">

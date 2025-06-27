@@ -5,6 +5,8 @@ import What2Do.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,18 +49,18 @@ public class TourService {
             throw new IllegalArgumentException("관광지구분은 필수입니다.");
         }
     }
-
-    public List<Tour> findRegion(String areacode,String sigungucode){
-        return tourRepository.findByAreacodeAndSigungucode(areacode,sigungucode);
+    public Page<Tour> findRegion(String areacode, String sigungucode, Pageable pageable){
+        return tourRepository.findByAreacodeAndSigungucode(areacode,sigungucode,pageable);
     }
     public Tour findOne(Long id){
         return tourRepository.findById(id).orElseThrow();
     }
 
-    public List<Tour> findCatecory(String contenttypeid,String areacode,String sigungucode){
 
-        return tourRepository.findByContenttypeidAndAreacodeAndSigungucode(contenttypeid,areacode,sigungucode);
+    public Page<Tour> findCatecory(String contenttypeid,String areacode,String sigungucode,Pageable pageable){
+        return tourRepository.findByContenttypeidAndAreacodeAndSigungucode(contenttypeid,areacode,sigungucode,pageable);
     }
+
     @Transactional
     public Integer likePlus(Long num){
         Integer likeCnt=tourRepository.updateLikePlus(num);
@@ -115,4 +117,8 @@ public class TourService {
         return tourRepository.existsBycontentid(contentid);
     }
 
+    public List<Tour> findByTitleContaining(String title) {
+        List<Tour> list= tourRepository.findByTitleContaining(title);
+        return list;
+    }
 }

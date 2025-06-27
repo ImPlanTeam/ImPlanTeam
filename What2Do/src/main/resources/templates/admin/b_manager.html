@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>자유게시판 관리</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
           font-family: 'Segoe UI', sans-serif;
@@ -68,17 +69,12 @@
         }
 
         .delete-btn {
-          background-color: #e74c3c;
-          color: #fff;
+          background-color: transparent;
           border: none;
           padding: 0.5rem 1rem;
           border-radius: 0.5rem;
           cursor: pointer;
           font-size: 0.85rem;
-        }
-
-        .delete-btn:hover {
-          opacity: 0.9;
         }
 
         .pagination {
@@ -114,7 +110,7 @@
 
 <!-- 메인 콘텐츠 -->
 <div class="main-container">
-    <h2>📋 자유게시판 게시글 관리</h2>
+    <h2>자유게시판 게시글 관리</h2>
 
     <table>
         <thead>

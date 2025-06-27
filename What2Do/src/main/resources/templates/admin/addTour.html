@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>관광지 추가</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -15,7 +16,7 @@
           color: #1f2937;
         }
 
-        .container {
+        .containerA {
           max-width: 880px;
           margin: 60px auto;
           padding: 40px;
@@ -55,45 +56,51 @@
           grid-column: 1 / -1;
         }
 
-        input, select, button {
-          width: 100%;
-          padding: 10px 12px;
-          border: 1px solid #d1d5db;
-          border-radius: 10px;
-          font-size: 0.95rem;
-          box-sizing: border-box;
-        }
+       input, select, textarea, button {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
+}
 
-        input:focus, select:focus {
-          outline: none;
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
+textarea {
+  height: 140px;
+  resize: vertical;
+}
 
-        .inline-input-group {
-          display: flex;
-          gap: 10px;
-          align-items: center;
-        }
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
 
-        .inline-input-group input {
-          flex: 1;
-        }
+.inline-input-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-        .inline-btn {
-          width: auto;
-          padding: 9px 14px;
-          font-size: 0.9rem;
-          background-color: #f3f4f6;
-          border: 1px solid #cbd5e1;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-        }
+.inline-input-group input {
+  flex: 1;
+}
 
-        .inline-btn:hover {
-          background-color: #e5e7eb;
-        }
+.inline-btn {
+  padding: 10px 16px;
+  font-size: 14px;
+  background-color: #f3f4f6;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.inline-btn:hover {
+  background-color: #e5e7eb;
+}
+
 
         .image-preview {
           margin-top: 10px;
@@ -146,7 +153,7 @@
     </script>
 </head>
 <body>
-<div class="container">
+<div class="containerA">
     <h2>관광지 추가</h2>
     <form action="saveTour" method="post" onsubmit="return validateForm(this);">
         <input type="hidden" name="city" th:value="${city}" readonly>

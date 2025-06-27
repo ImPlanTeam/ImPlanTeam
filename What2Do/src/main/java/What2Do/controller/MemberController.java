@@ -22,6 +22,7 @@ import org.apache.coyote.BadRequestException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Controller
@@ -145,8 +146,9 @@ public class MemberController {
     }
 
     @PostMapping("save2")
-    public String save2(@Valid UserDTO userDTO, Errors errors, Model model ){
+    public String save2(@Valid UserDTO userDTO, Errors errors, Model model){
         model.addAttribute("user", userDTO);
+        System.out.println(userDTO.getMail2());
         if (service.checkId(userDTO.getId())){
             System.out.println("아이디 중복");
             model.addAttribute("errID", "이미 사용중인 아이디입니다.");

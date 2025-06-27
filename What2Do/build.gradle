@@ -40,6 +40,7 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 
+	implementation 'org.python:jython-slim:2.7.4rc1'
 }
 
 tasks.named('test') {

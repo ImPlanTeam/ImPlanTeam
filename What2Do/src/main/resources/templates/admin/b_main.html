@@ -2,114 +2,167 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>글쓰기</title>re
-    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <title>게시글 보기</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f9fafc;
+          font-family: 'Segoe UI', sans-serif;
+          background-color: #f7f9fc;
+    <!--      margin: 0;-->
+    <!--      padding: 2rem;-->
         }
 
-        .main-container {
-            max-width: 800px;
-            margin: auto;
-            background-color: #ffffff;
-            padding: 2rem 2.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        .containerA {
+          max-width: 900px;
+          margin: auto;
+          background: white;
+          padding: 2rem 2.5rem;
+          border-radius: 1rem;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .back-link {
+          margin-bottom: 1.5rem;
+          display: inline-block;
+          color: #1a2e45;
+          font-weight: bold;
+          text-decoration: none;
         }
 
         h2 {
-            text-align: center;
-            margin-bottom: 2rem;
-            color: #333;
+          margin-bottom: 0.5rem;
+          color: #333;
         }
 
-        label {
-            font-weight: bold;
-            display: block;
-            margin: 1rem 0 0.4rem;
-            color: #444;
+        .info {
+          font-size: 0.95rem;
+          color: #666;
+          margin-bottom: 1.5rem;
         }
 
-        select, input[type="text"], textarea, input[type="file"] {
-            width: 100%;
-            padding: 0.7rem;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 14px;
-            box-sizing: border-box;
+        .images {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1rem;
+          margin-bottom: 1.5rem;
         }
 
-        textarea {
-            height: 150px;
-            resize: vertical;
+        .images img {
+          width: 200px;
+          border-radius: 0.5rem;
+          object-fit: cover;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        input[type="submit"] {
-            margin-top: 1.5rem;
-            background-color: #0d6efd;
-            color: white;
-            padding: 0.8rem 1.5rem;
-            font-size: 15px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
+        .content {
+          font-size: 1rem;
+          color: #444;
+          margin-bottom: 2rem;
+          line-height: 1.6;
         }
 
-        input[type="submit"]:hover {
-            background-color: #0b5ed7;
-        }
 
+
+        .like-count {
+          font-size: 1rem;
+          font-weight: bold;
+        }
+        .like-count {
+          font-size: 1rem;
+          font-weight: bold;
+          color: #1a2e45;
+        }
+        #heartBtn {
+        cursor: pointer;
+        transition: fill 0.3s, stroke 0.3s;
+      }
+
+      #heartBtn.liked {
+        fill: red;
+        stroke: red;
+      }
+
+    .action-text {
+      cursor: pointer;
+      color: #6b7280;
+      display: flex;
+      justify-content: flex-end;
+    }
     </style>
+
 </head>
 <body>
 
-<!-- 사용자 상단 메뉴 -->
 <div th:replace="~{fragments/admintop :: headerFragment}"></div>
 
-<div class="main-container">
-    <h2>✍ 자유게시판 글쓰기</h2>
-    <form action="/adminregister" method="post" enctype="multipart/form-data">
-        <label for="area">지역 선택</label>
-        <select name="area" id="area">
-            <option value="공지사항">공지사항</option>
-            <option>==선택==</option>
-            <option value="전체보기">전체보기</option>
-            <option value="서울특별시">서울특별시</option>
-            <option value="경기도">경기도</option>
-            <option value="인천광역시">인천광역시</option>
-            <option value="강원도">강원도</option>
-            <option value="충청북도">충청북도</option>
-            <option value="충청남도">충청남도</option>]
-            <option value="세종특별자치시">세종특별자치시</option>
-            <option value="대전광역시">대전광역시</option>
-            <option value="경상북도">경상북도</option>
-            <option value="경상남도">경상남도</option>
-            <option value="대구광역시">대구광역시</option>
-            <option value="전라북도">전라북도</option>
-            <option value="전라남도">전라남도</option>
-            <option value="광주광역시">대구광역시</option>
-            <option value="부산광역시">부산광역시</option>
-            <option value="울산광역시">울산광역시</option>
-            <option value="제주도">제주도</option>
-        </select>
+<div class="containerA">
+    <a th:href="@{/manager}" class="back-link">← 목록으로 돌아가기</a>
 
-        <label for="title">제목</label>
-        <input type="text" name="title" id="title" placeholder="제목을 입력하세요">
+    <h2 th:text="${board.title}" class="text-2xl font-semibold">제목</h2>
 
-        <label for="content">내용</label>
-        <textarea name="content" id="content" placeholder="내용을 입력해주세요."></textarea>
+    <div class="info">
+        지역: <span th:text="${board.area}"></span> |
+        작성일: <span th:text="${#strings.substring(board.indate,0,10)}"></span> |
+        작성자: <span th:text="${board.writer}"></span> |
+        조회수: <span th:text="${board.view_count}"></span>
+    </div>
 
-        <label for="files">첨부파일</label>
-        <input type="file" name="files" id="files" multiple>
+    <div class="images" th:if="${file != null}">
+        <div th:each="filename : ${file}">
+            <img th:src="@{'/upload/' + ${filename.originFileName}}" alt="첨부 이미지">
+        </div>
+    </div>
 
-        <input type="submit" value="작성 완료">
-    </form>
+    <div class="content" th:text="${board.content}"></div>
+
+    <div class="button-group">
+        <table>
+            <tr>
+                <td><svg id="heartBtn" width="24" height="24" fill="none"
+                         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                         viewBox="0 0 24 24" th:onclick="|likeIt(${board.num})|" th:classappend="${like} ? 'liked'">
+                    <path d="M12 21s-6.4-5.3-9-9c-2-3 0-7 4-7 2.1 0 3.4 1.4 5 3 1.6-1.6 2.9-3 5-3 4 0 6 4 4 7-2.6 3.7-9 9-9 9z"/>
+                </svg></td>
+                <td></td>
+                <td><span class="like-count" id="CNT" th:text="${board.like_count}">0</span></td>
+            </tr>
+        </table>
+    </div>
+
+    <span class="like-count" id="CNT" th:text="${board.like_count}">0</span>
+
+    <div class="edit" th:if="${board.writer == session.user.name}">
+        <a th:href="@{/update(num=${board.num})}">
+            <span class="action-text">수정 </span>
+        </a>
+    </div>
+
+</div>
 </div>
 
-<!-- 사용자 하단 푸터 -->
+<script>
+    const heart = document.getElementById('heartBtn');
+    function likeIt(num) {
+      $.ajax({
+        type: "post",
+        url: "/likeB",
+        data:
+        { "num" : num },
+        success: function(likeAll) {
+          $("#CNT").text(likeAll.likeCnt);
+           if (likeAll.like ==false) {
+          heart.classList.add('liked');
+        } else {
+          heart.classList.remove('liked');
+        }
+      },
+        error: function() {
+          alert("좋아요 처리 중 오류가 발생했습니다.");
+        }
+      });
+    }
+</script>
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
-
 </body>
 </html>

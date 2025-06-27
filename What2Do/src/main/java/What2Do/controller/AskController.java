@@ -34,8 +34,6 @@ public class AskController {
     private final AskRepository askRepository;
     private final AnswerRepository answerRepository;
 
-
-
     @GetMapping("/askjoin")
     public String askjoind(){
 
@@ -45,7 +43,6 @@ public class AskController {
     @PostMapping("/askjoin")
     public String askJoinPost(@RequestParam String title,
                               @RequestParam String content,
-                              @RequestParam String vicibility,
                               @RequestParam("files")List<MultipartFile> files,
                               HttpSession session){
         User loginUser = (User) session.getAttribute("user");
@@ -54,7 +51,7 @@ public class AskController {
 
         }
         try {
-            askService.saveAsk(title, content, vicibility, files, loginUser);
+            askService.saveAsk(title, content, files, loginUser);
         } catch (IOException e) {
             e.printStackTrace();
             return "error"; // 에러 페이지
@@ -121,15 +118,6 @@ public class AskController {
         User loginUser = (User) session.getAttribute("user");
         model.addAttribute("askview", view);
 
-        if ("private".equals(view.getVicibility())) {
-            if (loginUser == null || !view.getUser().getId().equals(loginUser.getId())) {
-                // 관리자 확인 로직 필요 시 추가
-                if (!isAdmin(loginUser)) {
-                    return "redirect:/ask?error=unauthorized";
-                }
-            }
-        }
-
         //첨부파일 가져오기
         List<AskFile> imglist = askService.getimg(askNo);
         model.addAttribute("file", imglist);
@@ -186,9 +174,6 @@ public class AskController {
 
         int startPage = currentBlock * blockLimit;
         int endPage = Math.min(startPage + blockLimit - 1, totalPages - 1);
-        if(totalPages ==0){
-            endPage = 0;
-        }
 
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
@@ -223,22 +208,23 @@ public class AskController {
         Answer answer = answerRepository.findByAsk(ask);
         model.addAttribute("answer", answer);
 
-        return "admin/askanswer";
+        return "admin/askanswer"; // 관리자용 답변 작성 페이지
     }
 
     //관리자답변저장
     @PostMapping("/admin/answer/{askNo}")
     public String adminAnswer(@PathVariable Integer askNo,
                               @RequestParam String content,
-                              HttpSession session, Model model) {
+                              HttpSession session) {
         User loginUser = (User) session.getAttribute("user");
         if (!isAdmin(loginUser)) {
             return "redirect:/admin?error=noPermission";
         }
+
         askService.saveAnswer(askNo, content);
-        Answer answer = new Answer();
-        model.addAttribute("answer", answer);
         return "redirect:/admin/answer/" + askNo;
     }
+
+
 
 }

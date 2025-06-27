@@ -53,8 +53,6 @@
       transition: color 0.3s;
     }
 
-    .menu1 a:hover {
-    }
 
     .login-btn {
       background-color: #1a2e45;
@@ -81,3 +79,21 @@
   display: inline-block;
   object-fit: cover;
 }
+ #kkk {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        #zzz {
+            background-color: #1a2e45;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #zzz::placeholder{
+          color: gray;
+          font-size: 12px;
+        }

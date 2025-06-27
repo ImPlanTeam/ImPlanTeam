@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="IU-251.26927.53">
+    <data-source name="what2do@localhost" uuid="177ad659-1792-44f0-a533-15e8986a2af4">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" />
+      <user-name>root</user-name>
+      <schema-mapping />
+    </data-source>
+    <data-source name="what2do@localhost" uuid="b6af1d0f-4345-4794-b349-91745f5754aa">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MARIADB" />
+      <user-name>root</user-name>
+      <schema-mapping />
+      <load-sources>user_and_system_sources</load-sources>
+    </data-source>
+  </component>
+</project>

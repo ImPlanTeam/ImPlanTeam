@@ -1,5 +1,6 @@
 package What2Do.repository;
 
+import What2Do.domain.Bcomment;
 import What2Do.domain.Comment;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +13,7 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment,Long> {
     Comment save(Comment comment);
 
+
     List<Comment> findAllByTour_id(Long tour_id);
 
     Comment findByNo(Long no);
@@ -23,4 +25,6 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
 
     void deleteByTourId(Long id); // 삭제된 개수 반환
 
+    @Query("select count(c) from Comment c where c.tour.id=:id")
+    Integer countByTour_id(Long id);
 }

@@ -1,10 +1,9 @@
 package What2Do.repository;
 
-import What2Do.domain.Comment;
-import What2Do.domain.LikeIt;
-import What2Do.domain.Tour;
-import What2Do.domain.TourSpot;
+import What2Do.domain.*;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,9 +12,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface TourRepository extends JpaRepository<Tour, Long> {
-    List<Tour> findByAreacodeAndSigungucode(String areacode,String sigungucode);
+    Page<Tour> findByAreacodeAndSigungucode(String areacode, String sigungucode, Pageable pageable);
 
-    List<Tour> findByContenttypeidAndAreacodeAndSigungucode(String contenttypeid,String areacode,String sigungucode);
+    Page<Tour> findByContenttypeidAndAreacodeAndSigungucode(String contenttypeid,String areacode,String sigungucode,Pageable pageable);
 
     @Modifying
     @Transactional
@@ -45,4 +44,7 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     void deleteById(Long id); // 삭제된 개수 반환
 
     boolean existsBycontentid(String contentid);
+
+    List<Tour> findByTitleContaining(String title);
+
 }

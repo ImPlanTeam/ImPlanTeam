@@ -4,11 +4,10 @@
     <meta charset="UTF-8">
     <title>글쓰기</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f9fafc;
-        }
+
 
         .main-container {
             max-width: 800px;
@@ -48,7 +47,7 @@
 
         input[type="submit"] {
             margin-top: 1.5rem;
-            background-color: #0d6efd;
+            background-color: #1a2e45;
             color: white;
             padding: 0.8rem 1.5rem;
             font-size: 15px;
@@ -56,11 +55,6 @@
             border-radius: 8px;
             cursor: pointer;
         }
-
-        input[type="submit"]:hover {
-            background-color: #0b5ed7;
-        }
-
     </style>
 </head>
 <body>
@@ -69,11 +63,10 @@
 <div th:replace="~{fragments/top :: headerFragment}"></div>
 
 <div class="main-container">
-    <h2>✍ 자유게시판 글쓰기</h2>
+    <h2 class="text-2xl font-semibold">자유게시판 글쓰기</h2>
     <form action="/register" method="post" enctype="multipart/form-data">
         <label for="area">지역 선택</label>
         <select name="area" id="area">
-            <option value="전체보기">전체보기</option>
             <option value="서울특별시">서울특별시</option>
             <option value="경기도">경기도</option>
             <option value="인천광역시">인천광역시</option>
@@ -94,10 +87,10 @@
         </select>
 
         <label for="title">제목</label>
-        <input type="text" name="title" id="title" placeholder="제목을 입력하세요">
+        <input type="text" name="title" id="title" placeholder="제목을 입력하세요" required>
 
         <label for="content">내용</label>
-        <textarea name="content" id="content" placeholder="내용을 입력해주세요."></textarea>
+        <textarea name="content" id="content" placeholder="내용을 입력해주세요." required></textarea>
 
         <label for="files">첨부파일</label>
         <input type="file" name="files" id="files" multiple>
@@ -108,6 +101,14 @@
 
 <!-- 사용자 하단 푸터 -->
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+<script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('content', {
+        language: "ko",
+        skin: "moono-lisa",
+    });
+</script>
 
 </body>
 </html>

@@ -3,90 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <title>오늘 뭐하지 추가</title>
-  <link rel="stylesheet" th:href="@{/css/common.css}">
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f9fafb;
-    }
-    .container {
-      max-width: 480px;
-      margin: 40px auto;
+    /* 모든 규칙을 free-board-page 내부로 한정 */
+    .free-board-page .board-container {
+      max-width: 1000px;
+      margin: auto;
       background: #fff;
-      padding: 2rem 2.5rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      padding: 30px;
+      border-radius: 16px;
     }
-    h2 {
-      font-weight: 700;
-      font-size: 1.8rem;
-      color: #333;
-      margin-bottom: 1.5rem;
-      text-align: center;
+
+    .free-board-page .filter-section {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
     }
-    label {
-      display: block;
-      font-weight: 600;
-      color: #444;
-      margin-bottom: 0.4rem;
-    }
-    input[type="text"], select, textarea {
-      width: 100%;
-      padding: 0.5rem 0.75rem;
+
+    /* 검색 버튼 */
+    .free-board-page #btnSearch {
       border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
-      box-sizing: border-box;
-      margin-bottom: 1rem;
-      transition: border-color 0.3s ease;
-      font-family: inherit;
-      resize: vertical;
+      width: 60px;
+      height: 30px;
+      font-size: 15px;
+      background: #1a2e45;
+      color: #f9f7f7;
+      border-radius: 4px;
+      cursor: pointer;
     }
-    input[type="text"]:focus, select:focus, textarea:focus {
-      border-color: #2563eb;
-      outline: none;
-      box-shadow: 0 0 6px rgba(37, 99, 235, 0.5);
+
+    /* 글쓰기 링크(버튼) */
+    .free-board-page .write-link {
+      display: block;
+      text-align: right;
+      margin-top: 15px;
     }
-    input[readonly] {
-      background-color: #f0f0f0;
-      color: #808080;
-      cursor: not-allowed;
-    }
-    .form-actions {
-      text-align: center;
-      margin-top: 1.5rem;
-    }
-    button[type="submit"] {
+    .free-board-page .write-link a {
       background-color: #1a2e45;
       color: white;
-      font-weight: 700;
-      font-size: 1.1rem;
-      padding: 0.75rem 2rem;
-      border: none;
+      padding: 8px 12px;
       border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.25s ease;
-      font-family: inherit;
+      text-decoration: none;
+      font-weight: bold;
     }
 
-    /* 선택박스 주변 마진 통일 */
-    .mb-4 {
-      margin-bottom: 1.25rem;
+    /* 페이징 버튼 */
+    .free-board-page .pagination a,
+    .free-board-page .pagination strong {
+      margin: 0 5px;
+      padding: 6px 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      text-decoration: none;
     }
-    .block {
-      display: block;
+    .free-board-page .pagination strong {
+      background-color: #1a2e45;
+      color: white;
+      border-color: #1a2e45;
     }
-    .font-medium {
-      font-weight: 600;
+
+    /* (필요시) 공지사항 행 강조 */
+    .free-board-page .notice-row {
+      background-color: #fff7e6 !important;
+      font-weight: bold;
     }
   </style>
+
 </head>
-<body>
+<body class="free-board-page">
 <div th:replace="~{fragments/admintop :: headerFragment}"></div>
 
-<div class="container">
-  <h2>오늘 뭐하지 추가</h2>
+<div class="containerA">
+  <h2 class="text-xl font-bold mb-4">오늘 뭐하지 추가</h2>
   <form action="/what2doR" method="post">
 
     <label for="name">활동명</label>
@@ -94,7 +83,7 @@
 
     <div class="mb-4">
       <label for="mood" class="block font-medium">현재 기분</label>
-      <select name="mood" id="mood" class="" required>
+      <select name="mood" id="mood" class="sel" required>
         <option value="기분좋아요">기분 좋아요</option>
         <option value="그냥그래요">그냥 그래요</option>
         <option value="피곤해요">피곤해요</option>
@@ -105,7 +94,7 @@
 
     <div class="mb-4">
       <label for="tags" class="block font-medium">선호하는 활동 유형</label>
-      <select name="tags" id="tags" required>
+      <select name="tags" id="tags" class="sel" required>
         <option value="실내">실내</option>
         <option value="실외">실외</option>
         <option value="문화/예술">문화/예술</option>
@@ -115,7 +104,7 @@
 
     <div class="mb-4">
       <label for="companions" class="block font-medium">동행인</label>
-      <select name="companions" id="companions" required>
+      <select name="companions" id="companions" class="sel" required>
         <option value="혼자">혼자</option>
         <option value="친구">친구</option>
         <option value="연인">연인</option>
@@ -125,7 +114,7 @@
 
     <div class="mb-4">
       <label for="weather" class="block font-medium">날씨</label>
-      <select name="weather" id="weather" required>
+      <select name="weather" id="weather" class="sel" required>
         <option value="맑음">맑음</option>
         <option value="구름 많음">구름 많음</option>
         <option value="흐림">흐림</option>

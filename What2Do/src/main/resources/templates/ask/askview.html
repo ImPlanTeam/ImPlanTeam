@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>1:1 문의 상세</title>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css?after}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
           font-family: 'Segoe UI', sans-serif;
+          background-color: #f9fafc;
 
         }
 
@@ -76,7 +78,11 @@
 <div th:replace="~{fragments/top :: headerFragment}"></div>
 
 <div class="main-container">
-    <h3>나의 문의 상세 보기</h3>
+    <a th:href="@{/ask}" class="back-link">← 목록으로 돌아가기
+
+        <br>
+        <br>
+    <h3 class="text-2xl font-semibold">나의 문의 상세 보기</h3>
 
     <div class="section">
         <span class="label">글번호</span>
@@ -86,7 +92,7 @@
         <div class="value" th:text="${askview.title}"></div>
 
         <span class="label">내용</span>
-        <div class="value" th:text="${askview.contents}"></div>
+        <div class="value" th:textu="${askview.contents}"></div>
 
         <span class="label">작성일</span>
         <div class="value" th:text="${#strings.substring(askview.indate,0,10)}"></div>
@@ -99,7 +105,7 @@
     </div>
 
     <div class="section" th:if="${answer != null}">
-        <h3>✅ 답변 내용</h3>
+        <h3 class="text-2xl font-semibold">답변 내용</h3>
         <div class="answer-box">
             <div th:text="${answer.content}"></div>
             <small th:text="${#temporals.format(answer.answeredAt, 'yyyy-MM-dd HH:mm')}"></small>

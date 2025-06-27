@@ -1,7 +1,6 @@
 package What2Do.controller;
 
 import What2Do.domain.*;
-import What2Do.repository.AnswerRepository;
 import What2Do.repository.TourRepository;
 import What2Do.service.AskService;
 import What2Do.service.BoardService;
@@ -13,6 +12,10 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +46,25 @@ public class MainController {
     }
 
 
+    @GetMapping("/listTour")
+    public String searchUser(@RequestParam("title") String title, Model model) {
+        List<Tour> list = tourService.findByTitleContaining(title);
+        if (title == null) {
+            return "tour/listTour";
+        }
+        if (!list.isEmpty()) {
+            System.out.println("검색어 존재");
+            model.addAttribute("list", list);
+            model.addAttribute("title", title);
+            return "tour/listTour"; // 위에서 만든 Thymeleaf 파일명
+        }else{
+            System.out.println("검색어 없음");
+            model.addAttribute("error", "해당 검색어가 존재하지 않습니다.");
+            model.addAttribute("title", title);
+            return "tour/listTour";
+        }
+    }
+
     @RequestMapping("/tourAdmin")
     public String tourAdmin(Model model) {
         List<Tour> tlist = tourService.findAll();
@@ -53,12 +75,12 @@ public class MainController {
     }
 
     @RequestMapping("/viewTour/{id}")
-    public String viewTour(@PathVariable Long id, Model model) {
+    public String viewTour(@PathVariable Long id, @RequestParam("city") String city, Model model) {
         Tour tour = tourService.findOne(id);
         model.addAttribute("tour", tour);
+        model.addAttribute("city", city);
         return "admin/viewTour";
     }
-
 
     @GetMapping("/detail")
     public String detailV(@RequestParam("id") Long id,
@@ -72,6 +94,11 @@ public class MainController {
 
         boolean like = tourService.likeB(id, num);
         model.addAttribute("like", like);
+
+        Integer count=commentService.counting(id);
+        System.out.println(count);
+        model.addAttribute("count",count);
+
         model.addAttribute("city", city);
         List<Comment> clist = commentService.commentV(id);
         System.out.println("city: "+city);
@@ -81,14 +108,37 @@ public class MainController {
         return "tour/cityDetail";
     }
 
-    //댓글 저장
+    //자유게시판 댓글 저장
+    @PostMapping("/commentB")
+    public String commentB(Bcomment bcomment, @RequestParam("board_id") Board board_id,
+                           RedirectAttributes re, HttpSession session, Model model){
+        User user = (User) session.getAttribute("user");
+        if(user.getName().equals("관리자")){
+            String user_id = user.getName();
+            bcomment.setUser(user_id);
+        }else {
+            String user_id = user.getId();
+            bcomment.setUser(user_id);
+        }
+        bcomment.setBoard(board_id);
+        commentService.commentB(bcomment);
+        Integer bid = board_id.getNum();
+        return "redirect:view/?num=" + bid;
+    }
+
+    //놀러가자 댓글 저장
     @PostMapping("/commentR")
     public String commentR(Comment comment, @RequestParam("tour_id") Tour tour_id,
                            @RequestParam("city") String city, RedirectAttributes re, HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
-        String user_id = user.getId();
+        if(user.getName().equals("관리자")) {
+            String user_id = user.getName();
+            comment.setUser(user_id);
+        }else {
+            String user_id = user.getId();
+            comment.setUser(user_id);
+        }
         comment.setTour(tour_id);
-        comment.setUser(user_id);
         commentService.commentR(comment);
         Long tid = tour_id.getId();
         re.addAttribute("city", city);
@@ -141,6 +191,8 @@ public class MainController {
                              @RequestParam("firstimage") String firstimage,
                              @RequestParam("firstimage2") String firstimage2,
                              @RequestParam("city") String city,
+                             @RequestParam("areacode") String areacode,
+                             @RequestParam("sigungucode") String sigungucode,
                              RedirectAttributes re){
         Tour tour = tourService.findOne(id);
         tour.setTitle(title);
@@ -151,8 +203,10 @@ public class MainController {
         tourRepository.save(tour);
         re.addAttribute("city", city);
         re.addAttribute("id", id);
+        re.addAttribute("sigungucode", sigungucode);
+        re.addAttribute("areacode", areacode);
         System.out.println(id+city);
-        return "redirect:/detail";
+        return "redirect:/category";
     }
 
     @RequestMapping("addTour")
@@ -227,12 +281,33 @@ public class MainController {
     }
 
     @GetMapping("/category")
-    public String category2(@RequestParam("city") String city, @RequestParam("areacode") String areacode, @RequestParam("sigungucode") String sigungucode, Model model) {
-        List<Tour> tlist = tourService.findRegion(areacode, sigungucode);
+    public String category2(@PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+                            @RequestParam("city") String city,
+                            @RequestParam("areacode") String areacode,
+                            @RequestParam("sigungucode") String sigungucode,
+                            Model model) {
+
+        Page<Tour> tlist = tourService.findRegion(areacode, sigungucode, pageable);
+
+
+        int nowPage = tlist.getNumber(); // 현재 페이지 번호 (0부터 시작)
+        int totalPages = tlist.getTotalPages(); // 전체 페이지 수
+        int blockLimit = 5; // 페이지 블럭 크기
+        int currentBlock = nowPage / blockLimit;
+
+        int startPage = currentBlock * blockLimit ; // ex) 0, 5, 10
+        int endPage = Math.min(startPage + blockLimit -1, totalPages-1);
+        if(totalPages ==0){
+            endPage = 0;
+        }
         model.addAttribute("city", city);
         model.addAttribute("areacode", areacode);
         model.addAttribute("sigungucode", sigungucode);
         model.addAttribute("tlist", tlist);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages);
 
         System.out.println("/category 컨트롤러 실행됨, areacode: "+areacode+" sugungucode: "+sigungucode);
 
@@ -295,12 +370,31 @@ public class MainController {
 
     //    @ResponseBody
     @PostMapping("/categoryView")
-    public String categoryV(@RequestParam("num") String contenttypeid, @RequestParam("areacode") String areacode, @RequestParam("sigungucode") String sigungucode, Model model) {
-        List<Tour> tlist = tourService.findCatecory(contenttypeid, areacode, sigungucode);
-        model.addAttribute("tlist", tlist);
-        return "tour/city::#categoryTable";
-    }
+    public String categoryV(@PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+                            @RequestParam("num") String contenttypeid,
+                            @RequestParam("areacode") String areacode,
+                            @RequestParam("sigungucode") String sigungucode,
+                            @RequestParam("city") String city,
+                            Model model) {
+        Page<Tour> tlist = tourService.findCatecory(contenttypeid, areacode, sigungucode,pageable);
+        int nowPage = tlist.getNumber(); // 현재 페이지 번호 (0부터 시작)
+        int totalPages = tlist.getTotalPages(); // 전체 페이지 수
+        int blockLimit = 5; // 페이지 블럭 크기
+        int currentBlock = nowPage / blockLimit;
 
+        int startPage = currentBlock * blockLimit ; // ex) 0, 5, 10
+        int endPage = Math.min(startPage + blockLimit -1, totalPages-1);
+        if(totalPages ==0){
+            endPage = 0;
+        }
+        model.addAttribute("tlist", tlist);
+        model.addAttribute("city", city);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages);
+        return "tour/city :: categoryTableFragment";
+    }
 
 
     @ResponseBody
