@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
   <title>오늘 뭐하지 추가</title>
   <style>
     body {
@@ -11,13 +12,14 @@
       margin: 0;
       padding: 0;
     }
-    .container {
-      max-width: 480px;
+    .containerA {
+      max-width: 650px;
       margin: 40px auto;
       background: #fff;
       padding: 2rem 2.5rem;
       border-radius: 8px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+
     }
     h2 {
       font-weight: 700;
@@ -25,6 +27,7 @@
       color: #333;
       margin-bottom: 1.5rem;
       text-align: center;
+
     }
     label {
       display: block;
@@ -44,11 +47,7 @@
       font-family: inherit;
       resize: vertical;
     }
-    input[type="text"]:focus, select:focus, textarea:focus {
-      border-color: #2563eb;
-      outline: none;
-      box-shadow: 0 0 6px rgba(37, 99, 235, 0.5);
-    }
+
     input[readonly] {
       background-color: #f0f0f0;
       color: #808080;
@@ -74,6 +73,7 @@
     /* 선택박스 주변 마진 통일 */
     .mb-4 {
       margin-bottom: 1.25rem;
+
     }
     .block {
       display: block;
@@ -81,13 +81,16 @@
     .font-medium {
       font-weight: 600;
     }
+    .sel{
+      height:40px;
+    }
   </style>
 </head>
 <body>
 <div th:replace="~{fragments/admintop :: headerFragment}"></div>
 
-<div class="container">
-  <h2>오늘 뭐하지 추가</h2>
+<div class="containerA">
+  <h2 class="text-xl font-bold mb-4">오늘 뭐하지 추가</h2>
   <form action="/what2doR" method="post">
 
     <label for="name">활동명</label>
@@ -95,7 +98,7 @@
 
     <div class="mb-4">
       <label for="mood" class="block font-medium">현재 기분</label>
-      <select name="mood" id="mood" class="" required>
+      <select name="mood" id="mood" class="sel" required>
         <option value="기분좋아요">기분 좋아요</option>
         <option value="그냥그래요">그냥 그래요</option>
         <option value="피곤해요">피곤해요</option>
@@ -106,7 +109,7 @@
 
     <div class="mb-4">
       <label for="tags" class="block font-medium">선호하는 활동 유형</label>
-      <select name="tags" id="tags" required>
+      <select name="tags" id="tags" class="sel" required>
         <option value="실내">실내</option>
         <option value="실외">실외</option>
         <option value="문화/예술">문화/예술</option>
@@ -116,7 +119,7 @@
 
     <div class="mb-4">
       <label for="companions" class="block font-medium">동행인</label>
-      <select name="companions" id="companions" required>
+      <select name="companions" id="companions" class="sel" required>
         <option value="혼자">혼자</option>
         <option value="친구">친구</option>
         <option value="연인">연인</option>
@@ -126,7 +129,7 @@
 
     <div class="mb-4">
       <label for="weather" class="block font-medium">날씨</label>
-      <select name="weather" id="weather" required>
+      <select name="weather" id="weather" class="sel" required>
         <option value="맑음">맑음</option>
         <option value="구름 많음">구름 많음</option>
         <option value="흐림">흐림</option>

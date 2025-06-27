@@ -2,13 +2,14 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
+  <script src="https://cdn.tailwindcss.com"></script>
   <title>글쓰기</title>
   <style>
     body {
         font-family: 'Segoe UI', sans-serif;
         background-color: #f9fafc;
-        margin: 0;
-        padding: 2rem;
+<!--        margin: 0;-->
+<!--        padding: 2rem;-->
     }
 
     .main-container {
@@ -49,18 +50,17 @@
 
     input[type="submit"] {
         margin-top: 1.5rem;
-        background-color: #0d6efd;
+        background-color: #1A2E45;
         color: white;
         padding: 0.8rem 1.5rem;
         font-size: 15px;
         border: none;
         border-radius: 8px;
         cursor: pointer;
+
     }
 
-    input[type="submit"]:hover {
-        background-color: #0b5ed7;
-    }
+
 
   </style>
 </head>
@@ -70,10 +70,10 @@
 <div th:replace="~{fragments/admintop :: headerFragment}"></div>
 
 <div class="main-container">
-  <h2>자유게시판 글쓰기</h2>
+  <h2 class="text-xl font-bold mb-4">자유게시판 글쓰기</h2>
   <form action="/adminregister" method="post" enctype="multipart/form-data">
     <label for="area">지역 선택</label>
-    <select name="area" id="area">
+    <select name="area" id="area" style="height:45px;">
       <option value="공지사항">공지사항</option>
       <option>==선택==</option>
       <option value="전체보기">전체보기</option>
@@ -100,7 +100,7 @@
     <input type="text" name="title" id="title" placeholder="제목을 입력하세요">
 
     <label for="content">내용</label>
-    <textarea name="content" id="content" placeholder="내용을 입력해주세요."></textarea>
+    <textarea name="content" id="content" placeholder=" 내용을 입력해주세요."></textarea>
 
     <label for="files">첨부파일</label>
     <input type="file" name="files" id="files" multiple>
@@ -111,6 +111,15 @@
 
 <!-- 사용자 하단 푸터 -->
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+<script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+<script>
+
+  CKEDITOR.replace('content', {
+      language: 'ko',
+      skin: 'moono-lisa'
+  });
+</script>
 
 </body>
 </html>

@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>회원 목록 관리</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
           font-family: 'Segoe UI', sans-serif;
           background-color: #f7f9fc;
-          margin: 0;
-          padding: 2rem;
+<!--          margin: 0;-->
+<!--          padding: 2rem;-->
         }
 
         .main-container {
@@ -39,19 +40,16 @@
         }
 
         form#searchForm button {
-          background-color: #0d6efd;
+          background-color: #1a2e45;
           color: white;
           border: none;
           padding: 0.5rem 1rem;
           border-radius: 6px;
           cursor: pointer;
           font-size: 14px;
-          margin-left: 8px;
+<!--          margin-left: 8px;-->
         }
 
-        form#searchForm button:hover {
-          background-color: #0b5ed7;
-        }
 
         .error-msg {
           color: red;
@@ -129,7 +127,7 @@
 
 <!-- 메인 콘텐츠 -->
 <div class="main-container">
-    <h2>회원 목록 관리</h2>
+    <h2 class="text-xl font-bold mb-4">회원 목록 관리</h2>
 
     <!-- 검색 -->
     <form id="searchForm">

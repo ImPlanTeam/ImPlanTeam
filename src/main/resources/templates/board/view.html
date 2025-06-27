@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>게시글 보기</title>
-  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/common.css?after}">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <style>
     body {
@@ -13,12 +14,14 @@
     }
 
     .container {
-      max-width: 900px;
+      position: relative; /* 자식 요소 위치 기준 */
+      width: 500px;
       margin: auto;
       background: white;
       padding: 2rem 2.5rem;
       border-radius: 1rem;
       box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+
     }
 
     .back-link {
@@ -76,15 +79,7 @@
     stroke: red;
   }
 
-    .container {
-  position: relative; /* 자식 요소 위치 기준 */
-  max-width: 900px;
-  margin: auto;
-  background: white;
-  padding: 2rem 2.5rem 4rem; /* 아래쪽 패딩 추가 */
-  border-radius: 1rem;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
+
 
 .action-buttons {
   position: absolute;
@@ -112,10 +107,10 @@
 
 <div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
-<div class="container">
+<div class="container" style="width:850px;">
   <a th:href="@{/listView}" class="back-link">← 목록으로 돌아가기</a>
 
-  <h2 th:text="${board.title}">제목</h2>
+  <h2 th:text="${board.title}" class="text-2xl font-semibold">제목</h2>
 
   <div class="info">
     지역: <span th:text="${board.area}"></span> |
@@ -130,18 +125,21 @@
     </div>
   </div>
 
-  <div class="content" th:text="${board.content}"></div>
+  <div class="content" th:utext="${board.content}"></div>
 
   <div class="button-group">
-<!--    <button type="button" th:onclick="|likeIt(${board.num})|">좋아요</button>-->
-    <svg id="heartBtn" width="24" height="24" fill="none"
-         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-         viewBox="0 0 24 24" th:onclick="|likeIt(${board.num})|" th:classappend="${like} ? 'liked'">
-      <path d="M12 21s-6.4-5.3-9-9c-2-3 0-7 4-7 2.1 0 3.4 1.4 5 3 1.6-1.6 2.9-3 5-3 4 0 6 4 4 7-2.6 3.7-9 9-9 9z"/>
-    </svg>
-
-
-    <span class="like-count" id="CNT" th:text="${board.like_count}">0</span>
+    <table>
+      <tr>
+        <td><svg id="heartBtn" width="24" height="24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+             viewBox="0 0 24 24" th:onclick="|likeIt(${board.num})|" th:classappend="${like} ? 'liked'">
+          <path d="M12 21s-6.4-5.3-9-9c-2-3 0-7 4-7 2.1 0 3.4 1.4 5 3 1.6-1.6 2.9-3 5-3 4 0 6 4 4 7-2.6 3.7-9 9-9 9z"/>
+        </svg></td>
+        <td></td>
+        <td><span class="like-count" id="CNT" th:text="${board.like_count}">0</span></td>
+      </tr>
+    </table>
+  </div>
 
 
     <div class="action-buttons"th:if="${board.writer == session.user.id}">
@@ -151,8 +149,9 @@
       <span class="divider"> | </span>
         <span class="action-text" th:onclick="|deleteB(${board.num})|"> 삭제</span>
     </div>
-  </div>
+
 </div>
+
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
 
 <script>

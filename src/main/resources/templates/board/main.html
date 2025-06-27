@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>글쓰기</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
 
 
@@ -61,7 +63,7 @@
 <div th:replace="~{fragments/top :: headerFragment}"></div>
 
 <div class="main-container">
-    <h2>자유게시판 글쓰기</h2>
+    <h2 class="text-2xl font-semibold">자유게시판 글쓰기</h2>
     <form action="/register" method="post" enctype="multipart/form-data">
         <label for="area">지역 선택</label>
         <select name="area" id="area">
@@ -99,6 +101,14 @@
 
 <!-- 사용자 하단 푸터 -->
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+<script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('content', {
+        language: "ko",
+        skin: "moono-lisa",
+    });
+</script>
 
 </body>
 </html>

@@ -1,10 +1,7 @@
 package What2Do.controller;
 
 
-import What2Do.domain.Board;
-import What2Do.domain.BoardFile;
-import What2Do.domain.Tour;
-import What2Do.domain.User;
+import What2Do.domain.*;
 import What2Do.service.BoardService;
 import What2Do.service.TourService;
 import jakarta.persistence.EntityManager;

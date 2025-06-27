@@ -4,7 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title th:text>가게 상세</title>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css?after}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
@@ -16,7 +17,7 @@
           color: #1f2937;
         }
 
-        .container {
+        .containerA {
           max-width: 1000px;
           margin: 40px auto;
           padding: 20px;
@@ -26,7 +27,7 @@
         .thumbnail {
           width: 100%;
           height: 580px;
-          object-fit: cover;
+          object-fit: contain;
           border-radius: 12px;
           margin-bottom: 24px;
         }
@@ -36,7 +37,7 @@
           font-weight: 800;
           color: #111827;
           margin-bottom: 20px;
-          border-left: 6px solid #3b82f6;
+          border-left: 6px solid #1a2e45;
           padding-left: 12px;
         }
 
@@ -101,7 +102,7 @@
         }
 
         .comment-section {
-          max-width: 800px;
+          width: 100%;
           margin: 40px auto;
           background-color: #ffffff;
           padding: 24px;
@@ -204,6 +205,48 @@
             display: flex;
             gap: 10px;
         }
+
+        .btnUpdate{
+            cursor: pointer;
+        }
+
+        .card-container {
+            max-width: 1200px;
+            margin: 0 auto 60px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+.card {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+        .card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .card img {
+            width: 100%;
+            height: 160px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            background-color: #f9fafb;
+        }
+
+        .card p {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 16px 0;
+        }
     </style>
 </head>
 <body>
@@ -211,8 +254,8 @@
 
 <div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
-<div class="container">
-    <div class="page-title" th:text="${tour.title}"></div>
+<div class="containerA">
+    <div class="page-title" th:text="${tour.title}" id="tourTitle"></div>
 
     <div th:if="${session.user.getRole() == 'ADMIN'}">
         <div id="btn">
@@ -221,9 +264,9 @@
             </a>
 
             <form th:action="@{/deleteTour/{id}(id=${tour.id})}" method="get" style="display:inline;">
-                <input type="hidden" th:value="${city}" name="city">
-                <input type="hidden" th:value="${tour.areacode}" name="areacode">
-                <input type="hidden" th:value="${tour.sigungucode}" name="sigungucode">
+                <input type="hidden" th:value="${tour.areacode}" name="areacode" >
+                <input type="hidden" th:value="${tour.sigungucode}" name="sigungucode" >
+
 
                 <button type="submit" class="action-btn">삭제</button>
             </form>
@@ -233,33 +276,41 @@
     <img th:if="${tour.firstimage != null}" th:src="${tour.firstimage}" alt="사진" class="thumbnail"/>
     <div class="overview" th:text="${tour.overview}"></div>
     <div class="address" th:text="${tour.addr1}"></div>
+    <input type="hidden" th:value="${tour.areacode}" name="areacode" id="areacode">
+    <input type="hidden" th:value="${tour.sigungucode}" name="sigungucode" id="sigungucode">
+    <input type="hidden" th:value="${city}" id="city2">
 
     <div class="map_wrap">
         <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
         <div class="hAddr"></div>
     </div>
 
-    <svg id="heartBtn" width="24" height="24" fill="none"
-         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-         viewBox="0 0 24 24" th:onclick="|likeT(${tour.id})|" th:classappend="${like} ? 'liked'">
-        <path d="M12 21s-6.4-5.3-9-9c-2-3 0-7 4-7 2.1 0 3.4 1.4 5 3 1.6-1.6 2.9-3 5-3 4 0 6 4 4 7-2.6 3.7-9 9-9 9z"/>
-    </svg>
-    <span class="like-count" id="CNT" th:text="${tour.like_count}">0</span>
+    <div style="display: flex; align-items: center;">
+        <svg id="heartBtn" width="24" height="24" fill="none"
+             stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+             viewBox="0 0 24 24" th:onclick="|likeT(${tour.id})|" th:classappend="${like} ? 'liked'">
+            <path d="M12 21s-6.4-5.3-9-9c-2-3 0-7 4-7 2.1 0 3.4 1.4 5 3 1.6-1.6 2.9-3 5-3 4 0 6 4 4 7-2.6 3.7-9 9-9 9z"/>
+        </svg>
+        <p class="like-count" id="CNT" th:text="${tour.like_count}">0</p>
+    </div>
+
+    <h2 class="text-2xl font-semibold" style="margin-top:20px">더 둘러보기</h2>
+    <div class="card-container"></div>
 
 
     <div class="comment-section">
-        <div class="comment-title">댓글</div>
+        <div class="comment-title">댓글(<span th:text="${count}"></span>)</div>
         <div th:each="clist : ${clist}" class="comment-box">
             <div class="comment-header">
                 <span class="comment-user" th:text="${clist?.user}"></span>
-                <span class="comment-date" th:text="${#strings.substring(clist?.indate,0,16)}"></span>
                 <div th:id="'btnBefore-' + ${clist.no}">
-                    <button type="button" th:if="${session.user.id} == ${clist.user}" th:onclick="modifyComment([[${clist.no}]])" class="action-btn edit-btn">수정</button>
-                    <span> | </span>
-                    <button type="button" th:if="${session.user.id} == ${clist.user}" th:onclick="deleteComment([[${clist.no}]])" class="action-btn edit-btn">삭제</button>
+                    <button type="button" th:onclick="modifyComment([[${clist.no}]])" class="action-btn edit-btn" th:if="${session.user.id} == ${clist.user} or ${clist.user} == 관리자 ">수정</button>
+                    <span th:if="${session.user.id} == ${clist.user} or ${clist.user} == 관리자"> | </span>
+                    <button type="button" th:if="${session.user.id} == ${clist.user} or ${session.user.name} == 관리자 "  th:onclick="deleteComment([[${clist.no}]])" class="action-btn edit-btn">삭제</button>
                 </div>
             </div>
             <div class="comment-content" th:text="${clist?.content}" th:id="'content-' + ${clist.no}"></div>
+            <span class="comment-date" th:text="${#strings.substring(clist?.indate,0,16)}"></span>
 
         </div>
     </div>
@@ -268,7 +319,6 @@
         <form th:action="@{/commentR(tour_id=${tour.id}, city=${city})}" onsubmit="return inpValidateFn();" method="post" class="comment-form">
             <textarea name="content" rows="5" placeholder="내용을 입력해주세요." id="contentB"></textarea>
             <input type="hidden" th:value="${tour.id}" name="tour_id">
-            <input type="hidden" th:value="${session.user.id}" name="user_id">
             <button type="submit">댓글 저장</button>
         </form>
     </div>
@@ -280,6 +330,7 @@
 
 <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=fca66437ffd757b4f7019de36217ec4b&libraries=services"></script>
 <script>
+
     window.onload = function () {
       var mapContainer = document.getElementById('map'),
           mapOption = {
@@ -312,6 +363,39 @@
           infowindow.open(map, marker);
         }
       });
+
+
+      const title=document.getElementById('tourTitle').innerText;
+      const sigungucode=document.getElementById('sigungucode').value;
+      const areacode=document.getElementById('areacode').value;
+      const city=document.getElementById('city2').value;
+      $.ajax({
+                type:'GET',
+                url:'http://127.0.0.1:5000/getTop3',
+                data:
+                    {mainTitle:title,
+                    sigungucode:sigungucode,
+                    areacode:areacode},
+                dataType: "json",  //서버가 응답해 주는 형식
+                success: function(recommend){   //list안에 json형식이 있다
+                    for(var d of recommend){    //list이기 떄문에 반복해서 실행한다
+                        var innerHtml = "";
+                        var innerHtml = `
+                              <div class="card">
+                                  <a href="/detail?id=${d.id}&city=${city}" >
+                                      <img src="${d.firstimage}" alt="${d.title}" >
+                                      <p>${d.title}</p>
+                                  </a>
+                              </div>
+                        `;
+                        $('.card-container').append(innerHtml);
+                    }
+                },
+                error:function(){
+                    console.log('실패')
+                }
+            });
+
     };
 
     function deleteComment(no){

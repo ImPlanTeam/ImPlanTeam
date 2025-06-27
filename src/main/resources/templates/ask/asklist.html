@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>1:1 문의 리스트</title>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
     <style>
-
-
         h3 {
             text-align: center;
             color: #333;
         }
-
         .container {
             max-width: 1000px;
             margin: 0 auto;
@@ -22,8 +18,12 @@
             width: 100%;
             border-collapse: collapse;
             background-color: white;
-            box-shadow: 0 0 10px rgba(0,0,0,0.05);
             overflow: hidden;
+            text-align: center;
+            max-width: 1000px;
+            margin: auto;
+            background: #ffffff;
+            padding: 30px;
         }
 
         .ask-table th, .ask-table td {
@@ -37,10 +37,7 @@
             color: #333;
         }
 
-
-
         .btn-write {
-            display: inline-block;
             margin-bottom: 20px;
             padding: 10px 18px;
             background-color: #1a2e45;
@@ -56,24 +53,48 @@
         }
 
         .pagination a, .pagination strong {
-             margin: 0 5px;
+            margin: 0 5px;
             padding: 6px 10px;
             border-radius: 5px;
+            color: #333;
+            text-decoration: none;
+            border: 1px solid #ccc;
         }
 
         .pagination strong {
-              color: white;
-              background-color: #1a2e45;
+            background-color: #1a2e45;
+            color: white;
+            border-color: #1a2e45;
         }
 
+        .pagination a:hover {
+            background-color: #e9f2ff;
+        }
+
+        .status-pending {
+            color: #808080;
+        }
+.ask-register-button {
+    padding: 12px 14px;
+    background-color: #1a2e45;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
 
     </style>
+    <link rel="stylesheet" th:href="@{/css/common.css?after}">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 <div class="container">
-    <h3>1:1 문의 리스트</h3>
-    <a th:href="@{/askjoin}" class="btn-write">문의 등록하기</a>
+    <h3 class="text-2xl font-semibold">1:1 문의 리스트</h3>
+    <div style="width: 100%; max-width: 1000px; margin: auto; text-align: right; margin-bottom: 10px;">
+        <button onclick="location.href='/askjoin'" class="ask-register-button">문의 등록하기</button>
+    </div>
 
     <table class="ask-table">
         <thead>
@@ -81,7 +102,6 @@
             <th>번호</th>
             <th>제목</th>
             <th>날짜</th>
-            <th>공개 여부</th>
             <th>작성자</th>
             <th>상태</th>
         </tr>
@@ -93,9 +113,12 @@
                 <a th:href="@{'/viewDetail?askNo=' + ${ask.no}}" th:text="${ask.title}"></a>
             </td>
             <td th:text="${#strings.substring(ask.indate,0,10)}"></td>
-            <td th:text="${ask.vicibility}"></td>
+
             <td th:text="${ask.user.id}"></td>
-            <td th:text="${statusMap[ask.no]}">검토중</td>
+            <td>
+                <span th:if="${statusMap[ask.no]} == '검토중'" class="status-badge status-pending">검토중</span>
+                <span th:if="${statusMap[ask.no]} == '답변완료'" class="status-badge status-done">답변완료</span>
+            </td>
         </tr>
         </tbody>
     </table>

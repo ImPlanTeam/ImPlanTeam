@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>자유게시판</title>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css?after}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js"
             integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
             crossorigin="anonymous"></script>
     <style>
-        h3{
-            text-align: center;
-            color: #333;
-        }
+
         .board-container {
             max-width: 1000px;
             margin: auto;
@@ -88,14 +86,25 @@
             background-color: #fff7e6 !important;
             font-weight: bold;
         }
+        #btnSearch {
+            border: 1px solid;
+            width: 60px;
+            height: 30px;
+            font-size: 15px;
+            text-align: center;
+            background: #1a2e45;
+            color:#F9F7F7;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 <div th:replace="~{fragments/top :: headerFragment}"></div>
 <div class="board-container">
-    <h3>자유게시판</h3>
+    <h2 class="text-2xl font-semibold" style="text-align: center;">자유게시판</h2>
 
-    <div class="filter-section">
+    <div class="filter-section" style="height:30px;">
         <select name="area" onchange="changeBoard(value)" id="area">
             <option>==선택==</option>
             <option value="전체보기">전체보기</option>
@@ -119,8 +128,8 @@
         </select>
 
         <form th:action="@{/listView}" method="get" style="display: flex; gap: 10px;">
-            <input type="text" name="searchKeyword" placeholder="검색어(제목)를 입력하세요.">
-            <button type="submit">검색</button>
+            <input type="text" name="searchKeyword" placeholder="검색어(제목)를 입력하세요." style="padding:5px; width:250px; border: solid 1px; border-radius: 3px;">
+            <button type="submit" id="btnSearch">검색</button>
         </form>
     </div>
 

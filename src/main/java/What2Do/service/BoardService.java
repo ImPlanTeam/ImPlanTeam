@@ -1,14 +1,9 @@
 package What2Do.service;
 
 
-import What2Do.domain.Board;
-import What2Do.domain.BoardFile;
-import What2Do.domain.LikeIt;
-import What2Do.domain.User;
-import What2Do.repository.BoardRepository;
-import What2Do.repository.FileRepository;
-import What2Do.repository.LikeRepository;
-import What2Do.repository.UserRepository;
+import What2Do.domain.*;
+import What2Do.repository.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;

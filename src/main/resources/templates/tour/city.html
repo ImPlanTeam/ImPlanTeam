@@ -4,132 +4,133 @@
 <head>
     <meta charset="UTF-8" />
     <title>오늘 뭐하지?</title>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css?after}" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
-        /* 기본 바디 스타일 */
+        /* 기존 CSS 유지 */
         body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          margin: 0;
-          padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
         }
 
-        /* 체크박스 폼 영역 */
-        form {
-          max-width: 800px;
-          margin: 40px auto 20px auto;
-          text-align: center;
-        }
 
-        /* 체크박스 라벨 */
+
         .checkbox-label {
-          display: inline-block;
-          cursor: pointer;
-          user-select: none;
-          margin: 0 10px 12px 10px;
+            display: inline-block;
+            cursor: pointer;
+            user-select: none;
+            margin: 0 10px 12px 10px;
         }
 
-        /* 라디오 버튼 숨기기 */
         .checkbox-label input[type="radio"] {
-          display: none;
+            display: none;
         }
 
-        /* 체크박스 텍스트 스타일 */
         .checkbox-label span {
-          display: inline-block;
-          padding: 10px 26px;
-          border: 2px solid #1a2e45; /* 파란색 */
-          border-radius: 24px;
-          font-weight: 600;
-          font-size: 16px;
-          color: #1a2e45;
-          transition: all 0.3s ease;
-          background-color: white;
-          box-shadow: 0 2px 6px rgb(59 130 246 / 0.2);
+            display: inline-block;
+            padding: 10px 26px;
+            border: 2px solid #1a2e45;
+            border-radius: 24px;
+            font-weight: 600;
+            font-size: 16px;
+            color: #1a2e45;
+            transition: all 0.3s ease;
+            background-color: white;
+            box-shadow: 0 2px 6px rgb(59 130 246 / 0.2);
         }
 
-        /* 선택된 경우 */
         .checkbox-label input[type="radio"]:checked + span {
-          background-color: #3b82f6; /* 파란색 배경 */
-          color: white;
-          border-color: #3b82f6;
-          box-shadow: 0 4px 12px rgb(59 130 246 / 0.5);
+            background-color: #1a2e45;
+            color: white;
+            border-color: #1a2e45;
+            box-shadow: 0 4px 12px rgb(59 130 246 / 0.5);
         }
 
-        /* 마우스 오버 */
-        .checkbox-label span:hover {
-          background-color: #dbeafe; /* 연한 파랑 */
-          color: #1e40af; /* 진한 파랑 */
-        }
-
-        /* 카드 컨테이너 */
         .card-container {
-          max-width: 1200px;
-          margin: 0 auto 60px auto;
-          padding: 0 20px;
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-          gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto 60px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 24px;
         }
 
-        /* 카드 스타일 */
         .card {
-          background-color: white;
-          border-radius: 16px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-          overflow: hidden;
-          transition: box-shadow 0.3s ease;
-          cursor: pointer;
-          text-decoration: none;
-          color: inherit;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
         }
 
         .card:hover {
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
 
-        /* 카드 이미지 */
         .card img {
-          width: 100%;
-          height: 160px;
-          object-fit: contain;
-          margin-bottom: 12px;
-          background-color: #f9fafb; /* 약간 밝은 배경 */
+            width: 100%;
+            height: 160px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            background-color: #f9fafb;
         }
 
-        /* 카드 텍스트 */
         .card p {
-          text-align: center;
-          font-size: 18px;
-          font-weight: 700;
-          margin: 0 0 16px 0;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0 0 16px 0;
         }
+
         .category-wrapper {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;  /* 가운데 정렬 */
+            justify-content: center;
             align-items: center;
             margin-top: 30px;
             margin-bottom: 40px;
             gap: 12px;
         }
-  #add {
-  background-color: #1a2e45;
-  color: white;
-  border: 2px solid #1a2e45;
-  font-size: 20px;
-  padding: 10px 20px;
-  border-radius: 24px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
-  font-weight: 600;
-  line-height: 1;
-  height: 44px;
-}
 
+        #add {
+            background-color: #1a2e45;
+            color: white;
+            border: 2px solid #1a2e45;
+            font-size: 20px;
+            padding: 10px 20px;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.2);
+            font-weight: 600;
+            line-height: 1;
+            height: 44px;
+        }
+
+        .pagination {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .pagination a,
+        .pagination strong {
+            margin: 0 5px;
+            padding: 6px 10px;
+            border-radius: 5px;
+        }
+
+        .pagination strong {
+            color: white;
+            background-color: #1a2e45;
+        }
     </style>
 </head>
+
 <body class="bg-gray-100">
 
 <div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
@@ -138,110 +139,144 @@
     <div th:text="${city}">도시명</div>
 </h1>
 
-<!-- 카테고리 라디오 버튼 영역 감싸기 -->
+<!-- 카테고리 라디오 버튼 영역 -->
 <div class="category-wrapper">
     <label class="checkbox-label">
         <input type="radio" name="category" value="전체"
-               th:onclick="|location.href='@{/category(city=${city},areacode=${tlist[0].areacode},sigungucode=${tlist[0].sigungucode})}'|"/>
+               th:data-city="${city}"
+               th:data-areacode="${areacode}"
+               th:data-sigungucode="${sigungucode}"
+               th:data-category="전체"
+               onclick="categoryC(this, 0)" />
         <span>전체</span>
     </label>
     <label class="checkbox-label">
-        <input type="radio" name="category" value="관광지"
-               th:data-num="12"
-               th:data-areacode="${tlist[0].areacode}"
-               th:data-sigungucode="${tlist[0].sigungucode}"
-               onclick="categoryC(this)" />
+        <input type="radio" name="category" value="관광지" th:data-city="${city}" th:data-num="12" th:data-areacode="${areacode}"
+               th:data-sigungucode="${sigungucode}" onclick="categoryC(this,0)" />
         <span>관광지</span>
     </label>
-    <!-- 나머지 항목도 동일 -->
     <label class="checkbox-label">
-        <input type="radio" name="category" value="문화시설"
-               th:data-num="14"
-               th:data-areacode="${tlist[0].areacode}"
-               th:data-sigungucode="${tlist[0].sigungucode}"
-               onclick="categoryC(this)" />
+        <input type="radio" name="category" value="문화시설" th:data-city="${city}" th:data-num="14" th:data-areacode="${areacode}"
+               th:data-sigungucode="${sigungucode}" onclick="categoryC(this,0)" />
         <span>문화시설</span>
     </label>
     <label class="checkbox-label">
-        <input type="radio" name="category" value="행사/공연/축제"
-               th:data-num="15"
-               th:data-areacode="${tlist[0].areacode}"
-               th:data-sigungucode="${tlist[0].sigungucode}"
-               onclick="categoryC(this)" />
+        <input type="radio" name="category" value="행사/공연/축제" th:data-city="${city}" th:data-num="15" th:data-areacode="${areacode}"
+               th:data-sigungucode="${sigungucode}" onclick="categoryC(this,0)" />
         <span>행사/공연/축제</span>
     </label>
     <label class="checkbox-label">
-        <input type="radio" name="category" value="먹거리"
-               th:data-num="39"
-               th:data-areacode="${tlist[0].areacode}"
-               th:data-sigungucode="${tlist[0].sigungucode}"
-               onclick="categoryC(this)" />
+        <input type="radio" name="category" value="먹거리" th:data-city="${city}" th:data-num="39" th:data-areacode="${areacode}"
+               th:data-sigungucode="${sigungucode}" onclick="categoryC(this,0)" />
         <span>먹거리</span>
     </label>
     <label class="checkbox-label">
-        <input type="radio" name="category" value="레포츠"
-               th:data-num="28"
-               th:data-areacode="${tlist[0].areacode}"
-               th:data-sigungucode="${tlist[0].sigungucode}"
-               onclick="categoryC(this)" />
+        <input type="radio" name="category" value="레포츠" th:data-city="${city}" th:data-num="28" th:data-areacode="${areacode}"
+               th:data-sigungucode="${sigungucode}" onclick="categoryC(this,0)" />
         <span>레포츠</span>
     </label>
     <label class="checkbox-label">
-        <input type="radio" name="category" value="숙박"
-               th:data-num="32"
-               th:data-areacode="${tlist[0].areacode}"
-               th:data-sigungucode="${tlist[0].sigungucode}"
-               onclick="categoryC(this)" />
+        <input type="radio" name="category" value="숙박" th:data-city="${city}" th:data-num="32" th:data-areacode="${areacode}"
+               th:data-sigungucode="${sigungucode}" onclick="categoryC(this,0)" />
         <span>숙박</span>
     </label>
-    <label class="checkbox-label" th:if="${session.user?.getRole() == 'ADMIN'}">
+    <label class="checkbox-label" th:if="${session.user?.role == 'ADMIN'}">
         <a th:href="@{/addTour(city=${city}, areacode=${areacode}, sigungucode=${sigungucode})}">
-            <span style="padding: 10px 20px; font-size: 20px;" id="add">＋</span>
+            <span id="add" style="padding: 10px 20px; font-size: 20px;">＋</span>
         </a>
     </label>
 </div>
 
-
-<div class="card-container" id="categoryTable">
-    <tr th:each="tlist : ${tlist}">
-        <a th:href="@{/detail(id=${tlist.id}, city=${city})}" class="card"  >
-            <img th:src="${tlist.firstimage2}" alt="" class="pic" />
-            <p th:text="${tlist.title}"></p>
+<!-- 변경되는 목록 + 페이징 부분 (fragment로 지정) -->
+<div id="categoryTable" th:fragment="categoryTableFragment">
+    <div class="card-container">
+        <a th:each="item : ${tlist}" th:href="@{/detail(id=${item.id}, city=${city})}" class="card">
+            <img th:src="${item.firstimage2}" alt="" class="pic" />
+            <p th:text="${item.title}"></p>
         </a>
-    </tr>
+    </div>
 
+    <div class="pagination" id="pagination">
+        <a th:if="${startPage > 0}"
+           th:href="@{/category(page=${startPage - 1}, city=${city}, areacode=${areacode}, sigungucode=${sigungucode})}" th:attr="data-page=${startPage - 1}">이전</a>
+        <th:block th:each="page : ${#numbers.sequence(startPage,endPage)}">
+            <a th:if="${page != nowPage}"
+               th:href="@{/category(page=${page}, city=${city}, areacode=${areacode}, sigungucode=${sigungucode})}"
+               th:attr="data-page=${page}"
+               th:text="${page + 1}"></a>
+            <strong th:if="${page == nowPage}" th:text="${page + 1}"></strong>
+        </th:block>
+        <a th:if="${endPage < totalPages - 1}"
+           th:href="@{/category(page=${endPage + 1}, city=${city}, areacode=${areacode}, sigungucode=${sigungucode})}" th:attr="data-page=${endPage + 1}">다음</a>
+    </div>
 
 </div>
 
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
 
-</body>
-</html>
 <script>
-    function categoryC(elem) {
-        const num = elem.dataset.num;
-        const areacode = elem.dataset.areacode;
-        const sigungucode = elem.dataset.sigungucode;
+    function categoryC(elem, page = 0) {
+    const categoryValue = elem.value;
+    const areacode = elem.dataset.areacode;
+    const sigungucode = elem.dataset.sigungucode;
+    const city = elem.dataset.city;
+
+    if (categoryValue === "전체") {
+    // 전체는 서버 페이지 이동
+    const url = `/category?page=${page}&city=${city}&areacode=${areacode}&sigungucode=${sigungucode}`;
+    window.location.href = url; // category=전체 제거
+    return;
+}
+
+    const num = elem.dataset.num;
 
     $.ajax({
-      type: "post",
-      url: "/categoryView",
-      data:
-      { num : num,
-      areacode : areacode,
-      sigungucode : sigungucode
-       },
-
-     success: function(tlist) {
-        $("#categoryTable").replaceWith(tlist);
-
-      },
-      error: function() {
-       alert("오류가 발생했습니다.");
-     }
+        type: "POST",
+        url: "/categoryView",
+        data: { num, areacode, sigungucode, city, page },
+        success: function(fragmentHtml) {
+            $("#categoryTable").replaceWith(fragmentHtml);
+        },
+        error: function() {
+            alert("오류가 발생했습니다.");
+        }
     });
-  }
+}
 
+ // 페이징 클릭시 현재 선택된 카테고리 기준으로 다시 AJAX 호출
+ $(document).on("click", ".pagination a", function(e) {
+    e.preventDefault();
+    const page = $(this).data("page");
 
+    const selected = $("input[name='category']:checked");
 
+    // 기본 city, areacode, sigungucode는 hidden input이나 다른 방식으로 가져와도 됨
+    const city = selected.data("city") || '[[${city}]]';
+    const areacode = selected.data("areacode") || '[[${areacode}]]';
+    const sigungucode = selected.data("sigungucode") || '[[${sigungucode}]]';
+
+    if (!selected.length || selected.val() === "전체") {
+        // 전체 선택이거나 선택이 안 되어 있을 때는 전체 페이지 새로고침
+        const url = `/category?page=${page}&city=${city}&areacode=${areacode}&sigungucode=${sigungucode}`;
+        window.location.href = url;
+        return;
+    }
+
+    const num = selected.data("num");
+
+    $.ajax({
+        type: "POST",
+        url: "/categoryView",
+        data: { num, areacode, sigungucode, city, page },
+        success: function(fragmentHtml) {
+            $("#categoryTable").replaceWith(fragmentHtml);
+        },
+        error: function() {
+            alert("오류가 발생했습니다.");
+        }
+    });
+});
 </script>
+</body>
+
+</html>

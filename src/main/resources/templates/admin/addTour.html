@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>관광지 추가</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
@@ -14,7 +15,7 @@
           color: #1f2937;
         }
 
-        .container {
+        .containerA {
           max-width: 880px;
           margin: 60px auto;
           padding: 40px;
@@ -61,13 +62,10 @@
           border-radius: 10px;
           font-size: 0.95rem;
           box-sizing: border-box;
+          height:40px;
         }
 
-        input:focus, select:focus {
-          outline: none;
-          border-color: #3b82f6;
-          box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
+
 
         .inline-input-group {
           display: flex;
@@ -117,9 +115,6 @@
           transition: background-color 0.3s ease;
         }
 
-        .form-actions button:hover {
-          background-color: #243d5a;
-        }
 
         #error-messages {
           color: red;
@@ -145,37 +140,38 @@
     </script>
 </head>
 <body>
-<div class="container">
-    <h2>관광지 추가</h2>
+<div th:replace="~{fragments/admintop :: headerFragment}"></div>
+<div class="containerA">
+    <h2 class="text-xl font-bold mb-4">관광지 추가</h2>
     <form action="saveTour" method="post" onsubmit="return validateForm(this);">
         <input type="hidden" name="city" th:value="${city}">
 
         <div class="form-grid">
             <div class="form-grid-full">
                 <label>상호명</label>
-                <input type="text" name="title" placeholder="상호명을 입력하세요." th:value="${tour.title}"  required>
+                <input type="text" name="title" placeholder=" 상호명을 입력하세요." th:value="${tour.title}"  required>
             </div>
 
             <div class="form-grid-full">
                 <label>설명</label>
-                <input type="text" name="overview" placeholder="설명을 입력하세요." th:value="${tour.overview}"  required>
+                <input type="text" name="overview" placeholder=" 설명을 입력하세요." th:value="${tour.overview}"  required>
             </div>
 
             <div>
                 <label>주소</label>
-                <input type="text" name="addr1" placeholder="주소를 입력하세요." th:value="${tour.addr1}" required>
+                <input type="text" name="addr1" placeholder=" 주소를 입력하세요." th:value="${tour.addr1}" required>
             </div>
 
             <div>
                 <label>상세주소</label>
-                <input type="text" name="addr2" placeholder="상세주소를 입력하세요." th:value="${tour.addr2}" required>
+                <input type="text" name="addr2" placeholder=" 상세주소를 입력하세요." th:value="${tour.addr2}" required>
             </div>
 
             <div class="form-grid-full">
                 <label>컨텐츠 아이디</label>
                 <div class="inline-input-group">
-                    <input type="number" name="contentid" id="contentid" placeholder="컨텐츠 아이디를 입력하세요." th:value="${tour.contentid}" required>
-                    <button class="inline-btn" type="button" id="duplenxContentid" value="1">중복확인</button>
+                    <input type="number" name="contentid" id="contentid" placeholder=" 컨텐츠 아이디를 입력하세요." th:value="${tour.contentid}" required>
+                    <button class="inline-btn" type="button" id="duplenxContentid" value="1" style="background-color:#1a2e45; color:white;">중복확인</button>
                 </div>
                 <p id="error-messages" th:text="${errContentid}"></p>
             </div>
@@ -195,43 +191,43 @@
 
             <div>
                 <label>지역 코드</label>
-                <input type="number" name="areacode" th:value="${areacode}" readonly>
+                <input type="number" name="areacode" th:value=" ${areacode}" readonly>
             </div>
 
             <div>
                 <label>시군구 코드</label>
-                <input type="number" name="sigungucode" th:value="${sigungucode}" readonly>
+                <input type="number" name="sigungucode" th:value=" ${sigungucode}" readonly>
             </div>
 
             <div class="form-grid-full">
                 <label>카테고리</label>
                 <div class="inline-input-group">
-                    <input type="text" name="cat1" placeholder="카테고리1" th:value="${tour.cat1}">
-                    <input type="text" name="cat2" placeholder="카테고리2" th:value="${tour.cat2}">
-                    <input type="text" name="cat3" placeholder="카테고리3" th:value="${tour.cat3}">
+                    <input type="text" name="cat1" placeholder=" 카테고리1" th:value="${tour.cat1}">
+                    <input type="text" name="cat2" placeholder=" 카테고리2" th:value="${tour.cat2}">
+                    <input type="text" name="cat3" placeholder=" 카테고리3" th:value="${tour.cat3}">
                 </div>
             </div>
 
             <div>
                 <label>지도 좌표 (경도)</label>
-                <input type="number" name="mapx" placeholder="mapx (경도)" th:value="${tour.mapx}" required>
+                <input type="number" name="mapx" placeholder="mapx (경도)" th:value=" ${tour.mapx}" required>
             </div>
 
             <div>
                 <label>지도 좌표 (위도)</label>
-                <input type="number" name="mapy" placeholder="mapy (위도)" th:value="${tour.mapy}" required>
+                <input type="number" name="mapy" placeholder="mapy (위도)" th:value=" ${tour.mapy}" required>
             </div>
         </div>
 
         <div class="form-grid-full">
             <label>썸네일 URL</label>
-            <input type="text" name="firstimage2" th:value="${tour.firstimage2}" id="url2" placeholder="썸네일 URL을 입력하세요." oninput="updateImagePreview2(event)">
+            <input type="text" name="firstimage2" th:value="${tour.firstimage2}" id="url2" placeholder=" 썸네일 URL을 입력하세요." oninput="updateImagePreview2(event)">
             <img id="image-preview2" class="image-preview" style="display:none" />
         </div>
 
         <div class="form-grid-full">
             <label>이미지 URL</label>
-            <input type="text" name="firstimage" th:value="${tour.firstimage}" id="url" placeholder="이미지 URL을 입력하세요." oninput="updateImagePreview(event)">
+            <input type="text" name="firstimage" th:value="${tour.firstimage}" id="url" placeholder=" 이미지 URL을 입력하세요." oninput="updateImagePreview(event)">
             <img id="image-preview" class="image-preview" style="display:none" />
         </div>
 

@@ -43,11 +43,8 @@ public class LoginController {
             model.addAttribute("id", id + "님 어서오세요.");
 
             // 역할에 따라 분기
-            if ("ADMIN".equalsIgnoreCase(user.getRole())) {
-                return "redirect:/main/adminmain"; // 관리자 전용 페이지
-            } else {
                 return "redirect:/what2do"; // 일반 유저 메인 페이지
-            }
+
         } else {
             System.out.println("Login failed");
             model.addAttribute("error", "아이디 또는 비밀번호가 일치하지 않습니다.");

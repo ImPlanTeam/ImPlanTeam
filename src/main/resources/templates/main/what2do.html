@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>놀러가자!</title>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css?after}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
 
         svg {
@@ -50,7 +51,7 @@
 <body>
 <div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
-<h2 style="text-align: center; margin-top: 50px;">가고싶은 지역을 선택하세요</h2>
+<h2 class="text-2xl font-semibold" style="text-align: center; margin-top: 50px;">가고싶은 지역을 선택하세요</h2>
 
 <div id="all">
 <div id="tooltip" class="tooltip"></div>

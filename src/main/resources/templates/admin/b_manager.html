@@ -2,13 +2,14 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>자유게시판 관리</title>
     <style>
         body {
           font-family: 'Segoe UI', sans-serif;
           background-color: #f7f9fc;
-          margin: 0;
-          padding: 20px;
+<!--          margin: 0;-->
+<!--          padding: 20px;-->
         }
 
         .main-container {
@@ -64,9 +65,9 @@
           min-width: 120px;
         }
 
-        .main-container table tr:hover {
-          background-color: #f1f8ff;
-        }
+<!--        .main-container table tr:hover {-->
+<!--          background-color: #f1f8ff;-->
+<!--        }-->
 
         .delete-btn {
           background-color: #e74c3c;
@@ -103,9 +104,28 @@
             margin-top: 15px;
         }
         .notice-row {
-    background-color: #fff7e6 !important;
-    font-weight: bold;
-}
+            background-color: #fff7e6 !important;
+            font-weight: bold;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .pagination a,
+        .pagination strong {
+            margin: 0 5px;
+            padding: 6px 10px;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover {
+        }
+
+        .pagination strong {
+            color: white;
+            background-color: #1a2e45;
+        }
     </style>
 </head>
 <body>
@@ -115,7 +135,7 @@
 
 <!-- 메인 콘텐츠 -->
 <div class="main-container">
-    <h2>자유게시판 게시글 관리</h2>
+    <h2 class="text-xl font-bold mb-4">자유게시판 게시글 관리</h2>
 
     <table>
         <thead>

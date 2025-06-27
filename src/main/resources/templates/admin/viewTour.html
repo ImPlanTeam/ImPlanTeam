@@ -7,6 +7,7 @@
   <link rel="stylesheet" th:href="@{/css/common.css}">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       background-color: #fefefe;
@@ -16,7 +17,7 @@
       color: #1f2937;
     }
 
-    .container {
+    .containerA {
       max-width: 800px;
       margin: 40px auto;
       padding: 20px;
@@ -73,8 +74,8 @@
 
 <div th:replace="~{fragments/admintop :: headerFragment}"></div>
 
-<div class="container">
-  <h2>가게 정보 수정</h2>
+<div class="containerA">
+  <h2 class="text-xl font-bold mb-4">가게 정보 수정</h2>
   <form th:action="@{/updateTour/{id}(id=${tour.id})}" method="post">
 
     <input type="hidden" id="id" name="id" th:value="${tour.id}">

@@ -55,6 +55,26 @@ public class UserDTO { //클라이언트가 회원가입 폼에 입력한 데이
 
     private LocalDateTime indate;
 
+    private String checkId;
+
+    private String checkPass;
+
+    public String getCheckId() {
+        return checkId;
+    }
+
+    public void setCheckId(String checkId) {
+        this.checkId = checkId;
+    }
+
+    public String getCheckPass() {
+        return checkPass;
+    }
+
+    public void setCheckPass(String checkPass) {
+        this.checkPass = checkPass;
+    }
+
     public LocalDateTime getIndate() {
         return indate;
     }

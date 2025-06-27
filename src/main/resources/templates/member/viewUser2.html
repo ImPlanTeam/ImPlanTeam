@@ -5,7 +5,8 @@
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <meta charset="UTF-8">
     <title>회원 정보 수정</title>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css?after}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -175,7 +176,7 @@
 <div th:replace="~{fragments/top :: headerFragment}"></div>
 
 <div class="main-container">
-    <h2>👤 회원 정보 수정</h2>
+    <h2 class="text-2xl font-semibold">회원 정보 수정</h2>
 
     <form th:action="@{/update2/{id}(id=${user.id})}" method="post">
 
