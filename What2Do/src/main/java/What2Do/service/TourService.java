@@ -5,12 +5,16 @@ import What2Do.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +25,6 @@ public class TourService {
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
-    private final PythonService pythonService;
     private static final Logger logger = LoggerFactory.getLogger(TourService.class);
 
     @Transactional
@@ -50,16 +53,15 @@ public class TourService {
         }
     }
 
-    public List<Tour> findRegion(String areacode,String sigungucode){
-        return tourRepository.findByAreacodeAndSigungucode(areacode,sigungucode);
+    public Page<Tour> findRegion(String areacode, String sigungucode, Pageable pageable){
+        return tourRepository.findByAreacodeAndSigungucode(areacode,sigungucode,pageable);
     }
     public Tour findOne(Long id){
         return tourRepository.findById(id).orElseThrow();
     }
 
-    public List<Tour> findCatecory(String contenttypeid,String areacode,String sigungucode){
-
-        return tourRepository.findByContenttypeidAndAreacodeAndSigungucode(contenttypeid,areacode,sigungucode);
+    public Page<Tour> findCatecory(String contenttypeid,String areacode,String sigungucode,Pageable pageable){
+        return tourRepository.findByContenttypeidAndAreacodeAndSigungucode(contenttypeid,areacode,sigungucode,pageable);
     }
     @Transactional
     public Integer likePlus(Long num){
@@ -117,23 +119,44 @@ public class TourService {
         return tourRepository.existsBycontentid(contentid);
     }
 
-//    파이썬 서비스 연결
-    public List<Tour> recommendToursForActivity(String activityDesc) {
-    // 관광지 전체 목록 (overview가 있는 것만)
-    List<Tour> allTours = tourRepository.findAllWithValidOverview();
+    // 유사 관광지 추천 (Flask 호출)
+    public List<Map<String, Object>> getRecommendedToursFromFlask(Tour tour) {
+        RestTemplate restTemplate = new RestTemplate();
+        String flaskUrl = "http://localhost:7000/recommend";
 
-    // Python에 보낼 텍스트 목록: 활동 + overview 리스트
-    List<String> texts = new ArrayList<>();
-    texts.add(activityDesc);
-    texts.addAll(allTours.stream().map(Tour::getOverview).toList());
+        //Flask에 보낼 json 데이터
+        Map<String, Object> requestData = new HashMap<>();
+        requestData.put("overview", tour.getOverview());
+        requestData.put("sigungu_code", tour.getSigungucode());
+        requestData.put("areacode", tour.getAreacode());
+        requestData.put("content_id", tour.getContentid());
+        // json전송 헤더설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
 
-    // Python 서버에 요청 → top3 인덱스 받아옴
-    List<Integer> topIndexes = pythonService.getTopTourIndexes(texts);
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestData, headers);
+        //flask로 post방식 전송
+        try {
+            System.out.println("Flask에 전송할 데이터: " + requestData);
+            ResponseEntity<List> response = restTemplate.exchange(
+                    flaskUrl,
+                    HttpMethod.POST,
+                    entity,
+                    List.class
+            );
+            return response.getBody();
+        } catch (Exception e) {
+            System.out.println("Flask 서버 호출 실패: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
 
-    // 인덱스로 관광지 3개 추출
-    return topIndexes.stream()
-            .map(i -> allTours.get(i))
-            .toList();
+    public List<Tour> findByTitleContaining(String title) {
+        List<Tour> list= tourRepository.findByTitleContaining(title);
+        return list;
+    }
+
+
 }
 
-}
+

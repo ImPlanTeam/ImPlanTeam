@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>1:1 문의 등록</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
 
-        .container {
-            max-width: 600px;
+        .main-container {
+            max-width: 800px;
             margin: auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            background-color: #ffffff;
+            padding: 2rem 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
         h3 {
@@ -21,66 +23,65 @@
         }
 
         label {
+            font-weight: bold;
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #333;
+            margin: 1rem 0 0.4rem;
+            color: #444;
         }
 
-        input[type="text"],
-        textarea,
-        select {
+       select, input[type="text"], textarea, input[type="file"] {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
+            padding: 0.7rem;
             border: 1px solid #ccc;
             border-radius: 8px;
             font-size: 14px;
+            box-sizing: border-box;
         }
-
-        input[type="file"] {
-            margin-bottom: 20px;
+        textarea {
+            height: 150px;
+            resize: vertical;
         }
 
         input[type="submit"] {
-            width: 100%;
+            margin-top: 1.5rem;
             background-color: #1a2e45;
             color: white;
-            padding: 12px;
+            padding: 0.8rem 1.5rem;
+            font-size: 15px;
             border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 16px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
     </style>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
 </head>
 <body>
 <div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
-<div class="container">
-    <h3>1:1 문의 등록</h3>
+<div class="main-container">
+    <h3 class="text-2xl font-semibold" style="text-align: center; margin-top: 50px;">1:1 문의 등록</h3>
     <form action="/askjoin" method="post" enctype="multipart/form-data">
+
         <label for="title">제목</label>
         <input type="text" id="title" name="title" placeholder="제목을 입력해주세요." required>
 
         <label for="content">내용</label>
-        <textarea id="content" name="content" rows="6" placeholder="내용을 입력해주세요." required></textarea>
+        <textarea name="content" id="content" placeholder="내용을 입력해주세요." required></textarea>
 
-        <label for="vicibility">공개 여부</label>
-        <select id="vicibility" name="vicibility">
-            <option value="비공개">비공개</option>
-<!--            <option value="공개">공개</option>-->
-        </select>
-
-        <label for="files">파일 첨부</label>
+        <label for="files">첨부파일</label>
         <input type="file" id="files" name="files" multiple>
 
-        <input type="submit" value="저장">
+        <input type="submit" value="작성 완료">
     </form>
 </div>
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+<script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+<script>
+    CKEDITOR.config.notification = { delay: 0 };
+    CKEDITOR.replace('content', {
+        language: 'ko',
+        skin: 'moono-lisa'
+    });
+</script>
 </body>
 </html>

@@ -62,6 +62,21 @@ public class BoardController {
         return "redirect:/listView";
     }
 
+    //관리자 자유게시판 글 등록 기능
+    @PostMapping("/adminregister")
+    public String adminregister(@RequestParam String title,
+                                @RequestParam String content,
+                                HttpSession session,
+                                @RequestParam String area,
+                                @RequestParam List<MultipartFile> files) throws IOException {
+        User user = (User) session.getAttribute("user"); // 올바른 캐스팅
+        String writer = user.getName(); // 또는 필요한 속성으로 변경
+        boardService.register(title, content, writer, area, files);
+        return "redirect:/manager";
+    }
+
+
+
     //등록된 자유게시판 글 리스트(페이지 포함)
     @GetMapping("/listView")
     public String listView(Model model,
@@ -71,11 +86,15 @@ public class BoardController {
         Page<Board> list = null;
 
         if (searchKeyword == null || searchKeyword == "") {
-//                System.out.println('a');
+//            System.out.println('a');
             list = boardService.listV(pageable);
         } else {
-            System.out.println(searchKeyword);
-            list = boardService.listSearch(pageable, searchKeyword);
+            if (searchKeyword.equals("전체보기")) {
+                return "redirect:/listView";
+            } else {
+//                System.out.println('b');
+                list = boardService.listSearch(pageable, searchKeyword);
+            }
         }
 
         int nowPage = list.getNumber(); // 현재 페이지 번호 (0부터 시작)
@@ -99,42 +118,12 @@ public class BoardController {
         return "board/listView";
     }
 
-    //셀렉으로 지역 검색한 자유게시판 글 리스트(페이지 포함)
-    @GetMapping("/listView2")
-    public String listView2(Model model,
-                            @PageableDefault(page = 0, size = 10, sort = "num", direction = Sort.Direction.DESC) Pageable pageable,
-                            String search) {
-
-        Page<Board> list = null;
-
-        if (search.equals("전체보기")) {
-            return "redirect:/listView";
-        } else {
-            list = boardService.listSearch2(pageable, search);
-        }
-
-
-        int nowPage = list.getNumber(); // 현재 페이지 번호 (0부터 시작)
-        int totalPages = list.getTotalPages(); // 전체 페이지 수
-        int blockLimit = 5; // 페이지 블럭 크기
-        int currentBlock = nowPage / blockLimit;
-
-        int startPage = currentBlock * blockLimit; // ex) 0, 5, 10
-        int endPage = Math.min(startPage + blockLimit - 1, totalPages-1);
-        if(totalPages ==0){
-            endPage = 0;
-        }
-
-        model.addAttribute("list", list);
-        model.addAttribute("nowPage", nowPage);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("totalPages", totalPages);
-
-        return "board/listView";
+    //관리자 글쓰기
+    @GetMapping("/board2")
+    public String writing2() {
+        return "admin/b_main";
     }
 
-    //글 자세히 보기
     @GetMapping("/view")
     public String view(@RequestParam("num") Integer num, Model model,HttpSession session) {
         User user = (User) session.getAttribute("user");
@@ -149,7 +138,6 @@ public class BoardController {
 
         return "board/view";
     }
-
     @PostMapping("/likeB")
     @ResponseBody
     @Transactional
@@ -206,6 +194,22 @@ public class BoardController {
     public String del(Integer num) {
         boardService.del(num);
         return "redirect:/listView";
+    }
+
+    //관리자 글 자세히 보기
+    @GetMapping("/bview")
+    public String bview(@RequestParam("num") Integer num, Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        String id = user.getId();
+        boardService.updateCount(num);
+        Board board = boardService.view(num);
+        List<BoardFile> boardFiles = boardService.viewF(num);
+        boolean like = boardService.likeB(num, id);
+        model.addAttribute("board", board);
+        model.addAttribute("file", boardFiles);
+        model.addAttribute("like",like);
+
+        return "admin/b_view";
     }
 
     @GetMapping("/update")
@@ -274,38 +278,38 @@ public class BoardController {
         model.addAttribute("mine", mine);
         return "member/myPage";
     }
-    //관리자 글 자세히 보기
-    @GetMapping("/bview")
-    public String bview(@RequestParam("num") Integer num, Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        String id = user.getId();
-        boardService.updateCount(num);
-        Board board = boardService.view(num);
-        List<BoardFile> boardFiles = boardService.viewF(num);
-        boolean like = boardService.likeB(num, id);
-        model.addAttribute("board", board);
-        model.addAttribute("file", boardFiles);
-        model.addAttribute("like",like);
+    //셀렉으로 지역 검색한 자유게시판 글 리스트(페이지 포함)
+    @GetMapping("/listView2")
+    public String listView2(Model model,
+                            @PageableDefault(page = 0, size = 2, sort = "num", direction = Sort.Direction.DESC) Pageable pageable,
+                            String search) {
 
-        return "admin/b_view";
-    }
-    //관리자 자유게시판 글 등록 기능
-    @PostMapping("/adminregister")
-    public String adminregister(@RequestParam String title,
-                                @RequestParam String content,
-                                HttpSession session,
-                                @RequestParam String area,
-                                @RequestParam List<MultipartFile> files) throws IOException {
-        User user = (User) session.getAttribute("user"); // 올바른 캐스팅
-        String writer = user.getName(); // 또는 필요한 속성으로 변경
-        boardService.register(title, content, writer, area, files);
-        return "redirect:/manager";
-    }
-    //관리자 글쓰기
-    @GetMapping("/board2")
-    public String writing2() {
-        return "admin/b_main";
-    }
+        Page<Board> list = null;
+
+        if (search.equals("전체보기")) {
+            return "redirect:/listView";
+        } else {
+            list = boardService.listSearch2(pageable, search);
+        }
 
 
+        int nowPage = list.getNumber(); // 현재 페이지 번호 (0부터 시작)
+        int totalPages = list.getTotalPages(); // 전체 페이지 수
+        int blockLimit = 5; // 페이지 블럭 크기
+        int currentBlock = nowPage / blockLimit;
+
+        int startPage = currentBlock * blockLimit; // ex) 0, 5, 10
+        int endPage = Math.min(startPage + blockLimit - 1, totalPages-1);
+        if(totalPages ==0){
+            endPage = 0;
+        }
+
+        model.addAttribute("list", list);
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("totalPages", totalPages);
+
+        return "board/listView";
+    }
 }

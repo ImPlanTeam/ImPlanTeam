@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>오늘 뭐하지?관리</title>
-
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <style>
-    .main-container {
+    .main-container{
         width: 1000px;
         margin: auto;
         padding: 2rem 2.5rem;
@@ -23,6 +23,7 @@
         border-collapse: collapse;
         border-spacing: 0;
         text-align: center;
+
     }
     .c{
         padding: 14px 10px;
@@ -31,7 +32,7 @@
     }
     .b{
         width: 1200px;
-        background-color: #eaf2ff;
+        background-color:#e9f0fb;
         font-weight: 600;
         color: #222;
         padding: 14px 10px;
@@ -55,10 +56,23 @@
 
     }
     #searchText{
-        height:20px;
-        outline: none;
-
+        height:30px;
+        padding:5px;
+        width:200px;
+        border: solid 1px;
+        border-radius: 3px;"
     }
+     #btnS {
+            border: 1px solid;
+            width: 60px;
+            height: 32px;
+            font-size: 15px;
+            text-align: center;
+            background: #1a2e45;
+            color:#F9F7F7;
+            border-radius: 4px;
+            cursor: pointer;
+        }
 
 
 
@@ -66,15 +80,15 @@
 </style>
 <body>
 <!-- 관리자 상단 메뉴 -->
-<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
+<div th:replace="~{fragments/admintop :: headerFragment}"></div>
 
 <!-- 메인 콘텐츠 -->
 <div class="main-container">
-    <h2>오늘 뭐하지 리스트</h2>
+    <h2 class="text-xl font-bold mb-4">오늘 뭐하지 리스트</h2>
     <div id="search">
         <form th:action="@{/searchWhat2do}" method="get" >
-            <input type="text" name="search" placeholder="검색어를 입력하세요." id="searchText">
-            <button type="submit">검색</button>
+            <input type="text" name="search" placeholder="검색어를 입력하세요." id="searchText" >
+            <button type="submit" id="btnS">검색</button>
         </form>
     </div>
     <div class="write-container">
@@ -85,9 +99,6 @@
         <tr class="a">
             <th class="b">번호</th>
             <th class="b">활동명</th>
-<!--            <th class="b">활동유형</th>-->
-<!--            <th class="b">동행인</th>-->
-<!--            <th class="b">날씨</th>-->
         </tr>
         </thead>
         <tbody>
@@ -96,19 +107,6 @@
             <td class="c">
                 <a th:href="@{/todayAdmin(name=${list.name})}" th:text="${list.name}" ></a>
             </td>
-<!--            <td th:text="${list.tags}" class="c"></td>-->
-<!--            <td th:text="${list.companions}" class="c"></td>-->
-<!--            <td th:text="${list.weather}" class="c"></td>-->
-<!--            <td>-->
-<!--                <a th:href="@{'/delete/' + ${list.id}}" method="get" style="display:inline;">-->
-<!--                    <button type="submit" class="action-btn">삭제</button>-->
-<!--                </a>-->
-<!--            </td>-->
-<!--            <td>-->
-<!--                <a th:href="@{'/viewUser/' + ${list.id}}">-->
-<!--                    <button type="button" class="action-btn edit-btn">수정</button>-->
-<!--                </a>-->
-<!--            </td>-->
         </tr>
         </tbody>
     </table>

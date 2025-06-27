@@ -2,13 +2,14 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>글쓰기</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
             background-color: #f9fafc;
-            margin: 0;
-            padding: 2rem;
+    <!--        margin: 0;-->
+    <!--        padding: 2rem;-->
         }
 
         .main-container {
@@ -18,7 +19,6 @@
             padding: 2rem 2.5rem;
             border-radius: 1rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-
         }
 
         h2 {
@@ -50,41 +50,49 @@
 
         input[type="submit"] {
             margin-top: 1.5rem;
-            background-color: #0d6efd;
+            background-color: #1A2E45;
             color: white;
             padding: 0.8rem 1.5rem;
             font-size: 15px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
+
         }
 
-        input[type="submit"]:hover {
-            background-color: #0b5ed7;
-        }
+
 
     </style>
 </head>
 <body>
 
 <!-- 사용자 상단 메뉴 -->
-<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
+<div th:replace="~{fragments/admintop :: headerFragment}"></div>
 
 <div class="main-container">
-    <h2>✍ 자유게시판 글쓰기</h2>
+    <h2 class="text-xl font-bold mb-4">자유게시판 글쓰기</h2>
     <form action="/adminregister" method="post" enctype="multipart/form-data">
         <label for="area">지역 선택</label>
-        <select name="area" id="area">
+        <select name="area" id="area" style="height:45px;">
             <option value="공지사항">공지사항</option>
-            <option value="서울">서울</option>
+            <option>==선택==</option>
+            <option value="전체보기">전체보기</option>
+            <option value="서울특별시">서울특별시</option>
             <option value="경기도">경기도</option>
+            <option value="인천광역시">인천광역시</option>
             <option value="강원도">강원도</option>
             <option value="충청북도">충청북도</option>
-            <option value="충청남도">충청남도</option>
+            <option value="충청남도">충청남도</option>]
+            <option value="세종특별자치시">세종특별자치시</option>
+            <option value="대전광역시">대전광역시</option>
             <option value="경상북도">경상북도</option>
             <option value="경상남도">경상남도</option>
+            <option value="대구광역시">대구광역시</option>
             <option value="전라북도">전라북도</option>
             <option value="전라남도">전라남도</option>
+            <option value="광주광역시">대구광역시</option>
+            <option value="부산광역시">부산광역시</option>
+            <option value="울산광역시">울산광역시</option>
             <option value="제주도">제주도</option>
         </select>
 
@@ -92,7 +100,7 @@
         <input type="text" name="title" id="title" placeholder="제목을 입력하세요">
 
         <label for="content">내용</label>
-        <textarea name="content" id="content" placeholder="내용을 입력해주세요."></textarea>
+        <textarea name="content" id="content" placeholder=" 내용을 입력해주세요."></textarea>
 
         <label for="files">첨부파일</label>
         <input type="file" name="files" id="files" multiple>
@@ -103,6 +111,15 @@
 
 <!-- 사용자 하단 푸터 -->
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
+
+<script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+<script>
+
+    CKEDITOR.replace('content', {
+        language: 'ko',
+        skin: 'moono-lisa'
+    });
+</script>
 
 </body>
 </html>

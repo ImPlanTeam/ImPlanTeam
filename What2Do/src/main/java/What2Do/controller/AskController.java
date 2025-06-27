@@ -43,7 +43,6 @@ public class AskController {
     @PostMapping("/askjoin")
     public String askJoinPost(@RequestParam String title,
                               @RequestParam String content,
-                              @RequestParam String vicibility,
                               @RequestParam("files")List<MultipartFile> files,
                               HttpSession session){
         User loginUser = (User) session.getAttribute("user");
@@ -52,7 +51,7 @@ public class AskController {
 
         }
         try {
-            askService.saveAsk(title, content, vicibility, files, loginUser);
+            askService.saveAsk(title, content, files, loginUser);
         } catch (IOException e) {
             e.printStackTrace();
             return "error"; // 에러 페이지
@@ -118,15 +117,6 @@ public class AskController {
         Ask view = askService.viewDetail(askNo);
         User loginUser = (User) session.getAttribute("user");
         model.addAttribute("askview", view);
-
-        if ("private".equals(view.getVicibility())) {
-            if (loginUser == null || !view.getUser().getId().equals(loginUser.getId())) {
-                // 관리자 확인 로직 필요 시 추가
-                if (!isAdmin(loginUser)) {
-                    return "redirect:/ask?error=unauthorized";
-                }
-            }
-        }
 
         //첨부파일 가져오기
         List<AskFile> imglist = askService.getimg(askNo);

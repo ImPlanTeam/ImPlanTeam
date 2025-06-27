@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>1:1 문의 상세</title>
   <link rel="stylesheet" th:href="@{/css/common.css}">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -96,7 +97,7 @@
 
 <!-- 본문 -->
 <div class="main-container">
-  <h3>📩 문의 상세 보기</h3>
+  <h2 class="text-2xl font-semibold">문의 상세 보기</h2>
 
   <div class="section">
     <span class="label">글번호</span>
@@ -106,7 +107,7 @@
     <div class="value" th:text="${askview.title}"></div>
 
     <span class="label">내용</span>
-    <div class="value" th:text="${askview.contents}"></div>
+    <div class="value" th:utext="${askview.contents}"></div>
 
     <span class="label">작성일</span>
     <div class="value" th:text="${#strings.substring(askview.indate,0,10)}"></div>

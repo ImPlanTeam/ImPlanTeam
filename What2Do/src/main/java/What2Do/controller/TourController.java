@@ -10,19 +10,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.*;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 public class TourController {
 
@@ -258,12 +263,22 @@ public class TourController {
 
     }
 
-    @GetMapping("/recommend-result")
-    public String showRecommendation(@RequestParam String activityDesc, Model model) {
-        List<Tour> tourList = tourService.recommendToursForActivity(activityDesc);
-
-        model.addAttribute("tourList", tourList);
-        return "recommend/result";
-    }
+    //    유사 관광지추천
+//    @GetMapping("/detail")
+//    public String detail(@RequestParam Long id, @RequestParam String city, Model model) {
+//        Tour tour = tourService.findOne(id);
+//        model.addAttribute("tour", tour);
+//        model.addAttribute("city", city);
+//
+//        System.out.println("📦 overview: " + tour.getOverview());
+//        System.out.println("📦 sigungucode: " + tour.getSigungucode());
+//        System.out.println("📦 contentid: " + tour.getContentid());
+//
+//        // 여기에 Flask 추천 로직 추가
+//        List<Map<String, Object>> recommendedList = tourService.getRecommendedToursFromFlask(tour);
+//        model.addAttribute("recommendedList", recommendedList);
+//
+//        return "tour/cityDetail";  // 뷰 이름 그대로
+//    }
 
 }

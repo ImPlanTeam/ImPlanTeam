@@ -5,6 +5,7 @@
     <title>오늘 뭐하지?</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         html, body {
             margin: 0;
@@ -107,11 +108,13 @@
 <div id="main-content">
     <div class="card">
         <!-- 추천 결과 -->
-        <h2>추천결과: <span th:text="${rlist[0].name}">활동 이름</span></h2>
+        <h2 class="text-2xl font-semibold">추천결과: <span th:text="${rlist[0].name}">활동 이름</span></h2>
 
         <!-- 활동 설명 -->
         <p th:text="${rlist[0].description}">활동 설명이 여기에 표시됩니다.</p>
-        <img th:src="|/img2/${rlist[0].name}.jpg|" style="width:600px; height:400px;" alt=""/>
+        <div style="margin-left:55px">
+            <img th:src="|/img2/${rlist[0].name}.jpg|" style="width:600px; height:400px;" alt=""/>
+        </div>
         <br>
         <br>
         <!-- 버튼: area + city -->

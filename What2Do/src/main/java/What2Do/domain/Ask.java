@@ -20,7 +20,6 @@ public class Ask {
     private String title;
     @Column(length = 5000)
     private String contents;
-    private String vicibility;
     private LocalDateTime indate;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -84,13 +83,7 @@ public class Ask {
         this.contents = contents;
     }
 
-    public String getVicibility() {
-        return vicibility;
-    }
 
-    public void setVicibility(String vicibility) {
-        this.vicibility = vicibility;
-    }
 
     public LocalDateTime getIndate() {
         return indate;

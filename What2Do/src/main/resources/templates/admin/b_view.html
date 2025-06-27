@@ -4,15 +4,16 @@
   <meta charset="UTF-8">
   <title>게시글 보기</title>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
       background-color: #f7f9fc;
-      margin: 0;
-      padding: 2rem;
+<!--      margin: 0;-->
+<!--      padding: 2rem;-->
     }
 
-    .container {
+    .containerA {
       max-width: 900px;
       margin: auto;
       background: white;
@@ -95,10 +96,10 @@
 
 <div th:replace="~{fragments/admintop :: headerFragment}"></div>
 
-<div class="container">
+<div class="containerA">
   <a th:href="@{/manager}" class="back-link">← 목록으로 돌아가기</a>
 
-  <h2 th:text="${board.title}">제목</h2>
+  <h2 th:text="${board.title}" class="text-2xl font-semibold">제목</h2>
 
   <div class="info">
     지역: <span th:text="${board.area}"></span> |
@@ -113,24 +114,28 @@
     </div>
   </div>
 
-  <div class="content" th:text="${board.content}"></div>
+  <div class="content" th:utext="${board.content}"></div>
 
   <div class="button-group">
-    <svg id="heartBtn" width="24" height="24" fill="none"
-         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-         viewBox="0 0 24 24" th:onclick="|likeIt(${board.num})|" th:classappend="${like} ? 'liked'">
-      <path d="M12 21s-6.4-5.3-9-9c-2-3 0-7 4-7 2.1 0 3.4 1.4 5 3 1.6-1.6 2.9-3 5-3 4 0 6 4 4 7-2.6 3.7-9 9-9 9z"/>
-    </svg>
-
-    <span class="like-count" id="CNT" th:text="${board.like_count}">0</span>
-
-    <div class="edit" th:if="${board.writer == session.user.name}">
-      <a th:href="@{/update(num=${board.num})}">
-        <span class="action-text">수정 </span>
-      </a>
-    </div>
-
+    <table>
+      <tr>
+        <td><svg id="heartBtn" width="24" height="24" fill="none"
+                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                 viewBox="0 0 24 24" th:onclick="|likeIt(${board.num})|" th:classappend="${like} ? 'liked'">
+          <path d="M12 21s-6.4-5.3-9-9c-2-3 0-7 4-7 2.1 0 3.4 1.4 5 3 1.6-1.6 2.9-3 5-3 4 0 6 4 4 7-2.6 3.7-9 9-9 9z"/>
+        </svg></td>
+        <td></td>
+        <td><span class="like-count" id="CNT" th:text="${board.like_count}">0</span></td>
+      </tr>
+    </table>
   </div>
+  <div class="edit" th:if="${board.writer == session.user.name}">
+    <a th:href="@{/update(num=${board.num})}">
+      <span class="action-text">수정 </span>
+    </a>
+  </div>
+
+</div>
 </div>
 
 <script>

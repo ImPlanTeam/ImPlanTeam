@@ -22,6 +22,7 @@ import org.apache.coyote.BadRequestException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Controller
@@ -44,32 +45,31 @@ public class MemberController {
     private UserService service;
 
     @RequestMapping("myPage")
-    public String mp(){
+    public String mp() {
         return "member/myPage";
     }
 
     @RequestMapping("myInfo")
-    public String myInfo(){
+    public String myInfo() {
         return "member/myInfo";
     }
 
     @RequestMapping("findMyId")
-    public String findMyId(){
+    public String findMyId() {
         return "member/findMyId";
     }
 
 
     @PostMapping("findMyId2")
-    public String findMyId2(@RequestParam("name")String name,
-                            @RequestParam("tel")String tel, Model model){
+    public String findMyId2(@RequestParam("name") String name,
+                            @RequestParam("tel") String tel, Model model) {
         User user = userService.findByTel(tel);
-        System.out.println("아이디찾기"+tel+name);
+        System.out.println("아이디찾기" + tel + name);
         if (user != null && user.getName().equals(name)) {
-            System.out.println(user.getName()+"님");
+            System.out.println(user.getName() + "님");
             model.addAttribute("id", "아이디: " + user.getId());
-            System.out.println("아이디"+user.getId());
-        }
-        else{
+            System.out.println("아이디" + user.getId());
+        } else {
             model.addAttribute("id", "아이디를 찾을 수 없습니다.");
         }
         return "member/findMyId";
@@ -77,30 +77,29 @@ public class MemberController {
 
     @PostMapping("findMyPass2")
     public String findMyPass2(@RequestParam("id") String id,
-                              @RequestParam("mail") String mail, Model model){
+                              @RequestParam("mail") String mail, Model model) {
         User user = userService.findById(id);
-        System.out.println("비번찾기"+id+mail);
+        System.out.println("비번찾기" + id + mail);
         if (user != null && user.getMail().equals(mail)) {
-            System.out.println(user.getName()+"님");
+            System.out.println(user.getName() + "님");
             model.addAttribute("pass", "비밀번호: " + user.getPass());
             model.addAttribute("id", user.getId());
-            System.out.println("비밀번호"+user.getPass());
+            System.out.println("비밀번호" + user.getPass());
             return "member/newPass";
-        }
-        else{
+        } else {
             model.addAttribute("pass", "아이디를 찾을 수 없습니다.");
         }
         return "member/findMyPass";
     }
 
     @RequestMapping("findMyPass")
-    public String findMyPass(){
+    public String findMyPass() {
 
         return "member/findMyPass";
     }
 
     @GetMapping("newPass")
-    public String newPass(Model model){
+    public String newPass(Model model) {
         return "member/newPass";
     }
 
@@ -108,13 +107,13 @@ public class MemberController {
     public String newPass2(@PathVariable String id,
                            @RequestParam String pass,
                            @RequestParam String pass2,
-                           Model model){
-        System.out.println(id+pass);
-        if (!pass.equals(pass2)){
+                           Model model) {
+        System.out.println(id + pass);
+        if (!pass.equals(pass2)) {
             System.out.println("err");
             model.addAttribute("errPass", "비밀번호가 일치하지 않습니다.");
             return "member/newPass";
-        }else {
+        } else {
             User user = userRepository.findById(id);
             user.setPass(pass);
             userRepository.save(user);
@@ -130,7 +129,7 @@ public class MemberController {
                              @RequestParam String tel,
                              @RequestParam String pass,
                              @RequestParam String birth,
-                             @RequestParam(name = "jender", required = false)String jender) {
+                             @RequestParam(name = "jender", required = false) String jender) {
         User user = userRepository.findById(id);
         user.setName(name);
         user.setMail(mail);
@@ -145,21 +144,26 @@ public class MemberController {
     }
 
     @PostMapping("save2")
-    public String save2(@Valid UserDTO userDTO, Errors errors, Model model ){
+    public String save2(@Valid UserDTO userDTO, Errors errors, Model model){
         model.addAttribute("user", userDTO);
+        System.out.println(userDTO.getMail2());
         if (service.checkId(userDTO.getId())){
+            System.out.println("아이디 중복");
             model.addAttribute("errID", "이미 사용중인 아이디입니다.");
             return "member/join";
         }
         if (service.checkTel(userDTO.getTel())){
+            System.out.println("전화번호 중복");
             model.addAttribute("errTel", "이미 사용중인 전화번호입니다.");
             return "member/join";
         }
         if (service.checkMail(userDTO.getMail1()+"@"+userDTO.getMail2())){
+            System.out.println("이메일 중복");
             model.addAttribute("errMail", "이미 사용중인 이메일입니다.");
             return "member/join";
         }
         if (!Objects.equals(userDTO.getPass(), userDTO.getPass2())){
+            System.out.println("비밀번호 불일치");
             model.addAttribute("errPass", "비밀번호가 일치하지 않습니다.");
             return "member/join";
         }
@@ -180,7 +184,7 @@ public class MemberController {
             return "member/join";
         }
         User u = userDTO.toEntity(); // DTO를 Entity로 변환
-        if ("xjzl8520".equals(userDTO.getId())) {
+        if ("12341234".equals(userDTO.getId())) {
             u.setRole("ADMIN");
         } else {
             u.setRole("USER");
@@ -190,19 +194,52 @@ public class MemberController {
         return "redirect:/login2";
     }
 
+    @PostMapping("update2/{id}")
+    public String updateUser2(@PathVariable String id,
+                              @Valid UserDTO userDTO, Errors errors,
+                              @RequestParam String pass2,
+                              Model model) {
+
+        User user = userRepository.findById(id);
+
+        if (!userDTO.getPass().equals(pass2)) {
+            model.addAttribute("errPass2", "비밀번호가 일치하지 않습니다.");
+            model.addAttribute("user", user);
+            return "member/viewUser2";
+        }
+
+        if (errors.hasErrors()) {
+            System.out.println("유효성 검사 실패: " + errors.getAllErrors());
+            List<String> errorMessages = errors.getAllErrors()
+                    .stream()
+                    .map(error -> error.getDefaultMessage())
+                    .collect(Collectors.toList());
+            model.addAttribute("errList", errorMessages);
+            model.addAttribute("user", user); // ← 이거 꼭 추가!
+            return "member/viewUser2";
+        }
+
+        user.setMail(userDTO.getMail());
+        user.setPass(userDTO.getPass());
+        userRepository.save(user);
+
+        return "redirect:/viewUser2/" + id;
+    }
+
+
     @RequestMapping("list")
-    public String list2(Model model){
+    public String list2(Model model) {
         List<User> list = service.findAll();
         model.addAttribute("list", list);
         return "admin/memberlist";
     }
 
     @GetMapping("checkId")
-    public ResponseEntity<?> checkId(@RequestParam(value = "id", required = false)String id)throws BadRequestException{
+    public ResponseEntity<?> checkId(@RequestParam(value = "id", required = false) String id) throws BadRequestException {
         System.out.println(id);
-        if (service.checkId(id)){
+        if (service.checkId(id)) {
             throw new BadRequestException("이미 사용중인 아이디 입니다.");
-        }else {
+        } else {
             return ResponseEntity.ok("사용 가능한 아이디 입니다.");
         }
     }
@@ -230,10 +267,11 @@ public class MemberController {
         List<User> list = service.findByIdContaining(id);
         if (id == null) {
             return "admin/memberlist";
-        }if (list != null) {
+        }
+        if (list != null) {
             model.addAttribute("list", list);
             return "admin/memberlist";  // 위에서 만든 Thymeleaf 파일명
-        }else{
+        } else {
             model.addAttribute("error", "해당 아이디가 존재하지 않습니다.");
             return "admin/memberlist";
         }
@@ -274,36 +312,6 @@ public class MemberController {
         model.addAttribute("user", user);
         return "member/viewUser2";  // 위에서 만든 Thymeleaf 파일명
     }
-    @PostMapping("update2/{id}")
-    public String updateUser2(@PathVariable String id,
-                              @Valid UserDTO userDTO, Errors errors,
-                              @RequestParam String pass2,
-                              Model model) {
 
-        User user = userRepository.findById(id);
-
-        if (!userDTO.getPass().equals(pass2)) {
-            model.addAttribute("errPass2", "비밀번호가 일치하지 않습니다.");
-            model.addAttribute("user", user);
-            return "member/viewUser2";
-        }
-
-        if (errors.hasErrors()) {
-            System.out.println("유효성 검사 실패: " + errors.getAllErrors());
-            List<String> errorMessages = errors.getAllErrors()
-                    .stream()
-                    .map(error -> error.getDefaultMessage())
-                    .collect(Collectors.toList());
-            model.addAttribute("errList", errorMessages);
-            model.addAttribute("user", user); // ← 이거 꼭 추가!
-            return "member/viewUser2";
-        }
-
-        user.setMail(userDTO.getMail());
-        user.setPass(userDTO.getPass());
-        userRepository.save(user);
-
-        return "redirect:/viewUser2/" + id;
-    }
 
 }

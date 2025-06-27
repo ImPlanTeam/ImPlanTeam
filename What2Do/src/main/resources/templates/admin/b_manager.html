@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>자유게시판 관리</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
           font-family: 'Segoe UI', sans-serif;
@@ -66,19 +67,23 @@
 
 
         .pagination {
-          margin-top: 2rem;
-          text-align: center;
+            text-align: center;
+            margin-top: 30px;
         }
 
         .pagination a,
         .pagination strong {
-          margin: 0 6px;
-          font-size: 1rem;
-          text-decoration: none;
+            margin: 0 5px;
+            padding: 6px 10px;
+            border-radius: 5px;
+        }
+
+        .pagination a:hover {
         }
 
         .pagination strong {
-          color: #0d6efd;
+            color: white;
+            background-color: #1a2e45;
         }
         .write-link {
             display: block;
@@ -98,7 +103,7 @@
 
 <!-- 메인 콘텐츠 -->
 <div class="main-container">
-    <h2>자유게시판 게시글 관리</h2>
+    <h2 class="text-2xl font-semibold">자유게시판 게시글 관리</h2>
 
     <table>
         <thead>

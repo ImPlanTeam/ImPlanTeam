@@ -3,15 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>자유게시판</title>
-    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css?after}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js"
             integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
             crossorigin="anonymous"></script>
     <style>
-        h3{
-            text-align: center;
-            color: #333;
-        }
+
         .board-container {
             max-width: 1000px;
             margin: auto;
@@ -54,7 +52,7 @@
         }
 
         th {
-            background-color: #f1f3f5;
+            background-color: #eaf2ff;;
             font-weight: 600;
         }
 
@@ -88,14 +86,25 @@
             background-color: #fff7e6 !important;
             font-weight: bold;
         }
+        #btnSearch {
+            border: 1px solid;
+            width: 60px;
+            height: 30px;
+            font-size: 15px;
+            text-align: center;
+            background: #1a2e45;
+            color:#F9F7F7;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
+<div th:replace="~{fragments/top :: headerFragment}"></div>
 <div class="board-container">
-    <h3>자유게시판</h3>
+    <h2 class="text-2xl font-semibold" style="text-align: center; margin-top: 50px;">자유게시판</h2>
 
-    <div class="filter-section">
+    <div class="filter-section" style="height:30px;">
         <select name="area" onchange="changeBoard(value)" id="area">
             <option>==선택==</option>
             <option value="전체보기">전체보기</option>
@@ -105,22 +114,22 @@
             <option value="강원도">강원도</option>
             <option value="충청북도">충청북도</option>
             <option value="충청남도">충청남도</option>
-            <option value="세종특별자치시">세종특별자치시</option>
+            <option value="세종특별시">세종특별자치시</option>
             <option value="대전광역시">대전광역시</option>
             <option value="경상북도">경상북도</option>
             <option value="경상남도">경상남도</option>
             <option value="대구광역시">대구광역시</option>
             <option value="전라북도">전라북도</option>
             <option value="전라남도">전라남도</option>
-            <option value="광주광역시">대구광역시</option>
+            <option value="광주광역시">광주광역시</option>
             <option value="부산광역시">부산광역시</option>
             <option value="울산광역시">울산광역시</option>
             <option value="제주도">제주도</option>
         </select>
 
         <form th:action="@{/listView}" method="get" style="display: flex; gap: 10px;">
-            <input type="text" name="searchKeyword" placeholder="검색어를 입력하세요.">
-            <button type="submit">검색</button>
+            <input type="text" name="searchKeyword" placeholder="검색어(제목)를 입력하세요." style="padding:5px; width:250px; border: solid 1px; border-radius: 3px;">
+            <button type="submit" id="btnSearch">검색</button>
         </form>
     </div>
 
@@ -152,18 +161,29 @@
 
     <a class="write-link" th:href="@{/board}">➕ 글쓰기</a>
 
-    <div class="pagination">
-        <a th:if="${startPage > 0}" th:href="@{/listView(page=${startPage - 1})}">이전</a>
-
+    <div th:unless="${param.search}" class="pagination">
+        <a th:if="${startPage > 0}" th:href="@{/listView(page=${startPage - 1},searchKeyword=${param.searchKeyword})}">이전</a>
         <th:block th:each="page : ${#numbers.sequence(startPage,endPage)}">
             <a th:if="${page != nowPage}"
                th:href="@{/listView(page=${page}, searchKeyword=${param.searchKeyword})}"
                th:text="${page+1}"></a>
             <strong th:if="${page == nowPage}" th:text="${page+1}"></strong>
         </th:block>
-
-        <a th:if="${endPage < totalPages - 1}" th:href="@{/listView(page=${endPage + 1})}">다음</a>
+        <a th:if="${endPage < totalPages - 1}" th:href="@{/listView(page=${endPage + 1},searchKeyword=${param.searchKeyword})}">다음</a>
     </div>
+
+    <div th:if="${param.search}" class="pagination">
+        <a th:if="${startPage > 0}" th:href="@{/listView2(page=${startPage - 1},search=${param.search})}">이전</a>
+        <th:block th:each="page : ${#numbers.sequence(startPage,endPage)}">
+            <a th:if="${page != nowPage}"
+               th:href="@{/listView2(page=${page}, search=${param.search})}"
+               th:text="${page+1}"></a>
+            <strong th:if="${page == nowPage}" th:text="${page+1}"></strong>
+        </th:block>
+        <a th:if="${endPage < totalPages - 1}" th:href="@{/listView2(page=${endPage + 1},search=${param.search})}">다음</a>
+    </div>
+
+
 </div>
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
 <script>

@@ -5,6 +5,7 @@
   <title>Title</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" th:href="@{/css/common.css}">
+
 </head>
 <body class="bg-gray-100 font-sans">
 <div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>

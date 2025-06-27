@@ -29,11 +29,10 @@ public class AskService {
     private final String uploadDir = "D:/boottmp/";
 
     //1:1문의 저장
-    public void saveAsk(String title, String content, String vicibility, List<MultipartFile> files, User user) throws IOException {
+    public void saveAsk(String title, String content, List<MultipartFile> files, User user) throws IOException {
         Ask ask = new Ask();
         ask.setTitle(title);
         ask.setContents(content);
-        ask.setVicibility(vicibility);
         ask.setUser(user);
 
         // 파일 저장
