@@ -3,8 +3,10 @@ package What2Do.controller;
 
 import What2Do.domain.*;
 import What2Do.service.BoardService;
+import What2Do.service.CommentService;
 import What2Do.service.TourService;
 import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +35,13 @@ public class BoardController {
     private final BoardService boardService;
     private final TourService tourService;
     private final EntityManager entityManager;
+    private final CommentService commentService;
 
-    public BoardController(BoardService boardService, TourService tourService, EntityManager entityManager) {
+    public BoardController(BoardService boardService, TourService tourService, EntityManager entityManager, CommentService commentService) {
         this.boardService = boardService;
         this.tourService = tourService;
         this.entityManager = entityManager;
+        this.commentService = commentService;
     }
 
 
@@ -130,19 +134,81 @@ public class BoardController {
 
         return "board/listView";
     }
+    @ResponseBody
+    @PostMapping("/modifyBcomment")
+    public String modifyBcomment(@RequestParam("no") Integer no) {
+        System.out.println("댓글수정 / "+no);
+        Bcomment commentV = commentService.commentModify(no);
+        String comment = commentV.getContent();
+        return comment;
+    }
+
+    @ResponseBody
+    @PostMapping("/deleteBcomment")
+    public void deleteC(@RequestParam("no") Integer no) {
+        commentService.commentDelete(no);
+    }
+
+    @ResponseBody
+    @PostMapping("/updateBcomment")
+    public void updateC(@RequestParam("no") Integer no, @RequestParam("newComment") String content) {
+        commentService.commentUpdate(no, content);
+    }
+    //자유게시판 댓글 저장
+    @PostMapping("/commentB")
+    public String commentB(Bcomment bcomment, @RequestParam("board_num") Board board_num,
+                           HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        Integer bid = 0;
+        if(session !=null) {
+            User user = (User) session.getAttribute("user");
+            if (user.getName().equals("관리자")) {
+                String user_id = user.getName();
+                bcomment.setUser(user_id);
+            } else {
+                String user_id = user.getId();
+                bcomment.setUser(user_id);
+            }
+            bcomment.setBoard(board_num);
+            commentService.commentB(bcomment);
+            bid = board_num.getNum();
+        }else if(session == null){
+            bid = board_num.getNum();
+        }
+        return "redirect:view?num=" + bid;
+    }
 
     //글 자세히 보기
     @GetMapping("/view")
-    public String view(@RequestParam("num") Integer num, Model model,HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        String id = user.getId();
+    public String view(@RequestParam("num") Integer num,
+                       Model model,
+                       HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        User loginUser = null;
+        if (session != null) {
+            loginUser = (User) session.getAttribute("user");
+        }
+
+        // 1) 조회수 증가 & 게시글·파일·댓글 로드
         boardService.updateCount(num);
         Board board = boardService.view(num);
         List<BoardFile> boardFiles = boardService.viewF(num);
-        boolean like = boardService.likeB(num, id);
+        List<Bcomment> blist = commentService.bcommentV(num);
+
         model.addAttribute("board", board);
         model.addAttribute("file", boardFiles);
-        model.addAttribute("like",like);
+        if (blist != null) {
+            model.addAttribute("blist", blist);
+        }
+
+        // 2) 로그인 상태라면 좋아요 여부 계산해서 모델에 추가
+        boolean like = false;
+        if (loginUser != null) {
+            String id = loginUser.getId();
+            like = boardService.likeB(num, id);
+        }
+        model.addAttribute("like", like);
 
         return "board/view";
     }
@@ -283,6 +349,10 @@ public class BoardController {
         model.addAttribute("board", board);
         model.addAttribute("file", boardFiles);
         model.addAttribute("like",like);
+        List<Bcomment> blist = commentService.bcommentV(num);
+        if (blist != null){
+            model.addAttribute("blist", blist);
+        }
 
         return "admin/b_view";
     }

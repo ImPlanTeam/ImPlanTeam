@@ -55,6 +55,7 @@ public class LoginController {
     @GetMapping("/logout")
     public String logout(HttpSession session, Model model) {
         session.removeAttribute("user");
+        session.invalidate();
         System.out.println("logout");
         model.addAttribute("out", "로그아웃 되었습니다.");
         return "redirect:/what2do";
