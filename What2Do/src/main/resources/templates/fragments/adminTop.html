@@ -1,83 +1,35 @@
-<!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>오늘 뭐하지?</title>
-</head>
-
-<body>
-<div class="navbar" th:fragment="headerFragment">
+<!-- fragments/header.html -->
+<div class="navbar" th:fragment="headerFragment" xmlns:th="http://www.thymeleaf.org">
     <div class="logo">
         <a th:href="@{/what2do}">
             <img src="/img/로고1.png" alt="로고">
         </a>
     </div>
-    <div class="menu">
+
+    <nav class="menu1">
         <a th:href="@{/admin/today}">오늘 뭐하지?관리</a>
         <a th:href="@{/lego}">놀러 가자!관리</a>
         <a th:href="@{/manager}">자유게시판 관리</a>
         <a th:href="@{/admin/ask}">1:1 문의 답변하기</a>
         <a th:href="@{/list}">회원관리</a>
+    </nav>
 
-        <style>
-            body {
-              margin: 0;
-              font-family: 'Segoe UI', sans-serif;
-              background-color: #f9f9f9;
-            }
+    <form th:action="@{/listTour}" method="get" style="display: flex; gap: 10px; align-items: center; text-align: center;">
+        <div id="container2" style="width: 300px; height: 40px; position: relative; display: flex;">
+            <input type="text" name="title" id="kkk" placeholder="검색어(제목)를 입력하세요." style="border: 1px solid; border-radius: 15px; width: 100%; ">
+            <button type="submit" id="zzz" style="position: absolute; right: 5px; background-color: transparent; border-radius: 20px; width:40px; height: 40px; align-items: center; justify-content: center;">
+                <img src="/img/돋보기.webp" alt="검색" style="width:25px; text-align: center; align-items: center; margin: auto;">
+            </button>
+        </div>
+    </form>
 
-            a {
-              text-decoration: none;
-              color: #222;
-            }
-
-            .navbar {
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-              padding: 16px 40px;
-              background-color: #ffffff;
-              border-radius: 12px;
-              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-              margin: 20px auto;
-              max-width: 1200px;
-            }
-
-            .menu {
-              display: flex;
-              gap: 40px;
-            }
-
-            .menu a {
-              font-weight: 600;
-              font-size: 16px;
-              transition: color 0.3s;
-            }
-
-            .login-btn {
-              background-color: #1a2e45;
-              color: white;
-              padding: 10px 20px;
-              border: none;
-              border-radius: 10px;
-              font-weight: bold;
-              font-size: 14px;
-              cursor: pointer;
-              transition: background-color 0.3s;
-            }
-        </style>
+    <div class="auth-section">
+        <th:block th:if="${session.user != null and session.user.role == 'ADMIN'}">
+            <table>
+                <tr>
+                    <td><a href="/logout"><button>로그아웃</button></a></td>
+                </tr>
+            </table>
+        </th:block>
     </div>
-    <th:block th:if="${session.user != null and session.user.role == 'ADMIN'}">
-        <table>
-            <tr>
-                <td th:text="${session.user.name} + ' 님,'"></td>
-                <td>환영합니다.</td>
-            </tr>
-            <tr>
-                <td><a href="/logout"><button>로그아웃</button></a></td>
-            </tr>
-        </table>
-    </th:block>
 </div>
-</body>
-</html>

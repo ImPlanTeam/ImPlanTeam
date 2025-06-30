@@ -21,7 +21,7 @@ import org.springframework.web.client.RestTemplate;
 public class TourService {
 
     private final TourRepository tourRepository;
-    private final TourSpotRepository tourSpotRepository;
+
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
     private final CommentRepository commentRepository;
@@ -33,14 +33,7 @@ public class TourService {
         tourRepository.saveAll(tourList);
         logger.info("관광지 정보 {}건 저장됨", tourList.size());
     }
-    public List<String> findC(){
-        return tourRepository.findAllByContenttypeid();
-    }
-    @Transactional
-    public void saveAllTour2(List<TourSpot> tourList) {
-        tourSpotRepository.saveAll(tourList);
-        logger.info("관광지 정보 {}건 저장됨", tourList.size());
-    }
+
     private void validateTour(Tour tour) {
         // 필수 필드 체크
         if (tour.getAddr1() == null || tour.getAddr1().isEmpty()) {

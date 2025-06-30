@@ -1,7 +1,6 @@
 package What2Do.repository;
 
 import What2Do.domain.Tour;
-import What2Do.domain.TourSpot;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,12 +35,6 @@ public interface TourRepository extends JpaRepository<Tour, Long> {
     @Query("select t from Tour t order by t.like_count desc Limit 5")
     List<Tour> findAllOrderByLikecountDesc();
 
-    @Modifying
-    @Transactional
-    @Query("select t.contentid from Tour t where t.contenttypeid='12'")
-    List<String> findAllByContenttypeid();
-    public interface TourSpotRepository extends JpaRepository<TourSpot, Long> {
-    }
 
     void deleteById(Long id); // 삭제된 개수 반환
 

@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>오늘 뭐하지?</title>
-  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link rel="stylesheet" th:href="@{/css/common.css}" >
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
 
@@ -49,6 +49,7 @@
         background: rgba(255,255,255,0.9);
     }
   </style>
+
   <style>
     #weather-widget{
         display: inilne-block
@@ -70,6 +71,85 @@
             justify-content: center;
         }
 
+  </style>
+
+  <!--  모바일 화면 반응형 웹 적용-->
+  <style>
+    @media (max-width: 768px) {
+
+      /* 슬라이드 & 공지 섹션을 세로로 */
+      section.flex.flex-col.md\:flex-row {
+        flex-direction: column !important;
+      }
+
+      /* 슬라이더 */
+      #main {
+        width: 100% !important;
+      }
+
+      .slider__wrap {
+        max-width: 100% !important;
+        padding: 0 10px;
+      }
+
+      .slider__img {
+        min-height: auto;
+        aspect-ratio: 16 / 9;
+      }
+
+      /* 공지사항 */
+      .w-full.md\:w-1\/3 {
+        width: 100% !important;
+        padding: 10px;
+      }
+
+      .ct_weather {
+    width: 100% !important;
+    overflow-x: auto; /* 필요시 가로 스크롤 */
+    padding: 8px;
+    box-sizing: border-box;
+  }
+
+
+      .searchText {
+        width: 100% !important;
+        font-size: 14px;
+      }
+
+      .btnSearch {
+        width: 100%;
+        margin-top: 8px;
+        font-size: 14px;
+        height: 36px;
+      }
+
+      /* 인기 관광지 카드 그리드 - 2열 이하로 */
+      .grid.grid-cols-1.sm\:grid-cols-2.md\:grid-cols-3.lg\:grid-cols-5 {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+
+      .text-xl {
+        font-size: 18px !important;
+      }
+
+      .text-lg {
+        font-size: 16px !important;
+      }
+
+      .text-base {
+        font-size: 14px !important;
+      }
+
+      .p-4 {
+        padding: 1rem !important;
+      }
+
+      /* 하단 날씨 텍스트 */
+      .ct_weather div {
+    font-size: 12px !important;
+    flex-wrap: wrap;
+
+    }
   </style>
 </head>
 

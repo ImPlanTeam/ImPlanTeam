@@ -173,7 +173,7 @@
 
 
 </div>
-<div th:replace="~{fragments/footer :: footerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 <script>
     function changeBoard(value) {
         location.href = '/listView2?search=' + value;

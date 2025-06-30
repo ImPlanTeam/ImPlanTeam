@@ -8,16 +8,16 @@ import org.hibernate.annotations.CreationTimestamp;
 @Entity
 @Getter
 @Setter
-@Table(name = "Bcomment")
+@Table(name = "bcomment")
 public class Bcomment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
-    private Long no;
+    private Integer no;
 
     @ManyToOne
-    @JoinColumn(name="board_id")
-    private Board board;//놀러가자 게시물 id
+    @JoinColumn(name="board_num")
+    private Board board;//게시판 id
 
     private String user; //유저 id
 
@@ -25,5 +25,4 @@ public class Bcomment {
 
     @CreationTimestamp
     private String indate; //댓글 단 시간
-
 }

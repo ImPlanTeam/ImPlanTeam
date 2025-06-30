@@ -176,7 +176,7 @@
 <div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <div class="main-container">
-    <h2>👤 회원 정보 수정</h2>
+    <h2 class="text-2xl font-semibold">회원 정보 수정</h2>
 
     <form th:action="@{/update2/{id}(id=${user.id})}" method="post">
 

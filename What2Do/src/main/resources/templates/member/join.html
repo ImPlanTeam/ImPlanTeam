@@ -14,8 +14,8 @@
     .input-group.password .eyes {
       position: absolute;
       top: 0;
-      bottom: 15px;
-      right: 0px;
+      bottom: 4px;
+      right: 15px;
       margin: auto;
       height: 30px;
       font-size: 22px;
@@ -162,7 +162,7 @@
     </ul>
 
     <label>*이름</label>
-    <input type="text" name="name" id="name" oninput="onlyKorean(this)" th:value="${user.name}" minlength="2" maxlength="5" required>
+    <input type="text" name="name" id="name"  th:value="${user.name}" minlength="2" maxlength="5" required>
 
     <label>*전화번호</label>
     <input type="text" name="tel" id="tel" placeholder="000-0000-0000"
@@ -265,9 +265,6 @@ function hasEnglish(htmlString) {
   return englishRegex.test(htmlString);
 }
 
-function onlyKorean(element) {
-  element.value = element.value.replace(/[^가-힣]/g, '');
-}
 
   const domainListEl = document.querySelector('#domain-list')
   const domainInputEl = document.querySelector('#mail2')

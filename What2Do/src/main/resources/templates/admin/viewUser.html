@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>회원 정보 수정</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -99,7 +100,7 @@
 <div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <div class="main-container">
-    <h2>👤 회원 정보 수정</h2>
+    <h2 class="text-2xl font-semibold"> 회원 정보 수정</h2>
 
     <form th:action="@{/update/{id}(id=${user.id})}" method="post">
         <label>유저 아이디</label>
