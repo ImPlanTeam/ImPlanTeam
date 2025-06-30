@@ -22,33 +22,52 @@ public class CommentService {
         this.bcommentRepository = bcommentRepository;
     }
 
-    public void commentR(Comment comment){
-        commentRepository.save(comment);
-    }
-    public List<Comment> commentV(Long tour){
-        return commentRepository.findAllByTour_id(tour);
-    }
     public void commentD(Long no){
         commentRepository.deleteById(no);
+    }
+
+    public void commentDelete(Integer no){
+        bcommentRepository.deleteById(no);
     }
 
     public Comment commentM(Long no){
         Comment comment = commentRepository.findByNo(no);
         return comment;
     }
+    public Bcomment commentModify(Integer no){
+        Bcomment comment = bcommentRepository.findByNo(no);
+        return comment;
+    }
+
     @Transactional
     public void commentU(Long no,String content){
         commentRepository.updateContent(no,content);
-
     }
+    @Transactional
+    public void commentUpdate(Integer no,String content){
+        bcommentRepository.updateContent(no,content);
+    }
+
 
     public Integer counting(Long id){
         return commentRepository.countByTour_id(id);
+    }
 
+    public void commentR(Comment comment){
+        commentRepository.save(comment);
     }
 
     public void commentB(Bcomment bcomment){
         bcommentRepository.save(bcomment);
     }
+
+    public List<Bcomment> bcommentV(Integer board){
+        return bcommentRepository.findAllByBoard_num(board);
+    }
+    public List<Comment> commentV(Long tour){
+        return commentRepository.findAllByTour_id(tour);
+    }
+
+
 
 }

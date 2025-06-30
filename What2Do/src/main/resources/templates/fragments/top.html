@@ -1,7 +1,5 @@
 <!-- fragments/header.html -->
-
 <div class="navbar" th:fragment="headerFragment" xmlns:th="http://www.thymeleaf.org">
-    <link rel="stylesheet" th:href="@{/css/common.css?after}">
     <div class="logo">
         <a th:href="@{/what2do}">
             <img src="/img/로고1.png" alt="로고">
@@ -14,31 +12,31 @@
         <a th:href="@{/listView}">자유게시판</a>
         <a th:href="@{/ask}">1:1 문의하기</a>
     </nav>
-    <form th:action="@{/listTour}" method="get" style="display: flex; gap: 10px; align-items: center; text-align: center;">
-        <div id="container2" style="width: 300px; height: 40px; position: relative; display: flex;">
-            <input type="text" name="title" id="kkk" placeholder="검색어(제목)를 입력하세요." style="border: 1px solid; border-radius: 15px; width: 100%; ">
-            <button type="submit" id="zzz" style="position: absolute; right: 5px; background-color: transparent; border-radius: 20px; width:40px; height: 40px; align-items: center; justify-content: center;">
-                <img src="/img/돋보기.webp" alt="검색" style="width:25px; text-align: center; align-items: center; margin: auto;">
-            </button>
-        </div>
-    </form>
+    <div class="search-login-wrap">
+        <form th:action="@{/listTour}" method="get" style="display: flex; gap: 10px; align-items: center; text-align: center;">
+            <div id="container2" style="height: 40px; position: relative; display: flex;">
+                <input type="text" name="title" id="kkk" placeholder="검색어(제목)를 입력하세요." style="border: 1px solid; border-radius: 15px; width: 280px;">
+                <button type="submit" id="zzz" style="position: absolute; right: 5px; background-color: transparent; border-radius: 20px; width: 40px; height: 40px;">
+                    <img src="/img/돋보기.webp" alt="검색" style="width: 25px; margin: auto;">
+                </button>
+            </div>
+        </form>
 
-    <div class="auth-section">
-        <div class="my">
-            <span th:if="${session.user != null}">
-                <a th:href="@{/myPage}" >
-                    <img src="/img/기본프로필.webp" onclick="toggleSelect()" id="profile">
-                </a>
-                <div th:text="${session.user.id + '님'}" id="userID" ></div>
-            </span>
-        </div>
-
-
-
-        <span th:if="${session.user == null}">
+        <div class="auth-section">
+            <div class="my">
+      <span th:if="${session.user != null}">
+        <a th:href="@{/myPage}">
+          <img src="/img/기본프로필.webp" onclick="toggleSelect()" id="profile">
+        </a>
+        <div th:text="${session.user.id + '님'}" id="userID"></div>
+      </span>
+            </div>
+            <span th:if="${session.user == null}">
       <a th:href="@{/login2}" id="a3">
         <button class="login-btn">로그인</button>
       </a>
     </span>
+        </div>
     </div>
+</div>
 </div>

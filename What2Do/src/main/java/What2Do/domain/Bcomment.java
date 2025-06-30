@@ -8,7 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Entity
 @Getter
 @Setter
-@Table(name = "Bcomment")
+@Table(name = "bcomment")
 public class Bcomment {
 
     @Id
@@ -16,7 +16,7 @@ public class Bcomment {
     private Integer no;
 
     @ManyToOne
-    @JoinColumn(name="board_id")
+    @JoinColumn(name="board_num")
     private Board board;//게시판 id
 
     private String user; //유저 id

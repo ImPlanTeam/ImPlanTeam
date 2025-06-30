@@ -3,10 +3,10 @@
 <head>
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
     <meta charset="UTF-8">
     <title>회원 정보 수정</title>
     <link rel="stylesheet" th:href="@{/css/common.css}">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
@@ -35,16 +35,18 @@
             color: #444;
         }
 
-/* 이렇게 바꿉니다 */
-.input-field {
-    width: 100%;
-    padding: 0.7rem;
-    margin-top: 0.3rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 14px;
-    background-color: #fff;
-}
+        input[type="text"],
+        input[type="date"],
+        input[type="password"] {
+            width: 100%;
+            padding: 0.7rem;
+            margin-top: 0.3rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            background-color: #fff;
+        }
+
         input[disabled] {
             background-color: #f1f1f1;
             color: #888;
@@ -171,49 +173,48 @@
 </head>
 <body>
 
-<div th:replace="~{fragments/top :: headerFragment}"></div>
+<div th:replace="${session.user?.role == 'ADMIN'} ? ~{fragments/admintop :: headerFragment} : ~{fragments/top :: headerFragment}"></div>
 
 <div class="main-container">
-    <h2>👤 회원 정보 수정</h2>
+    <h2 class="text-2xl font-semibold">회원 정보 수정</h2>
 
     <form th:action="@{/update2/{id}(id=${user.id})}" method="post">
 
 
         <label>유저 아이디</label>
-        <input type="text" class="input-field" th:value="${user.id}" disabled/>
+        <input type="text" th:value="${user.id}" disabled/>
 
         <label>*비밀번호</label>
         <div class="input-group mb-4 password">
-            <input
-                    type="password"
-                    class="form-control login input-field"
-                    name="pass"
-                    id="pass"
-                    minlength="8"
-                    maxlength="16"
-                    placeholder="비밀번호는 8~16자 …"
-                    th:value="${user.pass}"
-                    required>
-            <div class="eyes">…</div>
+            <input type="password" class="form-control login" name="pass" id="pass" minlength="8" maxlength="16"
+                   placeholder="비밀번호는 8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요." th:value="${user.pass}" required>
+            <div class="eyes">
+                <i class="fa fa-eye fa-lg"></i>
+            </div>
         </div>
 
         <label>*비밀번호 확인</label>
         <div class="pass-check-group">
-            <input type="password" id="pass2" class="input-field" name="pass2" required>
+            <input type="password" name="pass2" id="pass2" required>
             <button type="button" class="btn-check" onclick="checkPass()">확인</button>
         </div>
+        <p th:text="${errPass2}"></p>
+        <ul class="error-messages">
+            <li th:each="msg : ${errList}" th:text="${msg}"></li>
+        </ul>
+
 
         <label>이름</label>
-        <input type="text" class="input-field" name="name" th:value="${user.name}" disabled/>
+        <input type="text" name="name" th:value="${user.name}" disabled/>
 
         <label>전화번호</label>
-        <input type="text" class="input-field" name="tel" th:value="${user.tel}" disabled/>
+        <input type="text" name="tel" th:value="${user.tel}" disabled/>
 
         <label>생년월일</label>
-        <input type="date" class="input-field" name="birth" th:value="${user.birth}" disabled/>
+        <input type="date" name="birth" th:value="${user.birth}" disabled/>
 
         <label>이메일</label>
-        <input type="text" class="input-field" name="mail" th:value="${user.mail}"/>
+        <input type="text" name="mail" th:value="${user.mail}" />
 
         <label>성별</label>
         <div class="radio-group">
@@ -226,19 +227,19 @@
 
 
         <div class="btn-group">
-        <input type="submit" class="submit-btn" value="수정 완료"/>
+            <input type="submit" class="submit-btn" value="수정 완료"/>
         </div>
 
     </form>
 
-        <div class="btn-group">
-            <a href="/myPage"><button type="button" class="back-btn">뒤로가기</button></a>
+    <div class="btn-group">
+        <a href="/myPage"><button type="button" class="back-btn">뒤로가기</button></a>
 
 
-            <form th:action="@{'/delete2/' + ${session.user.id}}" method="get" style="display:inline;">
-                <button type="submit" class="btn btn-delete">회원탈퇴</button>
-            </form>
-        </div>
+        <form th:action="@{'/delete2/' + ${session.user.id}}" method="get" style="display:inline;">
+            <button type="submit" class="btn btn-delete">회원탈퇴</button>
+        </form>
+    </div>
 
 
 </div>

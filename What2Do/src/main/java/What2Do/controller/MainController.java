@@ -97,9 +97,10 @@ public class MainController {
 
         Integer count=commentService.counting(id);
         System.out.println(count);
-        model.addAttribute("count",count);
+        model.addAttribute("count",count); //댓글 수
 
         model.addAttribute("city", city);
+
         List<Comment> clist = commentService.commentV(id);
         System.out.println("city: "+city);
         if (clist != null) {
@@ -108,23 +109,6 @@ public class MainController {
         return "tour/cityDetail";
     }
 
-    //자유게시판 댓글 저장
-    @PostMapping("/commentB")
-    public String commentB(Bcomment bcomment, @RequestParam("board_id") Board board_id,
-                           RedirectAttributes re, HttpSession session, Model model){
-        User user = (User) session.getAttribute("user");
-        if(user.getName().equals("관리자")){
-            String user_id = user.getName();
-            bcomment.setUser(user_id);
-        }else {
-            String user_id = user.getId();
-            bcomment.setUser(user_id);
-        }
-        bcomment.setBoard(board_id);
-        commentService.commentB(bcomment);
-        Integer bid = board_id.getNum();
-        return "redirect:view/?num=" + bid;
-    }
 
     //놀러가자 댓글 저장
     @PostMapping("/commentR")

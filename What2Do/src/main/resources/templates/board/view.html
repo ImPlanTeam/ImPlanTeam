@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:c="http://www.w3.org/1999/XSL/Transform">
 <head>
   <meta charset="UTF-8">
   <title>게시글 보기</title>
@@ -13,16 +13,16 @@
 
     }
 
-    .containerA {
-      position: relative; /* 자식 요소 위치 기준 */
-      width: 500px;
-      margin: auto;
-      background: white;
-      padding: 2rem 2.5rem;
-      border-radius: 1rem;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-
-    }
+.containerA {
+  /* width: 500px; 제거 */
+  width: 100%;
+  max-width: 850px;    /* 한계 너비만 지정 */
+  margin: 2rem auto;   /* 상하 간격 좀 더 주고 자동 가운데 정렬 */
+  padding: 2rem 2.5rem;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
 
     .back-link {
       margin-bottom: 1.5rem;
@@ -79,14 +79,27 @@
     stroke: red;
   }
 
-
+.allInfo{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+  .info2 {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 1.5rem;
+    }
 
 .action-buttons {
-  position: absolute;
-  bottom: 1.5rem;
-  right: 2rem;
+
   font-size: 0.9rem;
   color: #6b7280;
+}
+
+#all{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .action-text {
@@ -100,6 +113,112 @@
   margin: 0 5px;
   color: #d1d5db;
 }
+
+/* 댓글 영역 */
+.comments-container {
+  width: 100%;
+  max-width: 850px;
+  margin: 2rem auto;   /* 포스트와 떨어뜨리기 위해 위쪽 여백 */
+  padding: 1.5rem;
+  border-radius: 1rem;
+}
+
+/* 제목 */
+.comments-title {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: #1a2e45;
+  border-bottom: 2px solid #e2e8f0;
+  padding-bottom: 0.5rem;
+}
+
+/* 댓글 리스트 */
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.comment-card {
+  padding: 1rem;
+  background: #f7f9fc;
+  border-radius: 0.75rem;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.comment-user {
+  font-weight: 600;
+  color: #334155;
+}
+
+.comment-date {
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.comment-body {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+/* 댓글 입력 폼 */
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.comment-form textarea {
+  resize: vertical;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.comment-form .btn-submit {
+  align-self: flex-end;
+  background-color: #1a2e45;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background-color 0.2s;
+}
+
+
+    /* 수정 입력박스 스타일 개선 */
+.comment-edit-input {
+  width: 100%;
+  max-width: 600px;            /* 적당한 최대 너비 */
+  padding: 0.75rem 1rem;       /* 내부 여백 늘리기 */
+  font-size: 1rem;             /* 약간 키운 폰트 사이즈 */
+  line-height: 1.4;
+  color: #1f2937;              /* 짙은 그레이 컬러 */
+  background-color: #ffffff;   /* 흰 배경 유지 */
+  border: 1px solid #d1d5db;   /* 연한 테두리 */
+  border-radius: 0.5rem;       /* 둥근 모서리 */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05); /* 가벼운 그림자 */
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.comment-edit-input:focus {
+  outline: none;
+  border-color: #3b82f6;       /* 포커스 시 블루 컬러 */
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.2);
+}
+
+
   </style>
 
 </head>
@@ -109,15 +228,22 @@
 
 <div class="containerA" style="width:850px;">
   <a th:href="@{/listView}" class="back-link">← 목록으로 돌아가기</a>
+  <div class="info">
+    지역: <span th:text="${board.area}"></span>
+  </div>
 
   <h2 th:text="${board.title}" class="text-2xl font-semibold">제목</h2>
 
-  <div class="info">
-    지역: <span th:text="${board.area}"></span> |
-    작성일: <span th:text="${#strings.substring(board.indate,0,10)}"></span> |
-    작성자: <span th:text="${board.writer}"></span> |
-    조회수: <span th:text="${board.view_count}"></span>
+  <div class="allInfo">
+    <div class="info" >
+      작성자: <span th:text="${board.writer}"></span> |
+      <span th:text="${#strings.substring(board.indate,0,10)}"></span>
+    </div>
+    <div class="info2">
+      조회수: <span th:text="${board.view_count}"></span>
+    </div>
   </div>
+
 
   <div class="images" th:if="${file != null}">
     <div th:each="filename : ${file}">
@@ -127,59 +253,168 @@
 
   <div class="content" th:utext="${board.content}"></div>
 
-  <div class="button-group">
-    <table>
-      <tr>
-        <td><svg id="heartBtn" width="24" height="24" fill="none"
-                 stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                 viewBox="0 0 24 24" th:onclick="|likeIt(${board.num})|" th:classappend="${like} ? 'liked'">
-          <path d="M12 21s-6.4-5.3-9-9c-2-3 0-7 4-7 2.1 0 3.4 1.4 5 3 1.6-1.6 2.9-3 5-3 4 0 6 4 4 7-2.6 3.7-9 9-9 9z"/>
-        </svg></td>
-        <td></td>
-        <td><span class="like-count" id="CNT" th:text="${board.like_count}">0</span></td>
-      </tr>
-    </table>
+  <div id="all">
+    <div class="button-group">
+      <table>
+        <tr>
+          <td><svg id="heartBtn" width="24" height="24" fill="none"
+                   stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                   viewBox="0 0 24 24" th:onclick="|likeIt(${board.num})|" th:classappend="${like} ? 'liked'">
+            <path d="M12 21s-6.4-5.3-9-9c-2-3 0-7 4-7 2.1 0 3.4 1.4 5 3 1.6-1.6 2.9-3 5-3 4 0 6 4 4 7-2.6 3.7-9 9-9 9z"/>
+          </svg></td>
+          <td></td>
+          <td><span class="like-count" id="CNT" th:text="${board.like_count}">0</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="action-buttons" th:if="${session.user !=null and board.writer == session.user.id}">
+      <a th:href="@{/update(num=${board.num})}">
+        <span class="action-text">수정 </span>
+      </a>
+      <span class="divider"> | </span>
+      <span class="action-text" th:onclick="|deleteB(${board.num})|"> 삭제</span>
+    </div>
   </div>
 
+  <!-- …기존 포스트 콘텐츠 끝나는 부분 바로 아래에 추가 -->
+</div> <!-- .containerA 포스트 영역 닫힘 -->
 
-  <div class="action-buttons"th:if="${board.writer == session.user.id}">
-    <a th:href="@{/update(num=${board.num})}">
-      <span class="action-text">수정 </span>
-    </a>
-    <span class="divider"> | </span>
-    <span class="action-text" th:onclick="|deleteB(${board.num})|"> 삭제</span>
+<!-- 댓글 섹션 별도 영역 -->
+<section class="comments-container">
+  <h3 class="comments-title">댓글 <span>(<span th:text="${blist.size()}">0</span>)</span></h3>
+
+  <div class="comments-list">
+    <div th:each="blist : ${blist}" class="comment-card">
+      <div class="comment-header">
+        <span class="comment-user" th:text="${blist.user}">사용자</span>
+
+        <div th:id="'btnBefore-' + ${blist.no}">
+          <button type="button" th:onclick="modifyBcomment([[${blist.no}]])" class="action-btn edit-btn" th:if="${session.user != null} and ${session.user.id} == ${blist.user} or ${blist.user} == 관리자 ">수정</button>
+          <span th:if="${session.user != null} and ${session.user.id} == ${blist.user} or ${blist.user} == 관리자" > | </span>
+          <button type="button" th:if="${session.user != null} and ${session.user.id} == ${blist.user} or ${blist.user} == 관리자 "  th:onclick="deleteBcomment([[${blist.no}]])" class="action-btn edit-btn">삭제</button>
+          <span class="comment-date" th:text="${#strings.substring(blist.indate,0,16)}" id="date">날짜</span>
+        </div>
+      </div>
+      <p class="comment-body" th:text="${blist?.content}" th:id="'content-' + ${blist.no}">댓글 내용</p>
+    </div>
   </div>
 
-</div>
+  <form th:action="@{/commentB(board_num=${board.num})}" onsubmit="return inpValidateFn();" method="post" class="comment-form">
+    <textarea id="contentB" name="content" rows="4" placeholder="댓글을 입력해주세요."></textarea>
+    <input type="hidden" name="board_num" th:value="${board.num}">
+    <button type="submit" class="btn-submit">댓글 등록</button>
+  </form>
+</section>
+
 <div th:replace="~{fragments/footer :: footerFragment}"></div>
 
 <script>
-  const heart = document.getElementById('heartBtn');
-  function likeIt(num) {
-    $.ajax({
-      type: "post",
-      url: "/likeB",
-      data:
-      { "num" : num },
-      success: function(likeAll) {
-        $("#CNT").text(likeAll.likeCnt);
-         if (likeAll.like ==false) {
-        heart.classList.add('liked');
-      } else {
-        heart.classList.remove('liked');
+
+  function deleteBcomment(no){
+        if(confirm("댓글을 삭제하시겠습니까?")){
+          $.post("/deleteBcomment", { no: no }, function () {
+            window.location.reload();
+          }).fail(function () {
+            alert("오류가 발생했습니다.");
+          });
+        }
       }
-    },
-      error: function() {
-        alert("좋아요 처리 중 오류가 발생했습니다.");
-      }
+function modifyBcomment(no){
+  // 이미 수정 폼이 있으면 중단
+  if (document.getElementById(`editForm-${no}`)) return;
+
+  $.post("/modifyBcomment", { no: no }, function(comment) {
+    // ① 버튼들만 숨기기
+    $(`#btnBefore-${no} button`).hide();
+    $(`#btnBefore-${no} span`).hide();
+     $(document.getElementById(`date`)).hide();
+
+    // ② 본문 숨기기
+    $(`#content-${no}`).hide();
+
+    // ③ 수정 입력폼 추가
+    const editForm = `
+      <div class="comment-edit-form" id="editForm-${no}">
+        <input type="text"
+               class="comment-edit-input"
+               id="modInput-${no}"
+               value="${comment.replace(/"/g,'&quot;')}"/>
+        <button type="button"
+                class="btn-update"
+                data-no="${no}">완료</button>
+      </div>`;
+    $(`#btnBefore-${no}`).after(editForm);
+  }).fail(function(){
+    alert("오류가 발생했습니다.");
+  });
+}
+
+// 완료 버튼 클릭
+$(document).on('click', '.btn-update', function () {
+  const no = $(this).data("no");
+  const newComment = $(`#modInput-${no}`).val();
+  $.post("/updateBcomment", { no: no, newComment: newComment }, function () {
+    window.location.reload();
+  }).fail(function () {
+    alert("오류가 발생했습니다.");
+  });
+});
+
+
+        $(document).on('click', '.btnUpdate', function () {
+        const no = $(this).data("no");
+        const newComment = $("#modInput-" + no).val();
+        $.post("/updateBcomment", { no: no, newComment: newComment }, function () {
+            window.location.reload();
+        }).fail(function () {
+            alert("오류가 발생했습니다.");
+        });
     });
+
+const heart = document.getElementById('heartBtn');
+function likeIt(num) {
+  $.ajax({
+    type: "post",
+    url: "/likeB",
+    data:
+    { "num" : num },
+    success: function(likeAll) {
+      $("#CNT").text(likeAll.likeCnt);
+       if (likeAll.like ==false) {
+      heart.classList.add('liked');
+    } else {
+      heart.classList.remove('liked');
+    }
+  },
+    error: function() {
+      alert("좋아요기능은 로그인 후  가능합니다.");
+    }
+  });
+}
+
+function deleteB(num){
+ if(confirm("게시물을 삭제하시겠습니까?")){
+     location.href= '/delete?num='+num;
+    }
+}
+const isLoggedIn = [[${session.user != null}]]
+
+function inpValidateFn() {
+  if (!isLoggedIn) {
+    alert("로그인 후 이용 가능합니다.");
+    return false;
   }
 
-  function deleteB(num){
-   if(confirm("게시물을 삭제하시겠습니까?")){
-       location.href= '/delete?num='+num;
-      }
+  const content = document.getElementById("contentB").value.trim().length;
+  if (content ==0) {
+    alert("댓글 내용을 입력해주세요.");
+    return false;
   }
+
+  return true;
+}
+
 </script>
 
 </body>

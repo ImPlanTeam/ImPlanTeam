@@ -14,13 +14,18 @@
         <a th:href="@{/list}">회원관리</a>
     </nav>
 
+    <form th:action="@{/listTour}" method="get" style="display: flex; gap: 10px; align-items: center; text-align: center;">
+        <div id="container2" style="width: 300px; height: 40px; position: relative; display: flex;">
+            <input type="text" name="title" id="kkk" placeholder="검색어(제목)를 입력하세요." style="border: 1px solid; border-radius: 15px; width: 100%; ">
+            <button type="submit" id="zzz" style="position: absolute; right: 5px; background-color: transparent; border-radius: 20px; width:40px; height: 40px; align-items: center; justify-content: center;">
+                <img src="/img/돋보기.webp" alt="검색" style="width:25px; text-align: center; align-items: center; margin: auto;">
+            </button>
+        </div>
+    </form>
+
     <div class="auth-section">
         <th:block th:if="${session.user != null and session.user.role == 'ADMIN'}">
             <table>
-                <tr>
-                    <td th:text="${session.user.name} + ' 님,'"></td>
-                    <td>환영합니다.</td>
-                </tr>
                 <tr>
                     <td><a href="/logout"><button>로그아웃</button></a></td>
                 </tr>
