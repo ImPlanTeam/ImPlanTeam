@@ -92,7 +92,7 @@
             <div class="value" th:text="${askview.title}"></div>
 
             <span class="label">내용</span>
-            <div class="value" th:textu="${askview.contents}"></div>
+            <div class="value" th:utext="${askview.contents}"></div>
 
             <span class="label">작성일</span>
             <div class="value" th:text="${#strings.substring(askview.indate,0,10)}"></div>

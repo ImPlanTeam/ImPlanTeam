@@ -245,7 +245,7 @@ public class MainController {
     }
 
     @GetMapping("/category")
-    public String category2(@PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+    public String category2(@PageableDefault(page = 0, size = 12, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
                             @RequestParam("city") String city,
                             @RequestParam("areacode") String areacode,
                             @RequestParam("sigungucode") String sigungucode,
