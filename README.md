@@ -36,17 +36,18 @@
 
 ## 🖥 개발 환경
 
-| 구분            | 내용                          | 설명                                     | 버전              |
-|-----------------|-------------------------------|------------------------------------------|-------------------|
-| 운영체제         | Windows 11                    | 개발자 공통 OS 환경                      | -                 |
-| 언어             | Java                          | 백엔드 애플리케이션 개발 언어            | 17                |
-| 프레임워크       | Spring Boot                   | 메인 백엔드 프레임워크                   | 3.4.5             |
-| 템플릿 엔진      | Thymeleaf                     | 서버사이드 렌더링 프레임워크             | 3.1.2             |
-| 빌드 도구        | Gradle                        | 의존성 관리 및 빌드 도구                 | 8.7               |
-| DB              | MariaDB                       | 메인 관계형 데이터베이스                  | 10.11.6-MariaDB   |
-| ORM             | Spring Data JPA               | 객체-관계 매핑 처리                       | -                 |
-| IDE             | IntelliJ IDEA Community       | 메인 개발 환경 IDE                        | 2024.1            |
-| API             | 공공데이터포털(TourAPI)       | 관광지 정보 수집                         | v1                |
+| 구분            | 내용                           | 설명                                     | 버전              |
+|-----------------|---------------------------------|------------------------------------------|-------------------|
+| 운영체제         | Windows 11                      | 개발자 공통 OS 환경                      | -                 |
+| 언어             | Java                            | 백엔드 애플리케이션 개발 언어            | 17                |
+| 프레임워크       | Spring Boot                     | 메인 백엔드 프레임워크                   | 3.4.5             |
+| 템플릿 엔진      | Thymeleaf                       | 서버사이드 렌더링 프레임워크             | 3.1.2             |
+| 빌드 도구        | Gradle                          | 의존성 관리 및 빌드 도구                 | 8.7               |
+| DB              | MariaDB                         | 메인 관계형 데이터베이스                  | 10.11.6-MariaDB   |
+| ORM             | Spring Data JPA                 | 객체-관계 매핑 처리                       | -                 |
+| IDE             | IntelliJ IDEA Community         | 메인 개발 환경 IDE                        | 2024.1            |
+| API             | 공공데이터포털(TourAPI, 기상청API)| 관광지 정보 수집                         | v1                |
+                    KakaoMap API
 | 협업툴          | Notion, GitHub                | 문서 및 버전 관리                        | -                 |
 | 배포 환경       | 로컬 환경 기준                 | 추후 AWS 또는 배포 플랫폼 예정           | -                 |
 
@@ -64,7 +65,7 @@
 - 조건에 따라 알맞은 활동 추천 (DB 룰 기반)
 - 활동 태그, 설명 제공
 
-### 자유게시판
+### 📋자유게시판
 - 회원간의 커뮤니티 공간
 - 좋아요 기능으로 스크랩 가능
 - 댓글 기능을 활용하여 커뮤니티 기능 활성화
@@ -95,26 +96,9 @@
 
 ---
 
-## ⚙️ 실행 방법
-
-1. **`application.yml` 설정**
-```yaml
-spring:
-  datasource:
-    url: jdbc:mariadb://localhost:3306/what2do
-    username: your_username
-    password: your_password
-Gradle 빌드 및 실행
-
-bash
-복사
-편집
-./gradlew build
-java -jar build/libs/what2do-0.0.1-SNAPSHOT.jar
 📂 기타 자료
-📌 ERD 다이어그램 (링크 추가 예정)
-
-📌 활동 조건 조합표 (링크 또는 문서 추가 가능)
+📌 ERD, 기능정의서, WBS
+https://docs.google.com/spreadsheets/d/1SKw5Qvs5pL9EVkjBGdY6aUclmbU08nKhHZxcp9mL42Y/edit?usp=sharing
 
 
 📞 회의 일정
