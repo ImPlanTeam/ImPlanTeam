@@ -46,8 +46,7 @@
 | DB              | MariaDB                         | 메인 관계형 데이터베이스                  | 10.11.6-MariaDB   |
 | ORM             | Spring Data JPA                 | 객체-관계 매핑 처리                       | -                 |
 | IDE             | IntelliJ IDEA Community         | 메인 개발 환경 IDE                        | 2024.1            |
-| API             | 공공데이터포털(TourAPI, 기상청API)| 관광지 정보 수집                         | v1                |
-                    KakaoMap API
+| API             | 공공데이터포털(TourAPI, 기상청API), KakaoMap API| 관광지 정보 수집                         | v1                |
 | 협업툴          | Notion, GitHub                | 문서 및 버전 관리                        | -                 |
 | 배포 환경       | 로컬 환경 기준                 | 추후 AWS 또는 배포 플랫폼 예정           | -                 |
 
