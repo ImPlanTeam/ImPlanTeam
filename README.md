@@ -116,7 +116,6 @@ java -jar build/libs/what2do-0.0.1-SNAPSHOT.jar
 
 📌 활동 조건 조합표 (링크 또는 문서 추가 가능)
 
-📌 Swagger API 문서 (추가 시 반영)
 
 📞 회의 일정
 정기 회의: 매일 오전 9시 20분, 오후 5시 40분
