@@ -135,6 +135,6 @@ java -jar build/libs/what2do-0.0.1-SNAPSHOT.jar
 📌 Swagger API 문서 (추가 시 반영)
 
 📞 회의 일정
-정기 회의: 매주 월요일 오후 2시
+정기 회의: 매주 월요일 아침 9시 20분
 
-비정기 회의: Discord 채널을 통해 소집
+비정기 회의: Slack 채널을 통해 소집
