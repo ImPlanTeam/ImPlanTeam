@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<h3>문의답변하기</h3>
+<table>
+  <tr>
+    <td>글번호</td>
+    <td th:text="${askview.no}"></td>
+  </tr>
+  <tr>
+    <td>제목</td>
+    <td th:text="${askview.title}"></td>
+  </tr>
+  <tr>
+    <td>내용</td>
+    <td th:text="${askview.contents}"></td>
+  </tr>
+  <tr>
+    <td>날짜</td>
+    <td th:text="${#strings.substring(askview.indate,0,10)}"></td>
+  </tr>
+  <tr>
+    <td colspan="2" th:each="filename : ${file}">
+      <img th:src="@{'/upload/' + ${filename.storedFilename}}" alt="이미지" style="width: 200px;" />
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

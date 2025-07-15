@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:replace="~{fragments/top :: headerFragment}"></div>
+<h3>1:1문의등록</h3>
+<form action="/askjoin" method="post" id="frm" enctype="multipart/form-data">
+    <table>
+        <tr>
+            <td>제목</td>
+            <td><input type="text" name="title" placeholder="제목을 입력해주세요."/></td>
+        </tr>
+        <tr>
+            <td>내용</td>
+            <td><textarea name="content" cols="50" rows="5" placeholder="내용을 입력해주세요."></textarea></td>
+        </tr>
+        <tr>
+            <td>공개여부</td>
+            <td><select name="vicibility">
+                <option value="비공개">비공개</option>
+                <option value="공개">공개</option>
+            </select></td>
+        </tr>
+        <tr>
+            <td>파일첨부</td>
+            <td>
+                <input type="file" name="files" multiple>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="저장" />
+            </td>
+        </tr>
+    </table>
+</form>
+
+
+
+</body>
+</html>
